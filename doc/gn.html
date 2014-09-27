@@ -1,0 +1,2251 @@
+<head><style>
+body { font-family: Arial, sans-serif; font-size: small; }
+pre { font-family: Consolas, monospace; font-size: small; }
+</style><body><h1>GN</h1>
+<h2>Commands (type "gn help &lt;command&gt;" for more details):</h2>
+<li><a href="#args">args</a>: Display configurable arguments declared by the build.</li>
+<li><a href="#check">check</a>: Check header dependencies.</li>
+<li><a href="#desc">desc</a>: Show lots of insightful information about a target.</li>
+<li><a href="#gen">gen</a>: Generate ninja files.</li>
+<li><a href="#help">help</a>: Does what you think.</li>
+<li><a href="#refs">refs</a>: Find stuff referencing a target, directory, or config.</li>
+<h2></h2>
+<h2>Common switches:</h2>
+<li>--args: Specifies build arguments overrides. See "gn help buildargs".</li>
+<li>--[no]color: Forces colored output on or off (rather than autodetect).</li>
+<li>--dotfile: Specifies an alternate .gn file. See "gn help dotfile".</li>
+<li>--no-exec: Skips exec_script calls (for performance testing).</li>
+<li>-q: Quiet mode, don't print anything on success.</li>
+<li>--output: Directory for build output (relative to source root).</li>
+<li>--root: Specifies source root (overrides .gn file).</li>
+<li>--time: Outputs a summary of how long everything took.</li>
+<li>--tracelog: Writes a Chrome-compatible trace log to the given file.</li>
+<li>-v: Verbose mode, print lots of logging.</li>
+<li>--version: Print the GN binary's version and exit.</li>
+<h2></h2>
+<h2>Target declarations (type "gn help &lt;function&gt;" for more details):</h2>
+<li><a href="#action">action</a>: Declare a target that runs a script a single time.</li>
+<li><a href="#action_foreach">action_foreach</a>: Declare a target that runs a script over a set of files.</li>
+<li><a href="#component">component</a>: Declare a component target.</li>
+<li><a href="#executable">executable</a>: Declare an executable target.</li>
+<li><a href="#group">group</a>: Declare a named group of targets.</li>
+<li><a href="#shared_library">shared_library</a>: Declare a shared library target.</li>
+<li><a href="#source_set">source_set</a>: Declare a source set target.</li>
+<li><a href="#static_library">static_library</a>: Declare a static library target.</li>
+<li><a href="#test">test</a>: Declares a test target.</li>
+<h2></h2>
+<h2>Buildfile functions (type "gn help &lt;function&gt;" for more details):</h2>
+<li><a href="#assert">assert</a>: Assert an expression is true at generation time.</li>
+<li><a href="#config">config</a>: Defines a configuration object.</li>
+<li><a href="#copy">copy</a>: Declare a target that copies files.</li>
+<li><a href="#declare_args">declare_args</a>: Declare build arguments.</li>
+<li><a href="#defines">defines</a>: Returns whether an identifier is defined.</li>
+<li><a href="#exec_script">exec_script</a>: Synchronously run a script and return the output.</li>
+<li><a href="#getenv">getenv</a>: Get an environment variable.</li>
+<li><a href="#import">import</a>: Import a file into the current scope.</li>
+<li><a href="#print">print</a>: Prints to the console.</li>
+<li><a href="#process_file_template">process_file_template</a>: Do template expansion over a list of files.</li>
+<li><a href="#read_file">read_file</a>: Read a file into a variable.</li>
+<li><a href="#rebase_path">rebase_path</a>: Rebase a file or directory to another location.</li>
+<li><a href="#set_default_toolchain">set_default_toolchain</a>: Sets the default toolchain name.</li>
+<li><a href="#set_defaults">set_defaults</a>: Set default values for a target type.</li>
+<li><a href="#set_sources_assignment_filter">set_sources_assignment_filter</a>: Set a pattern to filter source files.</li>
+<li><a href="#template">template</a>: Define a template rule.</li>
+<li><a href="#tool">tool</a>: Specify arguments to a toolchain tool.</li>
+<li><a href="#toolchain">toolchain</a>: Defines a toolchain.</li>
+<li><a href="#toolchain_args">toolchain_args</a>: Set build arguments for toolchain build setup.</li>
+<li><a href="#write_file">write_file</a>: Write a file to disk.</li>
+<h2></h2>
+<h2>Built-in predefined variables (type "gn help &lt;variable&gt;" for more details):</h2>
+<li><a href="#build_cpu_arch">build_cpu_arch</a>: [string] The default value for the "cpu_arch" variable.</li>
+<li><a href="#build_os">build_os</a>: [string] The default value for the "os" variable.</li>
+<li><a href="#component_mode">component_mode</a>: [string] Specifies the meaning of the component() call.</li>
+<li><a href="#cpu_arch">cpu_arch</a>: [string] Current processor architecture.</li>
+<li><a href="#current_toolchain">current_toolchain</a>: [string] Label of the current toolchain.</li>
+<li><a href="#default_toolchain">default_toolchain</a>: [string] Label of the default toolchain.</li>
+<li><a href="#os">os</a>: [string] Indicates the operating system of the current build.</li>
+<li><a href="#python_path">python_path</a>: [string] Absolute path of Python.</li>
+<li><a href="#root_build_dir">root_build_dir</a>: [string] Directory where build commands are run.</li>
+<li><a href="#root_gen_dir">root_gen_dir</a>: [string] Directory for the toolchain's generated files.</li>
+<li><a href="#root_out_dir">root_out_dir</a>: [string] Root directory for toolchain output files.</li>
+<li><a href="#target_gen_dir">target_gen_dir</a>: [string] Directory for a target's generated files.</li>
+<li><a href="#target_out_dir">target_out_dir</a>: [string] Directory for target output files.</li>
+<h2></h2>
+<h2>Variables you set in targets (type "gn help &lt;variable&gt;" for more details):</h2>
+<li><a href="#all_dependent_configs">all_dependent_configs</a>: [label list] Configs to be forced on dependents.</li>
+<li><a href="#args">args</a>: [string list] Arguments passed to an action.</li>
+<li><a href="#cflags">cflags</a>: [string list] Flags passed to all C compiler variants.</li>
+<li><a href="#cflags_c">cflags_c</a>: [string list] Flags passed to the C compiler.</li>
+<li><a href="#cflags_cc">cflags_cc</a>: [string list] Flags passed to the C++ compiler.</li>
+<li><a href="#cflags_objc">cflags_objc</a>: [string list] Flags passed to the Objective C compiler.</li>
+<li><a href="#cflags_objcc">cflags_objcc</a>: [string list] Flags passed to the Objective C++ compiler.</li>
+<li><a href="#configs">configs</a>: [label list] Configs applying to this target.</li>
+<li><a href="#data">data</a>: [file list] Runtime data file dependencies.</li>
+<li><a href="#datadeps">datadeps</a>: [label list] Non-linked dependencies.</li>
+<li><a href="#depfile">depfile</a>: [string] File name for input dependencies for actions.</li>
+<li><a href="#deps">deps</a>: [label list] Linked dependencies.</li>
+<li><a href="#direct_dependent_configs">direct_dependent_configs</a>: [label list] Configs to be forced on dependents.</li>
+<li><a href="#forward_dependent_configs_from">forward_dependent_configs_from</a>: [label list] Forward dependent's configs.</li>
+<li><a href="#hard_dep">hard_dep</a>: [boolean] Indicates a target should be built before dependees.</li>
+<li><a href="#include_dirs">include_dirs</a>: [directory list] Additional include directories.</li>
+<li><a href="#ldflags">ldflags</a>: [string list] Flags passed to the linker.</li>
+<li><a href="#lib_dirs">lib_dirs</a>: [directory list] Additional library directories.</li>
+<li><a href="#libs">libs</a>: [string list] Additional libraries to link.</li>
+<li><a href="#output_extension">output_extension</a>: [string] Value to use for the output's file extension.</li>
+<li><a href="#output_name">output_name</a>: [string] Name for the output file other than the default.</li>
+<li><a href="#outputs">outputs</a>: [file list] Output files for actions and copy targets.</li>
+<li><a href="#public">public</a>: [file list] Declare public header files for a target.</li>
+<li><a href="#script">script</a>: [file name] Script file for actions.</li>
+<li><a href="#source_prereqs">source_prereqs</a>: [file list] Additional compile-time dependencies.</li>
+<li><a href="#sources">sources</a>: [file list] Source files for a target.</li>
+<li><a href="#visibility">visibility</a>: [label list] A list of labels that can depend on a target.</li>
+<h2></h2>
+<h2>Other help topics:</h2>
+<li><a href="#buildargs">buildargs</a>: How build arguments work.</li>
+<li><a href="#dotfile">dotfile</a>: Info about the toplevel .gn file.</li>
+<li><a href="#input_conversion">input_conversion</a>: Processing input from exec_script and read_file.</li>
+<li><a href="#patterns">patterns</a>: How to use patterns.</li>
+<li><a href="#source_expansion">source_expansion</a>: Map sources to outputs for scripts.</li>
+<h3><a name="args">gn args [arg name]</a></h3>
+  Displays all arguments declared by buildfiles along with their
+  description. Build arguments are anything in a declare_args() block
+  in any buildfile. The comment preceding the declaration will be
+  displayed here (so comment well!).
+<p>
+  These arguments can be overridden on the command-line:
+    --args="doom_melon_setting=5 component_build=1"
+  or in a toolchain definition (see "gn help buildargs" for more on
+  how this all works).
+<p>
+  If "arg name" is specified, only the information for that argument
+  will be displayed. Otherwise all arguments will be displayed.
+<p>
+<h3><a name="check">gn check: Check header dependencies.</a></h3>
+<p>
+  "gn check" is the same thing as "gn gen" with the "--check" flag
+  except that this command does not write out any build files. It's
+  intended to be an easy way to manually trigger include file checking.
+<p>
+  See "gn help" for the common command-line switches.
+<p>
+<h3><a name="desc">gn desc &lt;target label&gt; [&lt;what to show&gt;] [--blame] [--all | --tree]</a></h3>
+  Displays information about a given labeled target.
+<p>
+Possibilities for &lt;what to show&gt;:
+  (If unspecified an overall summary will be displayed.)
+<p>
+  sources
+      Source files.
+<p>
+  configs
+      Shows configs applied to the given target, sorted in the order
+      they're specified. This includes both configs specified in the
+      "configs" variable, as well as configs pushed onto this target
+      via dependencies specifying "all" or "direct" dependent
+      configs.
+<p>
+  deps [--all | --tree]
+      Show immediate (or, when "--all" or "--tree" is specified,
+      recursive) dependencies of the given target. "--tree" shows them
+      in a tree format.  Otherwise, they will be sorted alphabetically.
+      Both "deps" and "datadeps" will be included.
+<p>
+  defines       [--blame]
+  include_dirs  [--blame]
+  cflags        [--blame]
+  cflags_cc     [--blame]
+  cflags_cxx    [--blame]
+  ldflags       [--blame]
+  lib_dirs
+  libs
+      Shows the given values taken from the target and all configs
+      applying. See "--blame" below.
+<p>
+  --blame
+      Used with any value specified by a config, this will name
+      the config that specified the value. This doesn't currently work
+      for libs and lib_dirs because those are inherited and are more
+      complicated to figure out the blame (patches welcome).
+<p>
+Note:
+  This command will show the full name of directories and source files,
+  but when directories and source paths are written to the build file,
+  they will be adjusted to be relative to the build directory. So the
+  values for paths displayed by this command won't match (but should
+  mean the same thing).
+<p>
+<h4>Example</h4>
+<pre>
+  gn desc //base:base
+      Summarizes the given target.
+<p>
+  gn desc :base_unittests deps --tree
+      Shows a dependency tree of the "base_unittests" project in
+      the current directory.
+<p>
+  gn desc //base defines --blame
+      Shows defines set for the //base:base target, annotated by where
+      each one was set from.
+<p>
+</pre>
+<h3><a name="gen">gn gen: Generate ninja files.</a></h3>
+<p>
+  gn gen &lt;output_directory&gt;
+<p>
+  Generates ninja files from the current tree and puts them in the given
+  output directory.
+<p>
+  The output directory can be a source-repo-absolute path name such as:
+      //out/foo
+  Or it can be a directory relative to the current directory such as:
+      out/foo
+<p>
+  See "gn help" for the common command-line switches.
+<p>
+<h3><a name="help">gn help &lt;anything&gt;</a></h3>
+  Yo dawg, I heard you like help on your help so I put help on the help
+  in the help.
+<p>
+<h3><a name="refs">gn refs &lt;label_pattern&gt; [--files]</a></h3>
+<p>
+  Finds code referencing a given label. The label can be a
+  target or config name. Unlike most other commands, unresolved
+  dependencies will be tolerated. This allows you to use this command
+  to find references to targets you're in the process of moving.
+<p>
+  By default, the mapping from source item to dest item (where the
+  pattern matches the dest item). See "gn help pattern" for
+  information on pattern-matching rules.
+<p>
+Option:
+  --files
+      Output unique filenames referencing a matched target or config.
+<p>
+<h4>Example</h4>
+<pre>
+  gn refs "//tools/gn/*"
+      Find all targets depending on any target or config in the
+      "tools/gn" directory.
+<p>
+  gn refs //tools/gn:gn
+      Find all targets depending on the given exact target name.
+<p>
+  gn refs "*gtk*" --files
+      Find all unique buildfiles with a dependency on a target that has
+      the substring "gtk" in the name.
+<p>
+</pre>
+<h3><a name="action">action: Declare a target that runs a script a single time.</a></h3>
+<p>
+  This target type allows you to run a script a single time to produce
+  or more output files. If you want to run a script once for each of a
+  set of input files, see "gn help action_foreach".
+<p>
+  In an action the "sources" and "source_prereqs" are treated the
+  same: they're both input dependencies on script execution with no
+  special handling. If you want to pass the sources to your script, you
+  must do so explicitly by including them in the "args".
+<p>
+  It is recommended you put inputs to your script in the "sources"
+  variable, and stuff like other Python files required to run your
+  script in the "source_prereqs" variable.
+<p>
+  You should specify files created by your script by specifying them in
+  the "outputs".
+<p>
+  The script will be executed with the given arguments with the current
+  directory being that of the root build directory. If you pass files
+  to your script, see "gn help to_build_path" for how to convert
+  file names to be relative to the build directory (file names in the
+  sources, outputs, and source_prereqs will be all treated as relative
+  to the current build file and converted as needed automatically).
+<p>
+File name handling
+<p>
+  All output files must be inside the output directory of the build.
+  You would generally use |$target_out_dir| or |$target_gen_dir| to
+  reference the output or generated intermediate file directories,
+  respectively.
+<p>
+Variables
+<p>
+  args, data, datadeps, depfile, deps, outputs*, script*,
+  source_prereqs, sources
+  * = required
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  action("run_this_guy_once") {
+    script = "doprocessing.py"
+    sources = [ "my_configuration.txt" ]
+    outputs = [ "$target_gen_dir/insightful_output.txt" ]
+<p>
+    # Our script imports this Python file so we want to rebuild if it
+    # changes.
+    source_prereqs = [ "helper_library.py" ]
+<p>
+    # Note that we have to manually pass the sources to our script if
+    # the script needs them as inputs.
+    args = [ "--out", to_build_path(target_gen_dir) ] + sources
+  }
+<p>
+</pre>
+<h3><a name="action_foreach">action_foreach: Declare a target that runs a script over a set of files.</a></h3>
+<p>
+  This target type allows you to run a script once-per-file over a set
+  of sources. If you want to run a script once that takes many files as
+  input, see "gn help action".
+<p>
+  The script will be run once per file in the "sources" variable. The
+  "outputs" variable should specify one or more files with a source
+  expansion pattern in it (see "gn help source_expansion"). The output
+  file(s) for each script invocation should be unique. Normally you
+  use "{{source_name_part}}" in each output file.
+<p>
+  If your script takes additional data as input, such as a shared
+  configuration file or a Python module it uses, those files should be
+  listed in the "source_prereqs" variable. These files are treated as
+  dependencies of each script invocation.
+<p>
+  The script will be executed with the given arguments with the current
+  directory being that of the root build directory. If you pass files
+  to your script, see "gn help to_build_path" for how to convert
+  file names to be relative to the build directory (file names in the
+  sources, outputs, and source_prereqs will be all treated as relative
+  to the current build file and converted as needed automatically).
+<p>
+File name handling
+<p>
+  All output files must be inside the output directory of the build.
+  You would generally use |$target_out_dir| or |$target_gen_dir| to
+  reference the output or generated intermediate file directories,
+  respectively.
+<p>
+Variables
+<p>
+  args, data, datadeps, depfile, deps, outputs*, script*,
+  source_prereqs, sources*
+  * = required
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  # Runs the script over each IDL file. The IDL script will generate
+  # both a .cc and a .h file for each input.
+  action_foreach("my_idl") {
+    script = "idl_processor.py"
+    sources = [ "foo.idl", "bar.idl" ]
+<p>
+    # Our script reads this file each time, so we need to list is as a
+    # dependency so we can rebuild if it changes.
+    source_prereqs = [ "my_configuration.txt" ]
+<p>
+    # Transformation from source file name to output file names.
+    outputs = [ "$target_gen_dir/{{source_name_part}}.h",
+                "$target_gen_dir/{{source_name_part}}.cc" ]
+<p>
+    # Note that since "args" is opaque to GN, if you specify paths
+    # here, you will need to convert it to be relative to the build
+    # directory using "to_build_path()".
+    args = [ "{{source}}",
+             "-o",
+             to_build_path(relative_target_gen_dir) + "/" +
+                 {{source_name_part}}.h" ]
+  }
+<p>
+<p>
+</pre>
+<h3><a name="component">component: Declare a component target.</a></h3>
+<p>
+  A component is a shared library, static library, or source set
+  depending on the component mode. This allows a project to separate
+  out a build into shared libraries for faster development (link time is
+  reduced) but to switch to a static build for releases (for better
+  performance).
+<p>
+  To use this function you must set the value of the "component_mode"
+  variable to one of the following strings:
+    - "shared_library"
+    - "static_library"
+    - "source_set"
+  It is an error to call "component" without defining the mode
+  (typically this is done in the master build configuration file).
+<p>
+<h3><a name="executable">executable: Declare an executable target.</a></h3>
+<p>
+Variables
+<p>
+  Flags: cflags, cflags_c, cflags_cc, cflags_objc, cflags_objcc,
+         defines, include_dirs, ldflags, lib_dirs, libs
+  Deps: data, datadeps, deps, forward_dependent_configs_from, hard_dep
+  Dependent configs: all_dependent_configs, direct_dependent_configs
+  General: configs, source_prereqs, sources
+<p>
+<h3><a name="group">group: Declare a named group of targets.</a></h3>
+<p>
+  This target type allows you to create meta-targets that just collect a
+  set of dependencies into one named target. Groups can additionally
+  specify configs that apply to their dependents.
+<p>
+  Depending on a group is exactly like depending directly on that
+  group's deps. Direct dependent configs will get automatically
+  forwarded through the group so you shouldn't need to use
+  "forward_dependent_configs_from.
+<p>
+Variables
+<p>
+  Deps: data, datadeps, deps, forward_dependent_configs_from, hard_dep
+  Dependent configs: all_dependent_configs, direct_dependent_configs
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  group("all") {
+    deps = [
+      "//project:runner",
+      "//project:unit_tests",
+    ]
+  }
+<p>
+</pre>
+<h3><a name="shared_library">shared_library: Declare a shared library target.</a></h3>
+<p>
+  A shared library will be specified on the linker line for targets
+  listing the shared library in its "deps". If you don't want this
+  (say you dynamically load the library at runtime), then you should
+  depend on the shared library via "datadeps" instead.
+<p>
+Variables
+<p>
+  Flags: cflags, cflags_c, cflags_cc, cflags_objc, cflags_objcc,
+         defines, include_dirs, ldflags, lib_dirs, libs
+  Deps: data, datadeps, deps, forward_dependent_configs_from, hard_dep
+  Dependent configs: all_dependent_configs, direct_dependent_configs
+  General: configs, source_prereqs, sources
+<p>
+<h3><a name="source_set">source_set: Declare a source set target.</a></h3>
+<p>
+  A source set is a collection of sources that get compiled, but are not
+  linked to produce any kind of library. Instead, the resulting object
+  files are implicitly added to the linker line of all targets that
+  depend on the source set.
+<p>
+  In most cases, a source set will behave like a static library, except
+  no actual library file will be produced. This will make the build go
+  a little faster by skipping creation of a large static library, while
+  maintaining the organizational benefits of focused build targets.
+<p>
+  The main difference between a source set and a static library is
+  around handling of exported symbols. Most linkers assume declaring
+  a function exported means exported from the static library. The linker
+  can then do dead code elimination to delete code not reachable from
+  exported functions.
+<p>
+  A source set will not do this code elimination since there is no link
+  step. This allows you to link many sources sets into a shared library
+  and have the "exported symbol" notation indicate "export from the
+  final shared library and not from the intermediate targets." There is
+  no way to express this concept when linking multiple static libraries
+  into a shared library.
+<p>
+Variables
+<p>
+  Flags: cflags, cflags_c, cflags_cc, cflags_objc, cflags_objcc,
+         defines, include_dirs, ldflags, lib_dirs, libs
+  Deps: data, datadeps, deps, forward_dependent_configs_from, hard_dep
+  Dependent configs: all_dependent_configs, direct_dependent_configs
+  General: configs, source_prereqs, sources
+<p>
+<h3><a name="static_library">static_library: Declare a static library target.</a></h3>
+<p>
+  Make a ".a" / ".lib" file.
+<p>
+  If you only need the static library for intermediate results in the
+  build, you should consider a source_set instead since it will skip
+  the (potentially slow) step of creating the intermediate library file.
+<p>
+Variables
+<p>
+  Flags: cflags, cflags_c, cflags_cc, cflags_objc, cflags_objcc,
+         defines, include_dirs, ldflags, lib_dirs, libs
+  Deps: data, datadeps, deps, forward_dependent_configs_from, hard_dep
+  Dependent configs: all_dependent_configs, direct_dependent_configs
+  General: configs, source_prereqs, sources
+<p>
+<h3><a name="test">test: Declares a test target.</a></h3>
+<p>
+  This is like an executable target, but is named differently to make
+  the purpose of the target more obvious. It's possible in the future
+  we can do some enhancements like "list all of the tests in a given
+  directory".
+<p>
+  See "gn help executable" for usage.
+<p>
+<h3><a name="assert">assert: Assert an expression is true at generation time.</a></h3>
+<p>
+  assert(&lt;condition&gt; [, &lt;error string&gt;])
+<p>
+  If the condition is false, the build will fail with an error. If the
+  optional second argument is provided, that string will be printed
+  with the error message.
+<p>
+<h4>Example</h4>
+<pre>
+  assert(is_win)
+  assert(defined(sources), "Sources must be defined")
+<p>
+</pre>
+<h3><a name="config">config: Defines a configuration object.</a></h3>
+<p>
+  Configuration objects can be applied to targets and specify sets of
+  compiler flags, includes, defines, etc. They provide a way to
+  conveniently group sets of this configuration information.
+<p>
+  A config is referenced by its label just like a target.
+<p>
+  The values in a config are additive only. If you want to remove a flag
+  you need to remove the corresponding config that sets it. The final
+  set of flags, defines, etc. for a target is generated in this order:
+<p>
+   1. The values specified directly on the target (rather than using a
+      config.
+   2. The configs specified in the target's "configs" list, in order.
+   3. Direct dependent configs from a breadth-first traversal of the
+      dependency tree in the order that the targets appear in "deps".
+   4. All dependent configs from a breadth-first traversal of the
+      dependency tree in the order that the targets appear in "deps".
+<p>
+Variables valid in a config definition:
+  Flags: cflags, cflags_c, cflags_cc, cflags_objc, cflags_objcc,
+         defines, include_dirs, ldflags, lib_dirs, libs
+<p>
+Variables on a target used to apply configs:
+  all_dependent_configs, configs, direct_dependent_configs,
+  forward_dependent_configs_from
+<p>
+<h4>Example</h4>
+<pre>
+  config("myconfig") {
+    includes = [ "include/common" ]
+    defines = [ "ENABLE_DOOM_MELON" ]
+  }
+<p>
+  executable("mything") {
+    configs = [ ":myconfig" ]
+  }
+<p>
+</pre>
+<h3><a name="copy">copy: Declare a target that copies files.</a></h3>
+<p>
+File name handling
+<p>
+  All output files must be inside the output directory of the build.
+  You would generally use |$target_out_dir| or |$target_gen_dir| to
+  reference the output or generated intermediate file directories,
+  respectively.
+<p>
+  Both "sources" and "outputs" must be specified. Sources can
+  as many files as you want, but there can only be one item in the
+  outputs list (plural is used for the name for consistency with
+  other target types).
+<p>
+  If there is more than one source file, your output name should specify
+  a mapping from each source files to output file names using source
+  expansion (see "gn help source_expansion"). The placeholders will
+  will look like "{{source_name_part}}", for example.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  # Write a rule that copies a checked-in DLL to the output directory.
+  copy("mydll") {
+    sources = [ "mydll.dll" ]
+    outputs = [ "$target_out_dir/mydll.dll" ]
+  }
+<p>
+  # Write a rule to copy several files to the target generated files
+  # directory.
+  copy("myfiles") {
+    sources = [ "data1.dat", "data2.dat", "data3.dat" ]
+<p>
+    # Use source expansion to generate output files with the
+    # corresponding file names in the gen dir. This will just copy each
+    # file.
+    outputs = [ "$target_gen_dir/{{source_file_part}}" ]
+  }
+<p>
+</pre>
+<h3><a name="declare_args">declare_args: Declare build arguments.</a></h3>
+<p>
+  Introduces the given arguments into the current scope. If they are
+  not specified on the command line or in a toolchain's arguments,
+  the default values given in the declare_args block will be used.
+  However, these defaults will not override command-line values.
+<p>
+  See also "gn help buildargs" for an overview.
+<p>
+<h4>Example</h4>
+<pre>
+  declare_args() {
+    enable_teleporter = true
+    enable_doom_melon = false
+  }
+<p>
+  If you want to override the (default disabled) Doom Melon:
+    gn --args="enable_doom_melon=true enable_teleporter=false"
+  This also sets the teleporter, but it's already defaulted to on so
+  it will have no effect.
+<p>
+</pre>
+<h3><a name="exec_script">exec_script: Synchronously run a script and return the output.</a></h3>
+<p>
+  exec_script(filename,
+              arguments = [],
+              input_conversion = "",
+              file_dependencies = [])
+<p>
+  Runs the given script, returning the stdout of the script. The build
+  generation will fail if the script does not exist or returns a nonzero
+  exit code.
+<p>
+  The current directory when executing the script will be the root
+  build directory. If you are passing file names, you will want to use
+  the rebase_path() function to make file names relative to this
+  path (see "gn help rebase_path").
+<p>
+Arguments:
+<p>
+  filename:
+      File name of python script to execute. Non-absolute names will
+      be treated as relative to the current build file.
+<p>
+  arguments:
+      A list of strings to be passed to the script as arguments.
+      May be unspecified or the empty list which means no arguments.
+<p>
+  input_conversion:
+      Controls how the file is read and parsed.
+      See "gn help input_conversion".
+<p>
+      If unspecified, defaults to the empty string which causes the
+      script result to be discarded. exec script will return None.
+<p>
+  dependencies:
+      (Optional) A list of files that this script reads or otherwise
+      depends on. These dependencies will be added to the build result
+      such that if any of them change, the build will be regenerated and
+      the script will be re-run.
+<p>
+      The script itself will be an implicit dependency so you do not
+      need to list it.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  all_lines = exec_script(
+      "myscript.py", [some_input], "list lines",
+      [ rebase_path("data_file.txt", root_build_dir) ])
+<p>
+  # This example just calls the script with no arguments and discards
+  # the result.
+  exec_script("//foo/bar/myscript.py")
+<p>
+</pre>
+<h3><a name="getenv">getenv: Get an environment variable.</a></h3>
+<p>
+  value = getenv(env_var_name)
+<p>
+  Returns the value of the given enironment variable. If the value is
+  not found, it will try to look up the variable with the "opposite"
+  case (based on the case of the first letter of the variable), but
+  is otherwise case-sensitive.
+<p>
+  If the environment variable is not found, the empty string will be
+  returned. Note: it might be nice to extend this if we had the concept
+  of "none" in the language to indicate lookup failure.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  home_dir = getenv("HOME")
+<p>
+</pre>
+<h3><a name="import">import: Import a file into the current scope.</a></h3>
+<p>
+  The import command loads the rules and variables resulting from
+  executing the given file into the current scope.
+<p>
+  By convention, imported files are named with a .gni extension.
+<p>
+  An import is different than a C++ "include". The imported file is
+  executed in a standalone environment from the caller of the import
+  command. The results of this execution are cached for other files that
+  import the same .gni file.
+<p>
+  Note that you can not import a BUILD.gn file that's otherwise used
+  in the build. Files must either be imported or implicitly loaded as
+  a result of deps rules, but not both.
+<p>
+  The imported file's scope will be merged with the scope at the point
+  import was called. If there is a conflict (both the current scope and
+  the imported file define some variable or rule with the same name but
+  different value), a runtime error will be thrown. Therefore, it's good
+  practice to minimize the stuff that an imported file defines.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  import("//build/rules/idl_compilation_rule.gni")
+<p>
+  # Looks in the current directory.
+  import("my_vars.gni")
+<p>
+</pre>
+<h3><a name="print">print: Prints to the console.</a></h3>
+<p>
+  Prints all arguments to the console separated by spaces. A newline is
+  automatically appended to the end.
+<p>
+  This function is intended for debugging. Note that build files are run
+  in parallel so you may get interleaved prints. A buildfile may also
+  be executed more than once in parallel in the context of different
+  toolchains so the prints from one file may be duplicated or
+  interleaved with itself.
+<p>
+<h4>Example</h4>
+<pre>
+  print("Hello world")
+<p>
+  print(sources, deps)
+<p>
+</pre>
+<h3><a name="process_file_template">process_file_template: Do template expansion over a list of files.</a></h3>
+<p>
+  process_file_template(source_list, template)
+<p>
+  process_file_template applies a template list to a source file list,
+  returning the result of applying each template to each source. This is
+  typically used for computing output file names from input files.
+<p>
+Arguments:
+<p>
+  The source_list is a list of file names.
+<p>
+  The template can be a string or a list. If it is a list, multiple
+  output strings are generated for each input.
+<p>
+  The following template substrings are used in the template arguments
+  and are replaced with the corresponding part of the input file name:
+<p>
+    {{source}}
+        The entire source name.
+<p>
+    {{source_name_part}}
+        The source name with no path or extension.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  sources = [
+    "foo.idl",
+    "bar.idl",
+  ]
+  myoutputs = process_file_template(
+      sources,
+      [ "$target_gen_dir/{{source_name_part}}.cc",
+        "$target_gen_dir/{{source_name_part}}.h" ])
+<p>
+ The result in this case will be:
+    [ "//out/Debug/foo.cc"
+      "//out/Debug/foo.h"
+      "//out/Debug/bar.cc"
+      "//out/Debug/bar.h" ]
+<p>
+</pre>
+<h3><a name="read_file">read_file: Read a file into a variable.</a></h3>
+<p>
+  read_file(filename, input_conversion)
+<p>
+  Whitespace will be trimmed from the end of the file. Throws an error
+  if the file can not be opened.
+<p>
+Arguments
+<p>
+  filename
+      Filename to read, relative to the build file.
+<p>
+  input_conversion
+      Controls how the file is read and parsed.
+      See "gn help input_conversion".
+<p>
+<h4>Example</h4>
+<pre>
+  lines = read_file("foo.txt", "list lines")
+<p>
+</pre>
+<h3><a name="rebase_path">rebase_path: Rebase a file or directory to another location.</a></h3>
+<p>
+  converted = rebase_path(input,
+                          new_base = "",
+                          current_base = ".")
+<p>
+  Takes a string argument representing a file name, or a list of such
+  strings and converts it/them to be relative to a different base
+  directory.
+<p>
+  When invoking the compiler or scripts, GN will automatically convert
+  sources and include directories to be relative to the build directory.
+  However, if you're passing files directly in the "args" array or
+  doing other manual manipulations where GN doesn't know something is
+  a file name, you will need to convert paths to be relative to what
+  your tool is expecting.
+<p>
+  The common case is to use this to convert paths relative to the
+  current directory to be relative to the build directory (which will
+  be the current directory when executing scripts).
+<p>
+Arguments
+<p>
+  input
+      A string or list of strings representing file or directory names
+      These can be relative paths ("foo/bar.txt"), system absolute
+      paths ("/foo/bar.txt"), or source absolute paths
+      ("//foo/bar.txt").
+<p>
+  new_base
+      The directory to convert the paths to be relative to. This can be
+      an absolute path or a relative path (which will be treated
+      as being relative to the current BUILD-file's directory).
+<p>
+      As a special case, if new_base is the empty string (the default),
+      all paths will be converted to system-absolute native style paths
+      with system path separators. This is useful for invoking external
+      programs.
+<p>
+  current_base
+      Directory representing the base for relative paths in the input.
+      If this is not an absolute path, it will be treated as being
+      relative to the current build file. Use "." (the default) to
+      convert paths from the current BUILD-file's directory.
+<p>
+      On Posix systems there are no path separator transformations
+      applied. If the new_base is empty (specifying absolute output)
+      this parameter should not be supplied since paths will always be
+      converted,
+<p>
+Return value
+<p>
+  The return value will be the same type as the input value (either a
+  string or a list of strings). All relative and source-absolute file
+  names will be converted to be relative to the requested output
+  System-absolute paths will be unchanged.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  # Convert a file in the current directory to be relative to the build
+  # directory (the current dir when executing compilers and scripts).
+  foo = rebase_path("myfile.txt", root_build_dir)
+  # might produce "../../project/myfile.txt".
+<p>
+  # Convert a file to be system absolute:
+  foo = rebase_path("myfile.txt")
+  # Might produce "D:\source\project\myfile.txt" on Windows or
+  # "/home/you/source/project/myfile.txt" on Linux.
+<p>
+  # Convert a file's path separators from forward slashes to system
+  # slashes.
+  foo = rebase_path("source/myfile.txt", ".", ".", "to_system")
+<p>
+  # Typical usage for converting to the build directory for a script.
+  action("myscript") {
+    # Don't convert sources, GN will automatically convert these to be
+    # relative to the build directory when it contructs the command
+    # line for your script.
+    sources = [ "foo.txt", "bar.txt" ]
+<p>
+    # Extra file args passed manually need to be explicitly converted
+    # to be relative to the build directory:
+    args = [
+      "--data",
+      rebase_path("//mything/data/input.dat", root_build_dir),
+      "--rel",
+      rebase_path("relative_path.txt", root_build_dir)
+    ] + sources
+  }
+<p>
+</pre>
+<h3><a name="set_default_toolchain">set_default_toolchain: Sets the default toolchain name.</a></h3>
+<p>
+  set_default_toolchain(toolchain_label)
+<p>
+  The given label should identify a toolchain definition (see
+  "help toolchain"). This toolchain will be used for all targets
+  unless otherwise specified.
+<p>
+  This function is only valid to call during the processing of the build
+  configuration file. Since the build configuration file is processed
+  separately for each toolchain, this function will be a no-op when
+  called under any non-default toolchains.
+<p>
+  For example, the default toolchain should be appropriate for the
+  current environment. If the current environment is 32-bit and 
+  somebody references a target with a 64-bit toolchain, we wouldn't
+  want processing of the build config file for the 64-bit toolchain to
+  reset the default toolchain to 64-bit, we want to keep it 32-bits.
+<p>
+Argument:
+<p>
+  toolchain_label
+      Toolchain name.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  set_default_toolchain("//build/config/win:vs32")
+</pre>
+<h3><a name="set_defaults">set_defaults: Set default values for a target type.</a></h3>
+<p>
+  set_defaults(&lt;target_type_name&gt;) { &lt;values...&gt; }
+<p>
+  Sets the default values for a given target type. Whenever
+  target_type_name is seen in the future, the values specified in
+  set_default's block will be copied into the current scope.
+<p>
+  When the target type is used, the variable copying is very strict.
+  If a variable with that name is already in scope, the build will fail
+  with an error.
+<p>
+  set_defaults can be used for built-in target types ("executable",
+  "shared_library", etc.) and custom ones defined via the "template"
+  command.
+<p>
+<h4>Example</h4>
+<pre>
+  set_defaults("static_library") {
+    configs = [ "//tools/mything:settings" ]
+  }
+<p>
+  static_library("mylib")
+    # The configs will be auto-populated as above. You can remove it if
+    # you don't want the default for a particular default:
+    configs -= "//tools/mything:settings"
+  }
+<p>
+</pre>
+<h3><a name="set_sources_assignment_filter">set_sources_assignment_filter: Set a pattern to filter source files.</a></h3>
+<p>
+  The sources assignment filter is a list of patterns that remove files
+  from the list implicitly whenever the "sources" variable is
+  assigned to. This is intended to be used to globally filter out files
+  with platform-specific naming schemes when they don't apply, for
+  example, you may want to filter out all "*_win.cc" files on non-
+  Windows platforms.
+<p>
+  See "gn help patterns" for specifics on patterns.
+<p>
+  Typically this will be called once in the master build config script
+  to set up the filter for the current platform. Subsequent calls will
+  overwrite the previous values.
+<p>
+  If you want to bypass the filter and add a file even if it might
+  be filtered out, call set_sources_assignment_filter([]) to clear the
+  list of filters. This will apply until the current scope exits
+<p>
+<h4>Example</h4>
+<pre>
+  # Filter out all _win files.
+  set_sources_assignment_filter([ "*_win.cc", "*_win.h" ])
+<p>
+</pre>
+<h3><a name="template">template: Define a template rule.</a></h3>
+<p>
+  A template defines a custom name that acts like a function. It
+  provides a way to add to the built-in target types.
+<p>
+  The template() function is used to declare a template. To invoke the
+  template, just use the name of the template like any other target
+  type.
+<p>
+  Often you will want to declare your template in a special file that
+  other files will import (see "gn help import") so your template
+  rule can be shared across build files.
+<p>
+More details:
+<p>
+  When you call template() it creates a closure around all variables
+  currently in scope with the code in the template block. When the
+  template is invoked, the closure will be executed.
+<p>
+  When the template is invoked, the code in the caller is executed and
+  passed to the template code as an implicit "invoker" variable. The
+  template uses this to read state out of the invoking code.
+<p>
+  One thing explicitly excluded from the closure is the "current
+  directory" against which relative file names are resolved. The
+  current directory will be that of the invoking code, since typically
+  that code specifies the file names. This means all files internal
+  to the template should use absolute names.
+<p>
+Target naming:
+<p>
+  Your template should almost always define a built-in target with the
+  name the template invoker specified. For example, if you have an IDL
+  template and somebody does:
+    idl("foo") {...
+  you will normally want this to expand to something defining a
+  source_set or static_library named "foo" (among other things you may
+  need). This way, when another target specifies a dependency on
+  "foo", the static_library or source_set will be linked.
+<p>
+  It is also important that any other targets your template expands to
+  have globally unique names, or you will get collisions.
+<p>
+  Access the invoking name in your template via the implicit
+  "target_name" variable. This should also be the basis of how other
+  targets that a template expands to to ensure uniquness.
+<p>
+  A typical example would be a template that defines an action to
+  generate some source files, and a source_set to compile that source.
+  Your template would name the source_set "target_name" because
+  that's what you want external targets to depend on to link your code.
+  And you would name the action something like "${target_name}_action"
+  to make it unique. The source set would have a dependency on the
+  action to make it run.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  template("my_idl") {
+    # Be nice and help callers debug problems by checking that the
+    # variables the template requires are defined. This gives a nice
+    # message rather than giving the user an error about an
+    # undefined variable in the file defining the template
+    #
+    # You can also use defined() to give default values to variables
+    # unspecified by the invoker.
+    assert(defined(invoker.sources),
+           "Need sources in $target_name listing the idl files.")
+<p>
+    # Define a variable containing a source expansion
+    # (see "gn help source_expansion") that maps input files to
+    # output files. It is used in both targets below.
+    filter = [ "$target_gen_dir/{{source_name_part}}.cc",
+               "$target_gen_dir/{{source_name_part}}.h" ]
+<p>
+    # Intermediate target to convert IDL to C source. Note that the name
+    # is based on the name the invoker of the template specified. This
+    # way, each time the template is invoked we get a unique
+    # intermediate action name (since all target names are in the global
+    # scope).
+    action_foreach("${target_name}_code_gen") {
+      # Access the scope defined by the invoker via the implicit
+      # "invoker" variable.
+      sources = invoker.sources
+<p>
+      # Note that we need an absolute path for our script file name.
+      # The current directory when executing this code will be that of
+      # the invoker (this is why we can use the "sources" directly
+      # above without having to rebase all of the paths). But if we need
+      # to reference a script relative to the template file, we'll need
+      # to use an absolute path instead.
+      script = "//tools/idl/idl_code_generator.py"
+      outputs = filter  # Variable from above.
+    }
+<p>
+    # Name the source set the same as the template invocation so
+    # instancing this template produces something that other targets
+    # can link to in their deps.
+    source_set(target_name) {
+      # Generates the list of sources.
+      # See "gn help process_file_template"
+      sources = process_file_template(invoker.sources, filter)
+<p>
+      # This target depends on the files produced by the above code gen
+      # target.
+      deps = [ ":${target_name}_code_gen" ]
+    }
+  }
+<p>
+</pre>
+<h4>Example</h4>
+<pre>
+<p>
+  # This calls the template code above, defining target_name to be
+  # "foo_idl_files" and "invoker" to be the set of stuff defined in
+  # the curly brackets.
+  my_idl("foo_idl_files") {
+    # Goes into the template as "invoker.sources".
+    sources = [ "foo.idl", "bar.idl" ]
+  }
+<p>
+  # Here is a target that depends on our template.
+  executable("my_exe") {
+    # Depend on the name we gave the template call above. Internally,
+    # this will produce a dependency from executable to the source_set
+    # inside the template (since it has this name), which will in turn
+    # depend on the code gen action.
+    deps = [ ":foo_idl_files" ]
+  }
+<p>
+</pre>
+<h3><a name="tool">tool: Specify arguments to a toolchain tool.</a></h3>
+<p>
+  tool(&lt;command type&gt;) { &lt;command flags&gt; }
+<p>
+  Used inside a toolchain definition to define a command to run for a
+  given file type. See also "gn help toolchain".
+<p>
+Command types:
+  The following values may be passed to the tool() function for the type
+  of the command:
+<p>
+  "cc", "cxx", "objc", "objcxx", "asm", "alink", "solink",
+  "link", "stamp", "copy"
+<p>
+Command flags:
+<p>
+  These variables may be specified in the { } block after the tool call.
+  They are passed directly to Ninja. See the ninja documentation for how
+  they work. Don't forget to backslash-escape $ required by Ninja to
+  prevent GN from doing variable expansion.
+<p>
+    command, depfile, deps, description, pool, restat, rspfile,
+    rspfile_content
+<p>
+  Additionally, lib_prefix and lib_dir_prefix may be used for the link
+  tools. These strings will be prepended to the libraries and library
+  search directories, respectively, because linkers differ on how to
+  specify them.
+<p>
+  Note: On Mac libraries with names ending in ".framework" will be
+  added to the link like with a "-framework" switch and the lib prefix
+  will be ignored.
+<p>
+<h4>Example</h4>
+<pre>
+  toolchain("my_toolchain") {
+    # Put these at the top to apply to all tools below.
+    lib_prefix = "-l"
+    lib_dir_prefix = "-L"
+<p>
+    tool("cc") {
+      command = "gcc \$in -o \$out"
+      description = "GCC \$in"
+    }
+    tool("cxx") {
+      command = "g++ \$in -o \$out"
+      description = "G++ \$in"
+    }
+  }
+<p>
+</pre>
+<h3><a name="toolchain">toolchain: Defines a toolchain.</a></h3>
+<p>
+  A toolchain is a set of commands and build flags used to compile the
+  source code. You can have more than one toolchain in use at once in
+  a build.
+<p>
+  A toolchain specifies the commands to run for various input file
+  types via the "tool" call (see "gn help tool") and specifies
+  arguments to be passed to the toolchain build via the
+  "toolchain_args" call (see "gn help toolchain_args").
+<p>
+Invoking targets in toolchains:
+<p>
+  By default, when a target depends on another, there is an implicit
+  toolchain label that is inherited, so the dependee has the same one
+  as the dependent.
+<p>
+  You can override this and refer to any other toolchain by explicitly
+  labeling the toolchain to use. For example:
+    datadeps = [ "//plugins:mine(//toolchains:plugin_toolchain)" ]
+  The string "//build/toolchains:plugin_toolchain" is a label that
+  identifies the toolchain declaration for compiling the sources.
+<p>
+  To load a file in an alternate toolchain, GN does the following:
+<p>
+   1. Loads the file with the toolchain definition in it (as determined
+      by the toolchain label).
+   2. Re-runs the master build configuration file, applying the
+      arguments specified by the toolchain_args section of the toolchain
+      definition (see "gn help toolchain_args").
+   3. Loads the destination build file in the context of the
+      configuration file in the previous step.
+<p>
+<h4>Example</h4>
+<pre>
+  toolchain("plugin_toolchain") {
+    tool("cc") {
+      command = "gcc $in"
+    }
+<p>
+    toolchain_args() {
+      is_plugin = true
+      is_32bit = true
+      is_64bit = false
+    }
+  }
+<p>
+</pre>
+<h3><a name="toolchain_args">toolchain_args: Set build arguments for toolchain build setup.</a></h3>
+<p>
+  Used inside a toolchain definition to pass arguments to an alternate
+  toolchain's invocation of the build.
+<p>
+  When you specify a target using an alternate toolchain, the master
+  build configuration file is re-interpreted in the context of that
+  toolchain (see "gn help toolchain"). The toolchain_args function
+  allows you to control the arguments passed into this alternate
+  invocation of the build.
+<p>
+  Any default system arguments or arguments passed in on the command-
+  line will also be passed to the alternate invocation unless explicitly
+  overridden by toolchain_args.
+<p>
+  The toolchain_args will be ignored when the toolchain being defined
+  is the default. In this case, it's expected you want the default
+  argument values.
+<p>
+  See also "gn help buildargs" for an overview of these arguments.
+<p>
+<h4>Example</h4>
+<pre>
+  toolchain("my_weird_toolchain") {
+    ...
+    toolchain_args() {
+      # Override the system values for a generic Posix system.
+      is_win = false
+      is_posix = true
+<p>
+      # Pass this new value for specific setup for my toolchain.
+      is_my_weird_system = true
+    }
+  }
+<p>
+</pre>
+<h3><a name="write_file">write_file: Write a file to disk.</a></h3>
+<p>
+  write_file(filename, data)
+<p>
+  If data is a list, the list will be written one-item-per-line with no
+  quoting or brackets.
+<p>
+  TODO(brettw) we probably need an optional third argument to control
+  list formatting.
+<p>
+Arguments
+<p>
+  filename
+      Filename to write. This must be within the output directory.
+<p>
+  data:
+      The list or string to write.
+<p>
+<h3><a name="build_cpu_arch">build_cpu_arch: The default value for the "cpu_arch" variable.</a></h3>
+<p>
+  This value has the same definition as "cpu_arch" (see
+  "gn help cpu_arch") but should be treated as read-only. This is so
+  the build can override the "cpu_arch" variable for doing
+  cross-compiles, but can still access the host build system's CPU
+  architecture.
+<p>
+<h3><a name="build_os">build_os: [string] The default value for the "os" variable.</a></h3>
+<p>
+  This value has the same definition as "os" (see "gn help os") but
+  should be treated as read-only. This is so the build can override
+  the "os" variable for doing cross-compiles, but can still access
+  the host build system's operating system type.
+<p>
+<h3><a name="component_mode">component_mode: Specifies the meaning of the component() call.</a></h3>
+<p>
+  This value is looked up whenever a "component" target type is
+  encountered. The value controls whether the given target is a shared
+  or a static library.
+<p>
+  The initial value will be empty, which will cause a call to
+  component() to throw an error. Typically this value will be set in the
+  build config script.
+<p>
+Possible values:
+  - "shared_library"
+  - "source_set"
+  - "static_library"
+<p>
+<h3><a name="cpu_arch">cpu_arch: Current processor architecture.</a></h3>
+<p>
+  The initial value is based on the current architecture of the host
+  system. However, the build configuration can set this to any value.
+<p>
+  This value is not used internally by GN for any purpose, so you can
+  set it to whatever value is relevant to your build.
+<p>
+Possible initial values set by GN:
+  - "x86"
+  - "x64"
+  - "arm"
+  - "mipsel"
+<p>
+<h3><a name="current_toolchain">current_toolchain: Label of the current toolchain.</a></h3>
+<p>
+  A fully-qualified label representing the current toolchain. You can
+  use this to make toolchain-related decisions in the build. See also
+  "default_toolchain".
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  if (current_toolchain == "//build:64_bit_toolchain") {
+    executable("output_thats_64_bit_only") {
+      ...
+<p>
+</pre>
+<h3><a name="default_toolchain">default_toolchain: [string] Label of the default toolchain.</a></h3>
+<p>
+  A fully-qualified label representing the default toolchain, which may
+  not necessarily be the current one (see "current_toolchain").
+<p>
+<h3><a name="os">os: Indicates the operating system of the current build.</a></h3>
+  This value is set by default based on the current host operating
+  system. The build configuration can override the value to anything
+  it wants, or it can be set via the build arguments on the command
+  line.
+<p>
+  If you want to know the default value without any overrides, you can
+  use "default_os" (see "gn help default_os").
+<p>
+  Note that this returns the most specific value. So even though
+  Android and ChromeOS are both Linux, the more specific value will
+  be returned.
+<p>
+Some possible values:
+  - "amiga"
+  - "android"
+  - "chromeos"
+  - "ios"
+  - "linux"
+  - "mac"
+  - "win"
+<p>
+<h3><a name="python_path">python_path: Absolute path of Python.</a></h3>
+<p>
+  Normally used in toolchain definitions if running some command
+  requires Python. You will normally not need this when invoking scripts
+  since GN automatically finds it for you.
+<p>
+<h3><a name="root_build_dir">root_build_dir: [string] Directory where build commands are run.</a></h3>
+<p>
+  This is the root build output directory which will be the current
+  directory when executing all compilers and scripts.
+<p>
+  Most often this is used with rebase_path (see "gn help rebase_path")
+  to convert arguments to be relative to a script's current directory.
+<p>
+<h3><a name="root_gen_dir">root_gen_dir: Directory for the toolchain's generated files.</a></h3>
+<p>
+  Absolute path to the root of the generated output directory tree for
+  the current toolchain. An example value might be "//out/Debug/gen".
+  It will not have a trailing slash.
+<p>
+  This is primarily useful for setting up include paths for generated
+  files. If you are passing this to a script, you will want to pass it
+  through rebase_path() (see "gn help rebase_path") to convert it
+  to be relative to the build directory.
+<p>
+  See also "target_gen_dir" which is usually a better location for
+  generated files. It will be inside the root generated dir.
+<p>
+<h3><a name="root_out_dir">root_out_dir: [string] Root directory for toolchain output files.</a></h3>
+<p>
+  Absolute path to the root of the output directory tree for the current
+  toolchain. An example value might be "//out/Debug/gen". It will not
+  have a trailing slash.
+<p>
+  This is primarily useful for setting up script calls. If you are
+  passing this to a script, you will want to pass it through
+  rebase_path() (see "gn help rebase_path") to convert it
+  to be relative to the build directory.
+<p>
+  See also "target_out_dir" which is usually a better location for
+  output files. It will be inside the root output dir.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  action("myscript") {
+    # Pass the output dir to the script.
+    args = [ "-o", rebase_path(root_out_dir, root_build_dir) ]
+  }
+<p>
+</pre>
+<h3><a name="target_gen_dir">target_gen_dir: Directory for a target's generated files.</a></h3>
+<p>
+  Absolute path to the target's generated file directory. If your
+  current target is in "//tools/doom_melon" then this value might be
+  "//out/Debug/gen/tools/doom_melon". It will not have a trailing
+  slash.
+<p>
+  This is primarily useful for setting up include paths for generated
+  files. If you are passing this to a script, you will want to pass it
+  through rebase_path() (see "gn help rebase_path") to convert it
+  to be relative to the build directory.
+<p>
+  See also "gn help root_gen_dir".
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  action("myscript") {
+    # Pass the generated output dir to the script.
+    args = [ "-o", rebase_path(target_gen_dir, root_build_dir) ]
+  }
+<p>
+</pre>
+<h3><a name="target_out_dir">target_out_dir: [string] Directory for target output files.</a></h3>
+  Absolute path to the target's generated file directory. If your
+  current target is in "//tools/doom_melon" then this value might be
+  "//out/Debug/obj/tools/doom_melon". It will not have a trailing
+  slash.
+<p>
+  This is primarily useful for setting up arguments for calling
+  scripts. If you are passing this to a script, you will want to pass it
+  through rebase_path() (see "gn help rebase_path") to convert it
+  to be relative to the build directory.
+<p>
+  See also "gn help root_out_dir".
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  action("myscript") {
+    # Pass the output dir to the script.
+    args = [ "-o", rebase_path(target_out_dir, root_build_dir) ]
+  }
+<p>
+</pre>
+<h3><a name="all_dependent_configs">all_dependent_configs: Configs to be forced on dependents.</a></h3>
+<p>
+  A list of config labels.
+<p>
+  All targets depending on this one, and recursively, all targets
+  depending on those, will have the configs listed in this variable
+  added to them. These configs will also apply to the current target.
+<p>
+  This addition happens in a second phase once a target and all of its
+  dependencies have been resolved. Therefore, a target will not see
+  these force-added configs in their "configs" variable while the
+  script is running, and then can not be removed. As a result, this
+  capability should generally only be used to add defines and include
+  directories necessary to compile a target's headers.
+<p>
+  See also "direct_dependent_configs".
+<p>
+<h3><a name="args">gn args [arg name]</a></h3>
+  Displays all arguments declared by buildfiles along with their
+  description. Build arguments are anything in a declare_args() block
+  in any buildfile. The comment preceding the declaration will be
+  displayed here (so comment well!).
+<p>
+  These arguments can be overridden on the command-line:
+    --args="doom_melon_setting=5 component_build=1"
+  or in a toolchain definition (see "gn help buildargs" for more on
+  how this all works).
+<p>
+  If "arg name" is specified, only the information for that argument
+  will be displayed. Otherwise all arguments will be displayed.
+<p>
+<h3><a name="cflags">cflags*: Flags passed to the C compiler.</a></h3>
+<p>
+  A list of strings.
+<p>
+  "cflags" are passed to all invocations of the C, C++, Objective C,
+  and Objective C++ compilers.
+<p>
+  To target one of these variants individually, use "cflags_c",
+  "cflags_cc", "cflags_objc", and "cflags_objcc", respectively.
+  These variant-specific versions will be appended to the "cflags".
+<p>
+  Flags are never quoted. If your flag includes a string that must be
+  quoted, you must do it yourself. This also means that you can
+  specify more than one flag in a string if necessary ("--foo --bar")
+  and have them be seen as separate by the tool.
+<p>
+<h3><a name="cflags_c">cflags*: Flags passed to the C compiler.</a></h3>
+<p>
+  A list of strings.
+<p>
+  "cflags" are passed to all invocations of the C, C++, Objective C,
+  and Objective C++ compilers.
+<p>
+  To target one of these variants individually, use "cflags_c",
+  "cflags_cc", "cflags_objc", and "cflags_objcc", respectively.
+  These variant-specific versions will be appended to the "cflags".
+<p>
+  Flags are never quoted. If your flag includes a string that must be
+  quoted, you must do it yourself. This also means that you can
+  specify more than one flag in a string if necessary ("--foo --bar")
+  and have them be seen as separate by the tool.
+<p>
+<h3><a name="cflags_cc">cflags*: Flags passed to the C compiler.</a></h3>
+<p>
+  A list of strings.
+<p>
+  "cflags" are passed to all invocations of the C, C++, Objective C,
+  and Objective C++ compilers.
+<p>
+  To target one of these variants individually, use "cflags_c",
+  "cflags_cc", "cflags_objc", and "cflags_objcc", respectively.
+  These variant-specific versions will be appended to the "cflags".
+<p>
+  Flags are never quoted. If your flag includes a string that must be
+  quoted, you must do it yourself. This also means that you can
+  specify more than one flag in a string if necessary ("--foo --bar")
+  and have them be seen as separate by the tool.
+<p>
+<h3><a name="cflags_objc">cflags*: Flags passed to the C compiler.</a></h3>
+<p>
+  A list of strings.
+<p>
+  "cflags" are passed to all invocations of the C, C++, Objective C,
+  and Objective C++ compilers.
+<p>
+  To target one of these variants individually, use "cflags_c",
+  "cflags_cc", "cflags_objc", and "cflags_objcc", respectively.
+  These variant-specific versions will be appended to the "cflags".
+<p>
+  Flags are never quoted. If your flag includes a string that must be
+  quoted, you must do it yourself. This also means that you can
+  specify more than one flag in a string if necessary ("--foo --bar")
+  and have them be seen as separate by the tool.
+<p>
+<h3><a name="cflags_objcc">cflags*: Flags passed to the C compiler.</a></h3>
+<p>
+  A list of strings.
+<p>
+  "cflags" are passed to all invocations of the C, C++, Objective C,
+  and Objective C++ compilers.
+<p>
+  To target one of these variants individually, use "cflags_c",
+  "cflags_cc", "cflags_objc", and "cflags_objcc", respectively.
+  These variant-specific versions will be appended to the "cflags".
+<p>
+  Flags are never quoted. If your flag includes a string that must be
+  quoted, you must do it yourself. This also means that you can
+  specify more than one flag in a string if necessary ("--foo --bar")
+  and have them be seen as separate by the tool.
+<p>
+<h3><a name="configs">configs: Configs applying to this target.</a></h3>
+<p>
+  A list of config labels.
+<p>
+  The include_dirs, defines, etc. in each config are appended in the
+  order they appear to the compile command for each file in the target.
+  They will appear after the include_dirs, defines, etc. that the target
+  sets directly.
+<p>
+  The build configuration script will generally set up the default
+  configs applying to a given target type (see "set_defaults").
+  When a target is being defined, it can add to or remove from this
+  list.
+<p>
+<h4>Example</h4>
+<pre>
+  static_library("foo") {
+    configs -= "//build:no_rtti"  # Don't use the default RTTI config.
+    configs += ":mysettings"      # Add some of our own settings.
+  }
+<p>
+</pre>
+<h3><a name="data">data: Runtime data file dependencies.</a></h3>
+<p>
+  Lists files required to run the given target. These are typically
+  data files.
+<p>
+  Appearing in the "data" section does not imply any special handling
+  such as copying them to the output directory. This is just used for
+  declaring runtime dependencies. There currently isn't a good use for
+  these but it is envisioned that test data can be listed here for use
+  running automated tests.
+<p>
+  See also "gn help source_prereqs" and "gn help datadeps", both of
+  which actually affect the build in concrete ways.
+<p>
+<h3><a name="datadeps">datadeps: Non-linked dependencies.</a></h3>
+<p>
+  A list of target labels.
+<p>
+  Specifies dependencies of a target that are not actually linked into
+  the current target. Such dependencies will built and will be available
+  at runtime.
+<p>
+  This is normally used for things like plugins or helper programs that
+  a target needs at runtime.
+<p>
+  See also "gn help deps" and "gn help data".
+<p>
+<h4>Example</h4>
+<pre>
+  executable("foo") {
+    deps = [ "//base" ]
+    datadeps = [ "//plugins:my_runtime_plugin" ]
+  }
+<p>
+</pre>
+<h3><a name="depfile">depfile: [string] File name for input dependencies for actions.</a></h3>
+<p>
+  If nonempty, this string specifies that the current action or
+  action_foreach target will generate the given ".d" file containing
+  the dependencies of the input. Empty or unset means that the script
+  doesn't generate the files.
+<p>
+  The .d file should go in the target output directory. If you have more
+  than one source file that the script is being run over, you can use
+  the output file expansions described in "gn help action_foreach" to
+  name the .d file according to the input.
+  The format is that of a Makefile, and all of the paths should be
+  relative to the root build directory.
+<p>
+<h4>Example</h4>
+<pre>
+  action_foreach("myscript_target") {
+    script = "myscript.py"
+    sources = [ ... ]
+<p>
+    # Locate the depfile in the output directory named like the
+    # inputs but with a ".d" appended.
+    depfile = "$relative_target_output_dir/{{source_name}}.d"
+<p>
+    # Say our script uses "-o &lt;d file&gt;" to indicate the depfile.
+    args = [ "{{source}}", "-o", depfile ]
+  }
+<p>
+</pre>
+<h3><a name="deps">deps: Linked dependencies.</a></h3>
+<p>
+  A list of target labels.
+<p>
+  Specifies dependencies of a target. Shared and dynamic libraries will
+  be linked into the current target. Other target types that can't be
+  linked (like actions and groups) listed in "deps" will be treated
+  as "datadeps". Likewise, if the current target isn't linkable, then
+  all deps will be treated as "datadeps".
+<p>
+  See also "datadeps".
+<p>
+<h3><a name="direct_dependent_configs">direct_dependent_configs: Configs to be forced on dependents.</a></h3>
+<p>
+  A list of config labels.
+<p>
+  Targets directly referencing this one will have the configs listed in
+  this variable added to them. These configs will also apply to the
+  current target.
+<p>
+  This addition happens in a second phase once a target and all of its
+  dependencies have been resolved. Therefore, a target will not see
+  these force-added configs in their "configs" variable while the
+  script is running, and then can not be removed. As a result, this
+  capability should generally only be used to add defines and include
+  directories necessary to compile a target's headers.
+<p>
+  See also "all_dependent_configs".
+<p>
+<h3><a name="forward_dependent_configs_from">forward_dependent_configs_from</a></h3>
+<p>
+  A list of target labels.
+<p>
+  Exposes the direct_dependent_configs from a dependent target as
+  direct_dependent_configs of the current one. Each label in this list
+  must also be in the deps.
+<p>
+  Sometimes you depend on a child library that exports some necessary
+  configuration via direct_dependent_configs. If your target in turn
+  exposes the child library's headers in its public headers, it might
+  mean that targets that depend on you won't work: they'll be seeing the
+  child library's code but not the necessary configuration. This list
+  specifies which of your deps' direct dependent configs to expose as
+  your own.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  If we use a given library "a" from our public headers:
+<p>
+    deps = [ ":a", ":b", ... ]
+    forward_dependent_configs_from = [ ":a" ]
+<p>
+  This example makes a "transparent" target that forwards a dependency
+  to another:
+<p>
+    group("frob") {
+      if (use_system_frob) {
+        deps = ":system_frob"
+      } else {
+        deps = "//third_party/fallback_frob"
+      }
+      forward_dependent_configs_from = deps
+    }
+<p>
+</pre>
+<h3><a name="hard_dep">hard_dep: Indicates a target should be built before dependees.</a></h3>
+<p>
+  Ninja's default is to assume that targets can be compiled
+  independently. This breaks down for generated files that are included
+  in other targets because Ninja doesn't know to run the generator
+  before compiling the source file.
+<p>
+  Setting "hard_dep" to true on a target means that no sources in
+  targets depending directly on this one will be compiled until this
+  target is complete. It will introduce a Ninja implicit dependency
+  from those sources to this target. This flag is not transitive so
+  it will only affect direct dependents, which will cause problems if
+  a direct dependent uses this generated file in a public header that a
+  third target consumes. Try not to do this.
+<p>
+  See also "gn help source_prereqs" which allows you to specify the
+  exact generated file dependency on the target consuming it.
+<p>
+<h4>Example</h4>
+<pre>
+  executable("foo") {
+    # myresource will be run before any of the sources in this target
+    # are compiled.
+    deps = [ ":myresource" ]
+    ...
+  }
+<p>
+  action("myresource") {
+    hard_dep = true
+    script = "my_generator.py"
+    outputs = "$target_gen_dir/myresource.h"
+  }
+<p>
+</pre>
+<h3><a name="include_dirs">include_dirs: Additional include directories.</a></h3>
+<p>
+  A list of source directories.
+<p>
+  The directories in this list will be added to the include path for
+  the files in the affected target.
+<p>
+<h4>Example</h4>
+<pre>
+  include_dirs = [ "src/include", "//third_party/foo" ]
+<p>
+</pre>
+<h3><a name="ldflags">ldflags: Flags passed to the linker.</a></h3>
+<p>
+  A list of strings.
+<p>
+  These flags are passed on the command-line to the linker and generally
+  specify various linking options. Most targets will not need these and
+  will use "libs" and "lib_dirs" instead.
+<p>
+  Flags are never quoted. If your flag includes a string that must be
+  quoted, you must do it yourself. This also means that you can
+  specify more than one flag in a string if necessary ("--foo --bar")
+  and have them be seen as separate by the tool.
+<p>
+<h3><a name="lib_dirs">lib_dirs: Additional library directories.</a></h3>
+<p>
+  A list of directories.
+<p>
+  Specifies additional directories passed to the linker for searching
+  for the required libraries. If an item is not an absolute path, it
+  will be treated as being relative to the current build file.
+<p>
+  libs and lib_dirs work differently than other flags in two respects.
+  First, then are inherited across static library boundaries until a
+  shared library or executable target is reached. Second, they are
+  uniquified so each one is only passed once (the first instance of it
+  will be the one used).
+<p>
+  The order that libs/lib_dirs apply is:
+    1. Ones set on the target itself.
+    2. Ones from the configs applying to the target.
+    3. Ones from deps of the target, in order (recursively following
+       these rules).
+<p>
+<h4>Example</h4>
+<pre>
+  lib_dirs = [ "/usr/lib/foo", "lib/doom_melon" ]
+<p>
+</pre>
+<h3><a name="libs">libs: Additional libraries to link.</a></h3>
+<p>
+  A list of strings.
+<p>
+  These files will be passed to the linker, which will generally search
+  the library include path. Unlike a normal list of files, they will be
+  passed to the linker unmodified rather than being treated as file
+  names relative to the current build file. Generally you would set
+  the "lib_dirs" so your library is found. If you need to specify
+  a path, you can use "rebase_path" to convert a path to be relative
+  to the build directory.
+<p>
+  When constructing the linker command, the "lib_prefix" attribute of
+  the linker tool in the current toolchain will be prepended to each
+  library. So your BUILD file should not specify the switch prefix
+  (like "-l"). On Mac, libraries ending in ".framework" will be
+  special-cased: the switch "-framework" will be prepended instead of
+  the lib_prefix, and the ".framework" suffix will be trimmed.
+<p>
+  libs and lib_dirs work differently than other flags in two respects.
+  First, then are inherited across static library boundaries until a
+  shared library or executable target is reached. Second, they are
+  uniquified so each one is only passed once (the first instance of it
+  will be the one used).
+<p>
+  The order that libs/lib_dirs apply is:
+    1. Ones set on the target itself.
+    2. Ones from the configs applying to the target.
+    3. Ones from deps of the target, in order (recursively following
+       these rules).
+<p>
+<h4>Example</h4>
+<pre>
+  On Windows:
+    libs = [ "ctl3d.lib" ]
+  On Linux:
+    libs = [ "ld" ]
+<p>
+</pre>
+<h3><a name="output_extension">output_extension: Value to use for the output's file extension.</a></h3>
+<p>
+  Normally the file extension for a target is based on the target
+  type and the operating system, but in rare cases you will need to
+  override the name (for example to use "libfreetype.so.6" instead
+  of libfreetype.so on Linux).
+<h3><a name="output_name">output_name: Define a name for the output file other than the default.</a></h3>
+<p>
+  Normally the output name of a target will be based on the target name,
+  so the target "//foo/bar:bar_unittests" will generate an output
+  file such as "bar_unittests.exe" (using Windows as an example).
+<p>
+  Sometimes you will want an alternate name to avoid collisions or
+  if the internal name isn't appropriate for public distribution.
+<p>
+  The output name should have no extension or prefixes, these will be
+  added using the default system rules. For example, on Linux an output
+  name of "foo" will produce a shared library "libfoo.so".
+<p>
+  This variable is valid for all binary output target types.
+<p>
+<h4>Example</h4>
+<pre>
+  static_library("doom_melon") {
+    output_name = "fluffy_bunny"
+  }
+<p>
+</pre>
+<h3><a name="outputs">outputs: Output files for actions and copy targets.</a></h3>
+<p>
+  Outputs is valid for "copy", "action", and "action_foreach"
+  target types and indicates the resulting files. The values may contain
+  source expansions to generate the output names from the sources (see
+  "gn help source_expansion").
+<p>
+  For copy targets, the outputs is the destination for the copied
+  file(s). For actions, the outputs should be the list of files
+  generated by the script.
+<p>
+<h3><a name="public">public: Declare public header files for a target.</a></h3>
+<p>
+  A list of files and patterns that other targets can include. These
+  permissions are checked via the "check" command
+  (see "gn help check").
+<p>
+  If no public files are declared, other targets (assuming they have
+  visibility to depend on this target) can include any file. If this
+  variable is defined on a target, dependent targets may only include
+  files on this whitelist.
+<p>
+  The entries in this list are patterns (see "gn help patterns") so
+  you can use simple wildcard matching if you have a directory of public
+  files.
+<p>
+  Header file permissions are also subject to visibility. A target
+  must be visible to another target to include any files from it at all
+  and the public headers indicate which subset of those files are
+  permitted.
+<p>
+  Public files are inherited through the dependency tree. So if there is
+  a dependency A -&gt; B -&gt; C, then A can include C's public headers.
+  However, the same is NOT true of visibility, so unless A is in C's
+  visibility list, the include will be rejected.
+<p>
+<h4>Example</h4>
+<pre>
+  These exact files are public:
+    public = [ "foo.h", "bar.h" ]
+<p>
+  All files in the "public" directory are public:
+    public = [ "public/*" ]
+<p>
+  No files are public (no targets may include headers from this one):
+    public = []
+<p>
+</pre>
+<h3><a name="script">script: Script file for actions.</a></h3>
+<p>
+  An absolute or buildfile-relative file name of a Python script to run
+  for a action and action_foreach targets (see "gn help action" and
+  "gn help action_foreach").
+<p>
+<h3><a name="source_prereqs">source_prereqs: Additional compile-time dependencies.</a></h3>
+<p>
+  Inputs are compile-time dependencies of the current target. This means
+  that all source prerequisites must be available before compiling any
+  of the sources.
+<p>
+  If one of your sources #includes a generated file, that file must be
+  available before that source file is compiled. For subsequent builds,
+  the ".d" files will list the include dependencies of each source
+  and Ninja can know about that dependency to make sure it's generated
+  before compiling your source file. However, for the first run it's
+  not possible for Ninja to know about this dependency.
+<p>
+  Source prerequisites solves this problem by declaring such
+  dependencies. It will introduce a Ninja "implicit" dependency for
+  each source file in the target on the listed files.
+<p>
+  For binary targets, the files in the "source_prereqs" should all be
+  listed in the "outputs" section of another target. There is no
+  reason to declare static source files as source prerequisites since
+  the normal include file dependency management will handle them more
+  efficiently anyway.
+<p>
+  For action targets that don't generate ".d" files, the
+  "source_prereqs" section is how you can list known compile-time
+  dependencies your script may have.
+<p>
+  See also "gn help data" and "gn help datadeps" (which declare
+  run-time rather than compile-time dependencies), and
+  "gn help hard_dep" which allows you to declare the source dependency
+  on the target generating a file rather than the target consuming it.
+<p>
+<h4>Example</h4>
+<pre>
+  executable("foo") {
+    sources = [ "foo.cc" ]
+    source_prereqs = [ "$root_gen_dir/something/generated_data.h" ]
+  }
+<p>
+  action("myscript") {
+    script = "domything.py"
+    source_prereqs = [ "input.data" ]
+  }
+<p>
+</pre>
+<h3><a name="sources">sources: Source files for a target</a></h3>
+<p>
+  A list of files relative to the current buildfile.
+<p>
+<h3><a name="visibility">visibility: A list of labels that can depend on a target.</a></h3>
+<p>
+  A label or a list of labels and label patterns that define which
+  targets can depend on the current one. These permissions are checked
+  via then "check" command (see "gn help check").
+<p>
+  If visibility is not defined, it defaults to public ("*").
+<p>
+  If visibility is defined, only the targets with labels that match it
+  can depend on the current target. The empty list means no targets
+  can depend on the current target.
+<p>
+  Tip: Often you will want the same visibility for all targets in a
+  BUILD file. In this case you can just put the definition at the top,
+  outside of any target, and the targets will inherit that scope and see
+  the definition.
+<p>
+Matching:
+<p>
+  You can specify "*" but the inputs aren't general patterns. The
+  following classes of patterns are supported:
+<p>
+   - Explicit (no wildcard):
+       "//foo/bar:baz"
+       ":baz"
+   - Wildcard target names:
+       "//foo/bar:*" (any target in the //foo/bar/BUILD.gn file)
+       ":*"  (any target in the current build file)
+   - Wildcard directory names ("*" is only supported at the end)
+       "*"  (any target anywhere)
+       "//foo/bar/*"  (any target in any subdir of //foo/bar)
+       "./*"  (any target in the current build file or sub dirs)
+<p>
+  The toolchain (normally an implicit part of a label) is ignored when
+  checking visibility.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  Only targets in the current buildfile ("private", the default):
+    visibility = ":*"
+<p>
+  No targets (used for targets that should be leaf nodes):
+    visibility = []
+<p>
+  Any target ("public"):
+    visibility = "*"
+<p>
+  All targets in the current directory and any subdirectory:
+    visibility = "./*"
+<p>
+  Any target in "//bar/BUILD.gn":
+    visibility = "//bar:*"
+<p>
+  Any target in "//bar/" or any subdirectory thereof:
+    visibility = "//bar/*"
+<p>
+  Just these specific targets:
+    visibility = [ ":mything", "//foo:something_else" ]
+<p>
+  Any target in the current directory and any subdirectory thereof, plus
+  any targets in "//bar/" and any subdirectory thereof.
+    visibility = [ "./*", "//bar/*" ]
+<p>
+</pre>
+<h3><a name="buildargs">Build Arguments Overview</a></h3>
+<p>
+  Build arguments are variables passed in from outside of the build
+  that build files can query to determine how the build works.
+<p>
+How build arguments are set
+<p>
+  First, system default arguments are set based on the current system.
+  The built-in arguments are:
+   - cpu_arch (by default this is the same as "default_cpu_arch")
+   - default_cpu_arch
+   - default_os
+   - os (by default this is the same as "default_os")
+<p>
+  Second, arguments specified on the command-line via "--args" are
+  applied. These can override the system default ones, and add new ones.
+  These are whitespace-separated. For example:
+<p>
+    gn --args="enable_doom_melon=false" os=\"beos\"
+<p>
+  Third, toolchain overrides are applied. These are specified in the
+  toolchain_args section of a toolchain definition. The use-case for
+  this is that a toolchain may be building code for a different
+  platform, and that it may want to always specify Posix, for example.
+  See "gn help toolchain_args" for more.
+<p>
+  It is an error to specify an override for a build argument that never
+  appears in a "declare_args" call.
+<p>
+How build arguments are used
+<p>
+  If you want to use an argument, you use declare_args() and specify
+  default values. These default values will apply if none of the steps
+  listed in the "How build arguments are set" section above apply to
+  the given argument, but the defaults will not override any of these.
+<p>
+  Often, the root build config file will declare global arguments that
+  will be passed to all buildfiles. Individual build files can also
+  specify arguments that apply only to those files. It is also useful
+  to specify build args in an "import"-ed file if you want such
+  arguments to apply to multiple buildfiles.
+<p>
+<h3><a name="dotfile">.gn file</a></h3>
+<p>
+  When gn starts, it will search the current directory and parent
+  directories for a file called ".gn". This indicates the source root.
+  You can override this detection by using the --root command-line
+  argument
+<p>
+  The .gn file in the source root will be executed. The syntax is the
+  same as a buildfile, but with very limited build setup-specific
+  meaning.
+<p>
+  If you specify --root, by default GN will look for the file .gn in
+  that directory. If you want to specify a different file, you can
+  additionally pass --dotfile:
+<p>
+    gn gen out/Debug --root=/home/build --dotfile=/home/my_gn_file.gn
+<p>
+Variables
+<p>
+  buildconfig [required]
+      Label of the build config file. This file will be used to set up
+      the build file execution environment for each toolchain.
+<p>
+  root [optional]
+      Label of the root build target. The GN build will start by loading
+      the build file containing this target name. This defaults to
+      "//:" which will cause the file //BUILD.gn to be loaded.
+<p>
+  secondary_source [optional]
+      Label of an alternate directory tree to find input files. When
+      searching for a BUILD.gn file (or the build config file discussed
+      above), the file fill first be looked for in the source root.
+      If it's not found, the secondary source root will be checked
+      (which would contain a parallel directory hierarchy).
+<p>
+      This behavior is intended to be used when BUILD.gn files can't be
+      checked in to certain source directories for whatever reason.
+<p>
+      The secondary source root must be inside the main source tree.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  buildconfig = "//build/config/BUILDCONFIG.gn"
+<p>
+  root = "//:root"
+<p>
+  secondary_source = "//build/config/temporary_buildfiles/"
+<p>
+</pre>
+<h3><a name="input_conversion">input_conversion: Specifies how to transform input to a variable.</a></h3>
+<p>
+  input_conversion is an argument to read_file and exec_script that
+  specifies how the result of the read operation should be converted
+  into a variable.
+<p>
+  "" (the default)
+      Discard the result and return None.
+<p>
+  "list lines"
+      Return the file contents as a list, with a string for each line.
+      The newlines will not be present in the result. The last line may
+      or may not end in a newline.
+<p>
+      After splitting, each individual line will be trimmed of
+      whitespace on both ends.
+<p>
+  "scope"
+      Execute the block as GN code and return a scope with the
+      resulting values in it. If the input was:
+        a = [ "hello.cc", "world.cc" ]
+        b = 26
+      and you read the result into a variable named "val", then you
+      could access contents the "." operator on "val":
+        sources = val.a
+        some_count = val.b
+<p>
+  "string"
+      Return the file contents into a single string.
+<p>
+  "value"
+      Parse the input as if it was a literal rvalue in a buildfile.
+      Examples of typical program output using this mode:
+        [ "foo", "bar" ]     (result will be a list)
+      or
+        "foo bar"            (result will be a string)
+      or
+        5                    (result will be an integer)
+<p>
+      Note that if the input is empty, the result will be a null value
+      which will produce an error if assigned to a variable.
+<p>
+  "trim ..."
+      Prefixing any of the other transformations with the word "trim"
+      will result in whitespace being trimmed from the beginning and end
+      of the result before processing.
+<p>
+      Examples: "trim string" or "trim list lines"
+<p>
+      Note that "trim value" is useless because the value parser skips
+      whitespace anyway.
+<p>
+<h3><a name="patterns">Patterns</a></h3>
+  Patterns are VERY limited regular expressions that are used in
+  several places.
+<p>
+  Patterns must match the entire input string to be counted as a match.
+  In regular expression parlance, there is an implicit "^...$"
+  surrounding your input. If you want to match a substring, you need to
+  use wildcards at the beginning and end.
+<p>
+  There are only two special tokens understood by the pattern matcher.
+  Everything else is a literal.
+<p>
+   * Matches zero or more of any character. It does not depend on the
+     preceding character (in regular expression parlance it is
+     equivalent to ".*").
+<p>
+  \b Matches a path boundary. This will match the beginning or end of
+     a string, or a slash.
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  "*asdf*"
+      Matches a string containing "asdf" anywhere.
+<p>
+  "asdf"
+      Matches only the exact string "asdf".
+<p>
+  "*.cc"
+      Matches strings ending in the literal ".cc".
+<p>
+  "\bwin/*"
+      Matches "win/foo" and "foo/win/bar.cc" but not "iwin/foo".
+<p>
+</pre>
+<h3><a name="source_expansion">How Source Expansion Works</a></h3>
+<p>
+  Source expansion is used for the action_foreach and copy target types
+  to map source file names to output file names or arguments.
+<p>
+  To perform source expansion in the outputs, GN maps every entry in the
+  sources to every entry in the outputs list, producing the cross
+  product of all combinations, expanding placeholders (see below).
+<p>
+  Source expansion in the args works similarly, but performing the
+  placeholder substitution produces a different set of arguments for
+  each invocation of the script.
+<p>
+  If no placeholders are found, the outputs or args list will be treated
+  as a static list of literal file names that do not depend on the
+  sources.
+<p>
+  See "gn help copy" and "gn help action_foreach" for more on how
+  this is applied.
+<p>
+Placeholders
+<p>
+  {{source}}
+      The name of the source file relative to the root build output
+      directory (which is the current directory when running compilers
+      and scripts). This will generally be used for specifying inputs
+      to a script in the "args" variable.
+<p>
+  {{source_file_part}}
+      The file part of the source including the extension. For the
+      source "foo/bar.txt" the source file part will be "bar.txt".
+<p>
+  {{source_name_part}}
+      The filename part of the source file with no directory or
+      extension. This will generally be used for specifying a
+      transformation from a soruce file to a destination file with the
+      same name but different extension. For the source "foo/bar.txt"
+      the source name part will be "bar".
+<p>
+<h4>Example</h4>
+<pre>
+<p>
+  Non-varying outputs:
+    action("hardcoded_outputs") {
+      sources = [ "input1.idl", "input2.idl" ]
+      outputs = [ "$target_out_dir/output1.dat",
+                  "$target_out_dir/output2.dat" ]
+    }
+  The outputs in this case will be the two literal files given.
+<p>
+  Varying outputs:
+    action_foreach("varying_outputs") {
+      sources = [ "input1.idl", "input2.idl" ]
+      outputs = [ "$target_out_dir/{{source_name_part}}.h",
+                  "$target_out_dir/{{source_name_part}}.cc" ]
+    }
+  Performing source expansion will result in the following output names:
+    //out/Debug/obj/mydirectory/input1.h
+    //out/Debug/obj/mydirectory/input1.cc
+    //out/Debug/obj/mydirectory/input2.h
+    //out/Debug/obj/mydirectory/input2.cc
+<p>
+</pre>
+</body>
