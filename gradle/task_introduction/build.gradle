@@ -1,0 +1,136 @@
+////////////////////////////////////////////////////////
+// 1. Task introduction
+
+task hello {
+    doLast {
+        println 'Hello world!'
+    }
+}
+task hello2 << {
+    println "hello 2 world"
+}
+
+////////////////////////////////////////////////////////
+// 2. Write gradle like Program language
+
+task upper << {
+    String someString = 'mY_nAmE'
+    println "Original: " + someString
+    println "Upper case: " + someString.toUpperCase()
+}
+task count << {
+    4.times { print "$it " }
+}
+
+////////////////////////////////////////////////////////
+// 3. Dependency Management
+
+task intro(dependsOn: hello) << {
+    println "I'm Gradle"
+}
+// Lazy dependsOn
+task taskX(dependsOn: 'taskY') << {
+    println 'taskX'
+}
+task taskY << {
+    println 'taskY'
+}
+
+////////////////////////////////////////////////////////
+// 4. Create/Modify tasks dynamically
+
+// usage: gradle task1
+4.times { myVar ->
+    task "task$myVar" << {
+        println "I'm task number $myVar"
+    }
+}
+// add dependencies to a task dynamically
+task0.dependsOn task2, task3
+
+////////////////////////////////////////////////////////
+// 5. Sequence of doFirst, doLast
+
+task hello3 << {
+    println 'Hello Earth'
+}
+hello3.doFirst {
+    println 'Hello Venus'
+}
+hello3.doLast {
+    println 'Hello Mars'
+}
+hello3 << {
+    println 'Hello Jupiter'
+}
+hello3.doLast {
+    println 'Hello ++++++'
+}
+hello3.doFirst {
+    println 'Hello ------'
+}
+
+////////////////////////////////////////////////////////
+// 6. Task name is var, which can add custom properties. So use it as var
+
+hello << {
+    println "Greetings from the $hello.name task. Check: " + hello.name
+}
+// add custom properties to task
+task myTask {
+    ext.myProperty = "myValue"
+}
+myTask {
+    ext.one = "1"
+}
+task printTaskProperties << {
+    println myTask.myProperty
+    println myTask.one
+}
+
+////////////////////////////////////////////////////////
+// 7. Using method
+
+task checksum << {
+    fileList('../antLoadfileResources').each {File file ->
+        ant.checksum(file: file, property: "cs_$file.name")
+        println "$file.name Checksum: ${ant.properties["cs_$file.name"]}"
+    }
+}
+File[] fileList(String dir) {
+    file(dir).listFiles({file -> file.isFile() } as FileFilter).sort()
+}
+
+////////////////////////////////////////////////////////
+// 8. Default tasks
+
+defaultTasks 'clean', 'run'
+task clean << {
+    println 'Default Cleaning!'
+}
+task run << {
+    println 'Default Running!'
+}
+task other << {
+    println "I'm not a default task!"
+}
+
+////////////////////////////////////////////////////////
+// 9. Configuration phase & Execution phase
+
+// Gradle的运行分为 configuration（配置）和 execution（执行）两个阶段
+// configuration 阶段之后，Gradle知道所有要执行的task，并提供hook获得这些信息
+task distribution << {
+    println "We build the zip with version=$version"
+}
+task release(dependsOn: 'distribution') << {
+    println 'We release now'
+}
+gradle.taskGraph.whenReady {taskGraph ->
+    if (taskGraph.hasTask(release)) {
+        version = '1.0'
+    } else {
+        version = '1.0-SNAPSHOT'
+    }
+}
+
