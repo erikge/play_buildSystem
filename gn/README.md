@@ -1,3 +1,7 @@
+GN is a meta-build system that generates ninja files, which is part of the Chromium tree.
+https://code.google.com/p/chromium/wiki/gn
+ 
+
 play_gn
 =======
 
