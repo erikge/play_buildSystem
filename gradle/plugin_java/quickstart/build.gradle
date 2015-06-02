@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-// Default properties: usage and modification
+// 1. Default properties: usage and modification
 sourceCompatibility = 1.5
 version = '1.0'
 jar {
@@ -11,14 +11,38 @@ jar {
     }
 }
 
-// External jar dependencies and publish jar
+// 2. External jar dependencies and publish jar
 repositories {
     mavenCentral()
 }
+/* 一个工程可以有多个repositories，Gradle按照声明的先后顺序查找依赖
+ * other valit repo format:
+repositories {
+
+    maven {
+        url "http://repo.mycompany.com/maven2"
+    }
+}
+repositories {
+    ivy {
+        // URL can refer to a local directory
+        url "../local-repo"
+    }
+}
+*/
+
 dependencies {
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     testCompile group: 'junit', name: 'junit', version: '4.+'
+    // Dependency configuration
+    // compile, runtime, testCompile, testRuntime
+
+    // shortcut form: "group:name:version". such as
+    // compile 'org.hibernate:hibernate-core:3.6.7.Final'
+
 }
+
+// 通过uploadArchives task来发布、上传文件
 uploadArchives {
     repositories {
         flatDir {
@@ -26,8 +50,33 @@ uploadArchives {
         }
     }
 }
+/* 其他例子：
+上传到ivy库
+uploadArchives {
+    repositories {
+        ivy {
+            credentials {
+                username "username"
+                password "pw"
+            }
+            url "http://repo.mycompany.com"
+        }
+    }
+}
+上传到maven库
+apply plugin: 'maven'
 
-// Java plugin task is normal task
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file://localhost/tmp/myRepo/")
+        }
+    }
+}
+
+ */
+
+// 3. Java plugin task is normal task
 test {
     systemProperties 'property': 'value'
 }
