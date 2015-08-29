@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0084)https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md -->
+<html class="doc-page"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>GN Quick Start guide</title><link rel="stylesheet" type="text/css" href="./GN Quick Start guide_files/doc.0L3SNFV84koi7_B276HAQw.cache.css"><link rel="stylesheet" type="text/css" href="./GN Quick Start guide_files/prettify.pZ5FqzM6cPxAflH0va2Ucw.cache.css"></head><body><div class="doc"><h1><a class="h" name="GN-Quick-Start-guide" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#GN-Quick-Start-guide"><span></span></a>GN Quick Start guide</h1><div class="toc" role="navigation"><h2>Contents</h2><div class="toc-aux"><ul><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Running-GN">Running GN</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Setting-up-a-build">Setting up a build</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Passing-build-arguments">Passing build arguments</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Cross_compiling-to-a-target-OS-or-architecture">Cross-compiling to a target OS or architecture</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Configuring-goma">Configuring goma</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Configuring-component-mode">Configuring component mode</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Step_by_step">Step-by-step</a></li><ul><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Adding-a-build-file">Adding a build file</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Testing-your-addition">Testing your addition</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Declaring-dependencies">Declaring dependencies</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Test-the-static-library-version">Test the static library version</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Compiler-settings">Compiler settings</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Putting-settings-in-a-config">Putting settings in a config</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Dependent-configs">Dependent configs</a></li></ul><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Dont-know-whats-going-on">Dont know whats going on?</a></li><ul><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Print-debugging">Print debugging</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#The-desc-command">The desc command</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Performance">Performance</a></li></ul></ul></div></div><h2><a class="h" name="Running-GN" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Running-GN"><span></span></a>Running GN</h2><p>You just run <code>gn</code> from the command line. There is a script in depot_tools (which is presumably on your path) with this name. The script will find the binary in the source tree containing the current directory and run it.</p><h2><a class="h" name="Setting-up-a-build" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Setting-up-a-build"><span></span></a>Setting up a build</h2><p>In GYP, the system would generate <code>Debug</code> and <code>Release</code> build directories for you and configure them accordingly. GN doesn’t do this. Instead, you set up whatever build directory you want with whatever configuration you want. The Ninja files will be automatically regenerated if they’re out of date when you build in that directory.</p><p>To make a build directory:</p><pre class="code">gn gen out/my_build
+</pre><h2><a class="h" name="Passing-build-arguments" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Passing-build-arguments"><span></span></a>Passing build arguments</h2><p>Set build arguments on your build directory by running:</p><pre class="code">gn args out/my_build
+</pre><p>This will bring up an editor. Type build args into that file like this:</p><pre class="code">is_component_build = true
+is_debug = false
+</pre><p>You can see the list of available arguments and their default values by typing</p><pre class="code">gn args --list out/my_build
+</pre><p>on the command line. See “Taking build arguments” below for information on how to use these in your code. (Note that you have to specify the build directory for this command because the available arguments can change according to what’s set.</p><h2><a class="h" name="Cross_compiling-to-a-target-OS-or-architecture" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Cross_compiling-to-a-target-OS-or-architecture"><span></span></a>Cross-compiling to a target OS or architecture</h2><p>Run <code>gn args out/Default</code> (substituting your build directory as needed) and add one or more of the following lines for common cross-compiling options.</p><pre class="code">target_os = "chromeos"
+target_os = "android"
+
+target_cpu = "arm"
+target_cpu = "x86"
+target_cpu = "x64"
+</pre><p>See <a href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/cross_compiles.md">GNCrossCompiles</a> for more info.</p><h2><a class="h" name="Configuring-goma" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Configuring-goma"><span></span></a>Configuring goma</h2><p>Run <code>gn args out/Default</code> (substituting your build directory as needed). Add:</p><pre class="code">use_goma = true
+goma_dir = "~/foo/bar/goma"
+</pre><p>If your goma is in the default location (<code>~/goma</code>) then you can omit the <code>goma_dir</code> line.</p><h2><a class="h" name="Configuring-component-mode" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Configuring-component-mode"><span></span></a>Configuring component mode</h2><p>This is a build arg like the goma flags. run <code>gn args out/Default</code> and add:</p><pre class="code">is_component_build = true
+</pre><h2><a class="h" name="Step_by_step" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Step_by_step"><span></span></a>Step-by-step</h2><h3><a class="h" name="Adding-a-build-file" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Adding-a-build-file"><span></span></a>Adding a build file</h3><p>Create a <code>tools/gn/tutorial/BUILD.gn</code> file and enter the following:</p><pre class="code">executable("hello_world") {
+  sources = [
+    "hello_world.cc",
+  ]
+}
+</pre><p>There should already be a <code>hello_world.cc</code> file in that directory, containing what you expect. That’s it! Now we just need to tell the build about this file. Open the <code>BUILD.gn</code> file in the root directory and add the label of this target to the dependencies of one of the root groups (a “group” target is a meta-target that is just a collection of other targets):</p><pre class="code">group("root") {
+  deps = [
+    ...
+    "//url",
+    "//tools/gn/tutorial:hello_world",
+  ]
+}
+</pre><p>You can see the label of your target is “//” (indicating the source root), followed by the directory name, a colon, and the target name.</p><h3><a class="h" name="Testing-your-addition" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Testing-your-addition"><span></span></a>Testing your addition</h3><p>From the command line in the source root directory:</p><pre class="code">gn gen out/Default
+ninja -C out/Default hello_world
+out/Default/hello_world
+</pre><p>GN encourages target names for static libraries that aren’t globally unique. To build one of these, you can pass the label with no leading “//” to ninja:</p><pre class="code">ninja -C out/Default tools/gn/tutorial:hello_world
+</pre><h3><a class="h" name="Declaring-dependencies" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Declaring-dependencies"><span></span></a>Declaring dependencies</h3><p>Let’s make a static library that has a function to say hello to random people. There is a source file <code>hello.cc</code> in that directory which has a function to do this. Open the <code>tools/gn/tutorial/BUILD.gn</code> file and add the static library to the bottom of the existing file:</p><pre class="code">static_library("hello") {
+  sources = [
+    "hello.cc",
+  ]
+}
+</pre><p>Now let’s add an executable that depends on this library:</p><pre class="code">executable("say_hello") {
+  sources = [
+    "say_hello.cc",
+  ]
+  deps = [
+    ":hello",
+  ]
+}
+</pre><p>This executable includes one source file and depends on the previous static library. The static library is referenced by its label in the <code>deps</code>. You could have used the full label <code>//tools/gn/tutorial:hello</code> but if you’re referencing a target in the same build file, you can use the shortcut <code>:hello</code>.</p><h3><a class="h" name="Test-the-static-library-version" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Test-the-static-library-version"><span></span></a>Test the static library version</h3><p>From the command line in the source root directory:</p><pre class="code">ninja -C out/Default say_hello
+out/Default/say_hello
+</pre><p>Note that you <strong>didn’t</strong> need to re-run GN. GN will automatically rebuild the ninja files when any build file has changed. You know this happens when ninja prints <code>[1/1] Regenerating ninja files</code> at the beginning of execution.</p><h3><a class="h" name="Compiler-settings" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Compiler-settings"><span></span></a>Compiler settings</h3><p>Our hello library has a new feature, the ability to say hello to two people at once. This feature is controlled by defining <code>TWO_PEOPLE</code>. We can add defines like so:</p><pre class="code">static_library("hello") {
+  sources = [
+    "hello.cc",
+  ]
+  defines = [
+    "TWO_PEOPLE",
+  ]
+}
+</pre><h3><a class="h" name="Putting-settings-in-a-config" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Putting-settings-in-a-config"><span></span></a>Putting settings in a config</h3><p>However, users of the library also need to know about this define, and putting it in the static library target defines it only for the files there. If somebody else includes <code>hello.h</code>, they won’t see the new definition. To see the new definition, everybody will have to define <code>TWO_PEOPLE</code>.</p><p>GN has a concept called a “config” which encapsulates settings. Let’s create one that defines our preprocessor define:</p><pre class="code">config("hello_config") {
+  defines = [
+    "TWO_PEOPLE",
+  ]
+}
+</pre><p>To apply these settings to your target, you only need to add the config’s label to the list of configs in the target:</p><pre class="code">static_library("hello") {
+  ...
+  configs += [
+    ":hello_config",
+  ]
+}
+</pre><p>Note that you need “+=” here instead of “=” since the build configuration has a default set of configs applied to each target that set up the default build stuff. You want to add to this list rather than overwrite it. To see the default configs, you can use the <code>print</code> function in the build file or the <code>desc</code> command-line subcommand (see below for examples of both).</p><h3><a class="h" name="Dependent-configs" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Dependent-configs"><span></span></a>Dependent configs</h3><p>This nicely encapsulates our settings, but still requires everybody that uses our library to set the config on themselves. It would be nice if everybody that depends on our <code>hello</code> library can get this automatically. Change your library definition to:</p><pre class="code">static_library("hello") {
+  sources = [
+    "hello.cc",
+  ]
+  all_dependent_configs = [
+    ":hello_config"
+  ]
+}
+</pre><p>This applies the <code>hello_config</code> to the <code>hello</code> target itself, plus all targets that depend on transitively depend on the current one. Now everybody that depends on us will get our settings. You can also set <code>public_configs</code> which applies only to targets that directly depend on your target (not transitively).</p><p>Now if you compile and run, you’ll see the new version with two people:</p><pre class="code">&gt; ninja -C out/Default say_hello
+ninja: Entering directory 'out/Default'
+[1/1] Regenerating ninja files
+[4/4] LINK say_hello
+&gt; out/Default/say_hello
+Hello, Bill and Joy.
+</pre><h2><a class="h" name="Dont-know-whats-going-on" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Dont-know-whats-going-on"><span></span></a>Don’t know what’s going on?</h2><p>You can run GN in verbose mode to see lots of messages about what it’s doing. Use <code>-v</code> for this.</p><h3><a class="h" name="Print-debugging" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Print-debugging"><span></span></a>Print debugging</h3><p>There is a <code>print</code> command which just writes to stdout:</p><pre class="code">static_library("hello") {
+  ...
+  print(configs)
+}
+</pre><p>This will print all of the configs applying to your target (including the default ones).</p><h3><a class="h" name="The-desc-command" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#The-desc-command"><span></span></a>The “desc” command</h3><p>You can run <code>gn desc &lt;build_dir&gt; &lt;targetname&gt;</code> to get information about a given target:</p><pre class="code">gn desc out/Default //tools/gn/tutorial:say_hello
+</pre><p>will print out lots of exciting information. You can also print just one section. Lets say you wanted to know where your <code>TWO_PEOPLE</code> define came from on the <code>say_hello</code> target:</p><pre class="code">&gt; gn desc out/Default //tools/gn/tutorial:say_hello defines --blame
+...lots of other stuff omitted...
+  From //tools/gn/tutorial:hello_config
+       (Added by //tools/gn/tutorial/BUILD.gn:12)
+    TWO_PEOPLE
+</pre><p>You can see that <code>TWO_PEOPLE</code> was defined by a config, and you can also see the which like caused that config to be applied to your target (in this case, the <code>all_dependent_configs</code> line).</p><p>Another particularly interesting variation:</p><pre class="code">gn desc out/Default //base:base_i18n deps --tree
+</pre><p>See <code>gn help desc</code> for more.</p><h3><a class="h" name="Performance" href="https://chromium.googlesource.com/chromium/src/+/master/tools/gn/docs/quick_start.md#Performance"><span></span></a>Performance</h3><p>You can see what took a long time by running it with the –time command line flag. This will output a summary of timings for various things.</p><p>You can also make a trace of how the build files were executed:</p><pre class="code">gn --tracelog=mylog.trace
+</pre><p>and you can load the resulting file in Chrome’s <code>about:tracing</code> page to look at everything.</p></div><div class="footer-break"></div><div class="footer-line"><div class="nav-aux"><ul><li><a href="https://chromium.googlesource.com/chromium/src/+show/master/tools/gn/docs/quick_start.md">source</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+log/master/tools/gn/docs/quick_start.md">log</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+blame/master/tools/gn/docs/quick_start.md">blame</a></li></ul><div class="gitiles-att">Powered by <a href="https://code.google.com/p/gitiles/">Gitiles</a></div></div></div><script async="" src="./GN Quick Start guide_files/analytics.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-55762617-15', 'auto'); ga('send', 'pageview', {title: 'GN Quick Start guide'});</script></body></html>

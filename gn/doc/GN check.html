@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!-- saved from url=(0072)https://chromium.googlesource.com/chromium/src/+/master/docs/gn_check.md -->
+<html class="doc-page"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Concepts</title><link rel="stylesheet" type="text/css" href="./GN check_files/doc.0L3SNFV84koi7_B276HAQw.cache.css"><link rel="stylesheet" type="text/css" href="./GN check_files/prettify.pZ5FqzM6cPxAflH0va2Ucw.cache.css"></head><body><div class="doc"><p>GN has several different ways to check dependencies. Many of them are checked by the <code>gn check</code> command. Running checks involve opening and scanning all source files so this isn’t run every time a build is updated. To run check on an existing build: <code>
+gn check out/mybuild
+</code></p><p>To run the check as part of the “gen” command to update the build (this is what the bots do): <code>
+gn gen out/mybuild --check
+</code></p><h1><a class="h" name="Concepts" href="https://chromium.googlesource.com/chromium/src/+/master/docs/gn_check.md#Concepts"><span></span></a>Concepts</h1><h2><a class="h" name="Visibility" href="https://chromium.googlesource.com/chromium/src/+/master/docs/gn_check.md#Visibility"><span></span></a>Visibility</h2><p>Targets can control which other targets may depend on them by specifying <code>visibility</code>. Visibility is always checked when running any GN command (not just <code>gn check</code>.</p><p>By default, targets are “public” meaning any target can depend on them. If you supply a list, visibility will be listed to those targets (possibly including wildcards):</p><pre class="code">visibility = [
+  ":*",  # All targets in this file.
+  "//content/*",  # All targets in content and any subdirectory thereof.
+  "//tools:doom_melon",  # This specific target.
+]
+</pre><p>See <code>gn help visibility</code> for more details and examples.</p><h2><a class="h" name="Public-header-files" href="https://chromium.googlesource.com/chromium/src/+/master/docs/gn_check.md#Public-header-files"><span></span></a>Public header files</h2><p>Targets can control which headers may be included by dependent targets so as to define a public API. If your target specifies only <code>sources</code>, then all headers listed there are public and can be included by all dependents.</p><p>If your target defines a <code>public</code> variable, only the files listed in that list will be public. Files in <code>sources</code> but not <code>public</code> (they can be in both or only one) may not be included by dependent targets.</p><pre class="code">source_set("foo") {
+  public = [
+    "foo.h",
+    "foo_config.h",
+  ]
+  sources = [
+    "foo.cc",
+    "foo.h",
+    "bar.cc",
+    "bar.h",
+  ]
+}
+</pre><h2><a class="h" name="Public-dependencies" href="https://chromium.googlesource.com/chromium/src/+/master/docs/gn_check.md#Public-dependencies"><span></span></a>Public dependencies</h2><p>In order to include files from your target, that target must be listed in your target’s dependencies. By default, transitively depending on a target doesn’t give your files this privilege.</p><p>If a target exposes a dependency as part of its public API, then it can list that dependency as a <code>public_deps</code>: <code>
+source_set("foo") {
+  sources = [ ... ]
+  public_deps = [
+    "//base",
+  ]
+  deps = [
+    "//tools/doom_melon",
+  ]
+}
+</code> Targets that depend on <code>foo</code> can include files from <code>base</code> but not from <code>doom_melon</code>. To include public headers from `doom_melon, a target would need to depend directly on it.</p><p>Public dependencies work transitively, so listing a target as a public dependency also exposes that target’s public dependencies. Along with the ability to include headers, public dependencies forward the <code>public_configs</code> which allow settings like defines and include directories to apply to dependents.</p><h1><a class="h" name="Putting-it-all-together" href="https://chromium.googlesource.com/chromium/src/+/master/docs/gn_check.md#Putting-it-all-together"><span></span></a>Putting it all together</h1><p>In order to include a header from target Y in a file that is part of target X:</p><ul><li>X must be in Y’s <code>visibility</code> list (or B must have no <code>visibility</code> defined).</li><li>The header must be in Y’s <code>public</code> headers (or Y must have no <code>public</code> variable defined).</li><li>X must depend directly on Y, or there must be a path from X to Y following only public dependencies.</li></ul><h3><a class="h" name="What-gets-checked" href="https://chromium.googlesource.com/chromium/src/+/master/docs/gn_check.md#What-gets-checked"><span></span></a>What gets checked</h3><p>Chrome currently doesn’t come close to passing a <code>gn check</code> pass. You can check specific targets or subtrees for issues: ```  gn check out/mybuild //base</p><p>gn check out/mybuild “//mojo/*” ```</p></div><div class="footer-break"></div><div class="footer-line"><div class="nav-aux"><ul><li><a href="https://chromium.googlesource.com/chromium/src/+show/master/docs/gn_check.md">source</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+log/master/docs/gn_check.md">log</a></li><li><a href="https://chromium.googlesource.com/chromium/src/+blame/master/docs/gn_check.md">blame</a></li></ul><div class="gitiles-att">Powered by <a href="https://code.google.com/p/gitiles/">Gitiles</a></div></div></div><script async="" src="./GN check_files/analytics.js"></script><script>(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,'script','//www.google-analytics.com/analytics.js','ga'); ga('create', 'UA-55762617-15', 'auto'); ga('send', 'pageview', {title: 'Concepts'});</script></body></html>
