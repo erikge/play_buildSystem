@@ -1,0 +1,53 @@
+下载安装方法
+======
+
+"depot_tools"并不包含gn的可执行文件，"depot_tools"只用于通过gclient同步的工程，这种工程中会包含对应版本的gn，depot_tools只是工程中gn的wrapper。
+gn是 Chromium 的一部分，源码和可执行文件版本信息都在Chromium工程中，源码和编译都依赖于Chromium中的模块。
+
+下载官方预编译好的 gn binary
+======
+Chromium通过gclient同步工程，gclient根据DEPS文件中的信息下载文件。
+通过DEPS文件中如下信息可判断出，gn是通过download_from_google_storage命令从google storage下载的。
+{
+    "name": "gn_mac",
+    "pattern": "src/tools/gn/bin/mac/gn.sha1",
+    "action": [ "download_from_google_storage",
+                "--no_resume",
+                "--platform=darwin",
+                "--no_auth",
+                "--bucket", "chromium-gn", # <bucket>
+                "-s", "src/tools/gn/bin/mac/gn.sha1", # <object> location
+    ],
+},
+
+google storage可以通过下面两种方式访问资源：
+    1. storage.googleapis.com/<bucket>/<object>
+    2. https://storage.googleapis.com/<bucket>/<object>
+    3. <bucket>.storage.googleapis.com/<object>
+可以通过以下方式查看资源：
+    https://console.developers.google.com/storage/browser/<bucket>/
+
+这样根据Chromium工程中的 DEPS 即可获取对应版本gn的下载链接。
+    1. 访问 Chromium 源码 https://chromium.googlesource.com/chromium/src/+/master/
+    2. 在 DEPS 文件的 "name": "gn_mac" 部分得到 <bucket> 和 gn.sha1 的位置
+    3. 根据2.的 gn.sha1 位置，一般在 tools/gn/bin/mac/gn.sha1 或 buildtools/mac/gn.sha1 中得到<object>
+    4. 通过 storage.googleapis.com/<bucket>/<object> 下载 gn binary
+
+
+～～～～～～～～～
+网上的一个通过脚本下载的方法：http://www.cnblogs.com/ayanmw/p/4500825.html
+～～～～～～～～～
+对于gclient runhooks报的如下错误：
+    File gs://chromium-gn/1088992877b3a13f25b61c8fc18e25296d8cab33 for src/buildtools/linux32/gn does not exist, skipping
+通过如下命令下载：
+    wget --no-check-certificate https://storage.googleapis.com/chromium-gn/1088992877b3a13f25b61c8fc18e25296d8cab33 -O src/buildtools/linux32/gn
+其实用的也是https://storage.googleapis.com/<bucket>/<object>的方法，和上面的是一样的
+
+
+自己编译 gn binary
+======
+gn的代码在https://chromium.googlesource.com/chromium/src/+/master/tools/gn/，
+代码也依赖 Chromium 的部分代码，编译也要在 Chromium 工程的环境中。gn 自己的bootstrap目前不会用。
+
+github上有一个已经整理出来的编译gn的项目：
+    https://github.com/wesedens/gn

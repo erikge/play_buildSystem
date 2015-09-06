@@ -1,25 +1,34 @@
 GN is a meta-build system that generates ninja files, which is part of the Chromium tree.
+该工程用于熟悉gn的用法。
+
+官方文档
+======
+
+https://chromium.googlesource.com/chromium/src/+/master/tools/gn/
 https://code.google.com/p/chromium/wiki/gn
  
-
-play_gn
+目录说明
 =======
 
-GN is a meta-build system that generates ninja files. It's meant to be faster and simpler than GYP. It outputs Ninja build files.
+bin：预编译好的gn可执行文件
+doc：收集的官方文档
+sample：Chromium工程中的用法示例
+note：自己实践中的笔记
+src：工程实际源码
 
-GN is part of the Chromium tree.
 
-I want to figure out how to use it in this repo.
+用法
+======
+
+下载安装
+    1. 访问 Chromium 源码 https://chromium.googlesource.com/chromium/src/+/master/
+    2. 在 DEPS 文件的 "name": "gn_mac" 部分得到 <bucket> 和 gn.sha1 的位置
+    3. 根据2.的 gn.sha1 位置，一般在 tools/gn/bin/mac/gn.sha1 或 buildtools/mac/gn.sha1 中得到<object>
+    4. 通过 storage.googleapis.com/<bucket>/<object> 下载 gn binary
+    5. 把 gn binary 添加到 PATH 中
 
 
-1. Set up the environment
-
-* "depot_tools" in PATH
-* ".gclient" file and "buildtools" path to locate gn binary
-or
-* put self-build gn binary in PATH
-
-2. 
+生成构建文件和编译
 
 * put a ".gn" file in a directory as "source root"
 
