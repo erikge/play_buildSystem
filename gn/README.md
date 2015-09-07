@@ -23,7 +23,11 @@ src：工程实际源码
 下载安装
     1. 访问 Chromium 源码 https://chromium.googlesource.com/chromium/src/+/master/
     2. 在 DEPS 文件的 "name": "gn_mac" 部分得到 <bucket> 和 gn.sha1 的位置
-    3. 根据2.的 gn.sha1 位置，一般在 tools/gn/bin/mac/gn.sha1 或 buildtools/mac/gn.sha1 中得到<object>
+        2.1. gn.sha1 位置，一般在 tools/gn/bin/mac/gn.sha1 或 buildtools/mac/gn.sha1 中，
+        如果 gn.sha1 是位于 buildtools/mac/gn.sha1（buildtools.git）中，需要在文件中找到buildtools_revision，让后通过
+            https://chromium.googlesource.com/chromium/buildtools.git/+/<buildtools_revision> 找到buildtools目录，例如
+            https://chromium.googlesource.com/chromium/buildtools.git/+/565d04e8741429fb1b4f26d102f2c6c3b849edeb
+    3. 根据gn.sha1文件内容的 得到<object>
     4. 通过 storage.googleapis.com/<bucket>/<object> 下载 gn binary
     5. 把 gn binary 添加到 PATH 中
 

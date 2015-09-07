@@ -1,0 +1,16 @@
+独立使用 gn
+======
+
+gn几乎是嵌在 Chromium 中的，想抽离出来单独使用，要费一番功夫。
+使用中的最小组件：
+
+A .gn file:
+    GN treats the containing directory as the root directory, and this file also defines the location of the master build config file.
+A BUILDCONFIG.gn file:
+    a master build config file, Chrome’s is //build/config/BUILDCONFIG.gn, set common config and set_default_toolchain.
+A toolchain definition:
+    target-depended definitions. Chrome’s are in //build/toolchain/<platform>/BUILD.gn.
+
+A BUILD.gn file in the root directory:
+    Project build configuration. This will be loaded after the build config file to start the build.
+
