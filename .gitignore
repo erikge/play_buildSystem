@@ -1,0 +1,17 @@
+#android eclipse
+bin
+gen
+obj
+libs
+
+#android studio
+.idea
+*.iml
+build
+.gradle
+gradle
+gradlew
+gradlew.bat
+
+
+
