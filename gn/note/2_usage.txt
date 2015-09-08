@@ -1,0 +1,16 @@
+gn 使用方法
+======
+
+1. set up a build
+    gn gen out/my_build
+2. 指定 target_os 和 target_os，默认是当前系统
+    gn args out/my_build
+
+    target_os = "android"
+    target_cpu = "arm"
+
+2.1 前两部可以合为一步执行
+    gn gen out/my_build --args='target_os = "android" target_cpu = "arm"'
+3. 编译
+    gn gen out/my_build
+    ninja -C out/my_build

@@ -22,3 +22,10 @@ BUILDCONFIG.gn
 2、各种配置
 3、toolchain
 
+修改步骤
+======
+1、暂时屏蔽掉 //build/config/BUILDCONFIG.gn 的所有配置部分，修改 toolchain。
+    * 主要是复用了一个 gyp 的 mac_tool.py 和 win_tool.py
+2、删掉 //build/config 目录下的 allocator.gni, BUILD.gn, crypto.gni, features.gni, ui.gni
+3、根据运行报错情况修改 //build/config/BUILDCONFIG.gn
+4、删掉不用的目录和gyp的文件
