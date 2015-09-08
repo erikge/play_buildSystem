@@ -22,8 +22,11 @@ assert(is_win)
 # Its arguments are the VS path and the compiler wrapper tool. It will write
 # "environment.x86" and "environment.x64" to the build directory and return a
 # list to us.
-gyp_win_tool_path =
-    rebase_path("//tools/gyp/pylib/gyp/win_tool.py", root_build_dir)
+
+### erik ###
+#gyp_win_tool_path = rebase_path("//tools/gyp/pylib/gyp/win_tool.py", root_build_dir)
+gyp_win_tool_path = rebase_path("gyp_win_tool.py", root_build_dir)
+### erik ###
 
 toolchain_data = exec_script("setup_toolchain.py",
                              [

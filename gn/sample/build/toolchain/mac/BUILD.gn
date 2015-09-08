@@ -22,8 +22,10 @@ if (use_goma) {
 
 # This will copy the gyp-mac-tool to the build directory. We pass in the source
 # file of the win tool.
-gyp_mac_tool_source =
-    rebase_path("//tools/gyp/pylib/gyp/mac_tool.py", root_build_dir)
+### erik ###
+#gyp_mac_tool_source = rebase_path("//tools/gyp/pylib/gyp/mac_tool.py", root_build_dir)
+gyp_mac_tool_source = rebase_path("gyp_mac_tool.py", root_build_dir)
+### erik ###
 exec_script("setup_toolchain.py", [ gyp_mac_tool_source ])
 
 # Shared toolchain definition. Invocations should set toolchain_os to set the
@@ -203,10 +205,14 @@ template("mac_toolchain") {
 mac_toolchain("clang_arm") {
   toolchain_cpu = "arm"
   toolchain_os = "mac"
-  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-                       root_build_dir)
-  cc = "${goma_prefix}$prefix/clang"
-  cxx = "${goma_prefix}$prefix/clang++"
+### erik ###
+#  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
+#                       root_build_dir)
+#  cc = "${goma_prefix}$prefix/clang"
+#  cxx = "${goma_prefix}$prefix/clang++"
+  cc = "clang"
+  cxx = "clang++"
+### erik ###
   ld = cxx
   is_clang = true
 }
@@ -218,10 +224,14 @@ mac_toolchain("ios_clang_arm") {
 
   # TODO(GYP): We need to support being able to use the version of clang
   # shipped w/ XCode instead of the one pulled from upstream.
-  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-                       root_build_dir)
-  cc = "${goma_prefix}$prefix/clang"
-  cxx = "${goma_prefix}$prefix/clang++"
+### erik ###
+#  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
+#                       root_build_dir)
+#  cc = "${goma_prefix}$prefix/clang"
+#  cxx = "${goma_prefix}$prefix/clang++"
+  cc = "clang"
+  cxx = "clang++"
+### erik ###
   ld = cxx
   is_clang = true
 }
@@ -238,10 +248,14 @@ mac_toolchain("arm") {
 mac_toolchain("clang_x64") {
   toolchain_cpu = "x64"
   toolchain_os = "mac"
-  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-                       root_build_dir)
-  cc = "${goma_prefix}$prefix/clang"
-  cxx = "${goma_prefix}$prefix/clang++"
+### erik ###
+#  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
+#                       root_build_dir)
+#  cc = "${goma_prefix}$prefix/clang"
+#  cxx = "${goma_prefix}$prefix/clang++"
+### erik ###
+  cc = "clang"
+  cxx = "clang++"
   ld = cxx
   is_clang = true
 }

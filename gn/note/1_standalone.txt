@@ -14,3 +14,11 @@ A toolchain definition:
 A BUILD.gn file in the root directory:
     Project build configuration. This will be loaded after the build config file to start the build.
 
+
+BUILDCONFIG.gn
+======
+主要分三部分：
+1、定义各种变量
+2、各种配置
+3、toolchain
+
