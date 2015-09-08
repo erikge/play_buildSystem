@@ -29,3 +29,10 @@ BUILDCONFIG.gn
 2、删掉 //build/config 目录下的 allocator.gni, BUILD.gn, crypto.gni, features.gni, ui.gni
 3、根据运行报错情况修改 //build/config/BUILDCONFIG.gn
 4、删掉不用的目录和gyp的文件
+
+修改思路
+======
+1. //build/config/BUILDCONFIG.gn 是主要入口
+2. 配置一般是引用了 //build/config/<playform>/BUILD.gn ，这里是平台相关的配置入口
+3. toolchain一般是用到 //build/toolchain/<platform>/BUILD.gn ，这里修改编译工具的路径等设置
+4. 移动平台还要关注 //build/config/sysroot.gni
