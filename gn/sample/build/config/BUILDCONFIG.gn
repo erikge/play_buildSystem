@@ -400,11 +400,14 @@ if (!is_clang && (is_asan || is_lsan || is_tsan || is_msan)) {
 # Holds all configs used for making native executables and libraries, to avoid
 # duplication in each target below.
 _native_compiler_configs = [
-  "//build/config:feature_flags",
+### erik ###
+#  "//build/config:feature_flags",
   "//build/config/compiler:compiler",
   "//build/config/compiler:compiler_arm_fpu",
-  "//build/config/compiler:chromium_code",
-  "//build/config/compiler:default_include_dirs",
+#  "//build/config/compiler:chromium_code",
+  "//build/config/compiler:no_chromium_code",
+#  "//build/config/compiler:default_include_dirs",
+### erik ###
   "//build/config/compiler:no_rtti",
   "//build/config/compiler:runtime_library",
 ]
@@ -440,14 +443,16 @@ if (is_linux) {
 
 if (is_clang && !is_nacl) {
   _native_compiler_configs += [
-    "//build/config/clang:find_bad_constructs",
+### erik ###
+#    "//build/config/clang:find_bad_constructs",
+### erik ###
     "//build/config/clang:extra_warnings",
   ]
 }
 
 # Optimizations and debug checking.
 if (is_debug) {
-  _native_compiler_configs += [ "//build/config:debug" ]
+### erik ###  _native_compiler_configs += [ "//build/config:debug" ]
   _default_optimization_config = "//build/config/compiler:no_optimize"
 } else {
   _native_compiler_configs += [ "//build/config:release" ]
@@ -495,8 +500,10 @@ if (is_win) {
 }
 
 # Executable defaults.
-_executable_configs =
-    _native_compiler_configs + [ "//build/config:default_libs" ]
+### erik ###
+_executable_configs = []
+#    _native_compiler_configs + [ "//build/config:default_libs" ]
+### erik ###
 if (is_win) {
   _executable_configs += _windows_linker_configs
 } else if (is_mac) {
@@ -520,8 +527,10 @@ set_defaults("static_library") {
 }
 
 # Shared library defaults (also for components in component mode).
-_shared_library_configs =
-    _native_compiler_configs + [ "//build/config:default_libs" ]
+### erik ###
+_shared_library_configs = []
+#    _native_compiler_configs + [ "//build/config:default_libs" ]
+### erik ###
 if (is_win) {
   _shared_library_configs += _windows_linker_configs
 } else if (is_mac) {

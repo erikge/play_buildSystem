@@ -260,16 +260,18 @@ config("compiler") {
     ]
   }
 
-  if (is_clang && !is_nacl) {
-    # This is here so that all files get recompiled after a clang roll and
-    # when turning clang on or off. (defines are passed via the command line,
-    # and build system rebuild things when their commandline changes). Nothing
-    # should ever read this define.
-    defines +=
-        [ "CR_CLANG_REVISION=" + exec_script("//tools/clang/scripts/update.py",
-                                             [ "--print-revision" ],
-                                             "trim string") ]
-  }
+### erik ###
+#  if (is_clang && !is_nacl) {
+#    # This is here so that all files get recompiled after a clang roll and
+#    # when turning clang on or off. (defines are passed via the command line,
+#    # and build system rebuild things when their commandline changes). Nothing
+#    # should ever read this define.
+#    defines +=
+#        [ "CR_CLANG_REVISION=" + exec_script("//tools/clang/scripts/update.py",
+#                                             [ "--print-revision" ],
+#                                             "trim string") ]
+#  }
+### erik ###
 
   # Mac-specific compiler flags setup.
   # ----------------------------------
@@ -896,7 +898,9 @@ if (is_win) {
       # When compiling Objective-C, warns if a method is used whose
       # availability is newer than the deployment target. This is not
       # required when compiling Chrome for iOS.
-      default_warning_flags += [ "-Wpartial-availability" ]
+### erik ###
+#      default_warning_flags += [ "-Wpartial-availability" ]
+### erik ###
     }
   }
 
@@ -983,19 +987,21 @@ if (is_clang) {
     ]
   }
 
-  # NaCl's Clang compiler and Chrome's hermetic Clang compiler will almost
-  # always have different versions. Certain flags may not be recognized by
-  # one version or the other.
-  if (!is_nacl) {
-    # Flags NaCl does not recognize.
-    default_warning_flags += [
-      # TODO(hans): Get this cleaned up, http://crbug.com/428099
-      "-Wno-inconsistent-missing-override",
-
-      # TODO(thakis): Enable this, crbug.com/507717
-      "-Wno-shift-negative-value",
-    ]
-  }
+### erik ###
+#  # NaCl's Clang compiler and Chrome's hermetic Clang compiler will almost
+#  # always have different versions. Certain flags may not be recognized by
+#  # one version or the other.
+#  if (!is_nacl) {
+#    # Flags NaCl does not recognize.
+#    default_warning_flags += [
+#      # TODO(hans): Get this cleaned up, http://crbug.com/428099
+#      "-Wno-inconsistent-missing-override",
+#
+#      # TODO(thakis): Enable this, crbug.com/507717
+#      "-Wno-shift-negative-value",
+#    ]
+#  }
+### erik ###
 }
 
 # chromium_code ---------------------------------------------------------------
