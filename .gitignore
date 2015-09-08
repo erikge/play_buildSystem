@@ -1,17 +1,13 @@
-#android eclipse
+# android eclipse
 bin
 gen
 obj
 libs
 
-#android studio
+# android studio
 .idea
 *.iml
-build
-.gradle
-gradle
-gradlew
-gradlew.bat
+
 
 
 
