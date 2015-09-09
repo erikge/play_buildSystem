@@ -12,9 +12,8 @@ https://code.google.com/p/chromium/wiki/gn
 
 bin：预编译好的gn可执行文件
 doc：收集的官方文档
-sample：Chromium工程中的用法示例
 note：自己实践中的笔记
-src：工程实际源码
+src：工程示例
 
 
 用法
@@ -31,20 +30,16 @@ src：工程实际源码
     4. 通过 storage.googleapis.com/<bucket>/<object> 下载 gn binary
     5. 把 gn binary 添加到 PATH 中
 
+构建配置
+    1. copy本项目中的 //src/build 到工程中的 src root 下
+    2. copy本项目中的 //src/.gn 到工程中的 src root 下
+    3. 在 src root 下编辑 BUILD.gn
 
-生成构建文件和编译
-
-* put a ".gn" file in a directory as "source root"
-
-
-3. gn usage
-
-gn gen out/mybuild
-ninja -C out/mybuild
-
-Summary
-=======
-
-gn is in very earily-stage, and not work well in stand along project. I decided to try it later in the future.
+编译运行
+    1. gn gen out/my_build
+    2. gn args out/my_build // 可选
+    3. ninja -C out/my_build
+    4. cd out/my_build
+       ./<executable bin>
 
 
