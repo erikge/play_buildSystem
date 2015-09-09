@@ -28,3 +28,9 @@ static_library("hello_static") {
     "hello_static.h",
   ]
 }
+
+group("root") {
+  if (is_android) {
+    deps += [ "//demo_android" ]
+  }
+}
