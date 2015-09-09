@@ -9,8 +9,26 @@ gn 使用方法
     target_os = "android"
     target_cpu = "arm"
 
-2.1 前两部可以合为一步执行
-    gn gen out/my_build --args='target_os = "android" target_cpu = "arm"'
+    2.1 android编译要制定 SDK NDK 路径，默认的路径一般是不可用的
+        android_sdk_root = default_android_sdk_root
+        android_sdk_version = default_android_sdk_version
+        android_sdk_build_tools_version = default_android_sdk_build_tools_version
+        android_ndk_root = default_android_ndk_root
+
+    2.2 前两部可以合为一步执行
+        gn gen out/my_build --args='target_os = "android" target_cpu = "arm"'
 3. 编译
-    gn gen out/my_build
     ninja -C out/my_build
+4. 运行程序
+    cd out/my_build // 如果有动态库，需要进入可执行程序所在目录
+    ./<executable bin>
+
+    // 如果是要在android上执行
+    adb push <executable bin> /data/local/tmp
+    adb push <shared lib> /data/local/tmp
+    adb shell
+    cd /data/local/tmp
+    chmod 755 <executable bin>
+    LD_LIBRARY_PATH=$LD_LIBRARY_PATH:.
+    ./<executable bin>
+

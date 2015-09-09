@@ -15,10 +15,22 @@ if (is_android) {
   }
 
   if (!defined(default_android_sdk_root)) {
-    default_android_sdk_root = "//third_party/android_tools/sdk"
-    default_android_sdk_version = "23"
-    default_android_sdk_build_tools_version = "23.0.0"
+### erik ###
+#    default_android_sdk_root = "//third_party/android_tools/sdk"
+#    default_android_sdk_version = "23"
+#    default_android_sdk_build_tools_version = "23.0.0"
+    default_android_sdk_root = "/Users/erikge/bin/android/android-sdk-macosx"
+    default_android_sdk_version = "22"
+    default_android_sdk_build_tools_version = "22.0.1"
+### erik ###
   }
+
+### erik ###
+  if (!defined(default_android_ndk_root)) {
+#    default_android_ndk_root = "//third_party/android_tools/ndk"
+    default_android_ndk_root = "/Users/erikge/bin/android/android-ndk-r10d"
+  }
+### erik ###
 
   if (!defined(default_android_keystore_path)) {
     default_android_keystore_path =
@@ -41,6 +53,10 @@ if (is_android) {
     android_sdk_root = default_android_sdk_root
     android_sdk_version = default_android_sdk_version
     android_sdk_build_tools_version = default_android_sdk_build_tools_version
+
+### erik ###
+    android_ndk_root = default_android_ndk_root
+### erik ###
 
     # The path to the keystore to use for signing builds.
     android_keystore_path = default_android_keystore_path
@@ -98,7 +114,7 @@ if (is_android) {
   android_sdk = "${android_sdk_root}/platforms/android-${android_sdk_version}"
 
   # Path to the Android NDK and SDK.
-  android_ndk_root = "//third_party/android_tools/ndk"
+### erik ###  android_ndk_root = "//third_party/android_tools/ndk"
   android_ndk_include_dir = "$android_ndk_root/usr/include"
 
   android_sdk = "${android_sdk_root}/platforms/android-${android_sdk_version}"

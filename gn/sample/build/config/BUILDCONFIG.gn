@@ -455,7 +455,7 @@ if (is_debug) {
 ### erik ###  _native_compiler_configs += [ "//build/config:debug" ]
   _default_optimization_config = "//build/config/compiler:no_optimize"
 } else {
-  _native_compiler_configs += [ "//build/config:release" ]
+### erik ###  _native_compiler_configs += [ "//build/config:release" ]
   _default_optimization_config = "//build/config/compiler:optimize"
 }
 _native_compiler_configs += [ _default_optimization_config ]
@@ -501,7 +501,7 @@ if (is_win) {
 
 # Executable defaults.
 ### erik ###
-_executable_configs = []
+_executable_configs = _native_compiler_configs
 #    _native_compiler_configs + [ "//build/config:default_libs" ]
 ### erik ###
 if (is_win) {
@@ -528,7 +528,7 @@ set_defaults("static_library") {
 
 # Shared library defaults (also for components in component mode).
 ### erik ###
-_shared_library_configs = []
+_shared_library_configs = _native_compiler_configs
 #    _native_compiler_configs + [ "//build/config:default_libs" ]
 ### erik ###
 if (is_win) {

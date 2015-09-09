@@ -47,15 +47,19 @@ template("android_gcc_toolchain") {
 
     is_clang = invoker.is_clang
     if (is_clang) {
-      if (use_clang_type_profiler) {
-        prefix = rebase_path("//third_party/llvm-allocated-type/Linux_x64/bin",
-                             root_build_dir)
-      } else {
-        prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-                             root_build_dir)
-      }
-      cc = "${compiler_prefix}$prefix/clang"
-      cxx = "${compiler_prefix}$prefix/clang++"
+### erik ###
+#      if (use_clang_type_profiler) {
+#        prefix = rebase_path("//third_party/llvm-allocated-type/Linux_x64/bin",
+#                             root_build_dir)
+#      } else {
+#        prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
+#                             root_build_dir)
+#      }
+#      cc = "${compiler_prefix}$prefix/clang"
+#      cxx = "${compiler_prefix}$prefix/clang++"
+      cc = "${compiler_prefix}clang"
+      cxx = "${compiler_prefix}clang++"
+### erik ###
     } else {
       cc = "${compiler_prefix}${tool_prefix}gcc"
       cxx = "${compiler_prefix}${tool_prefix}g++"
