@@ -13,18 +13,15 @@
     third_party/ijar 复制到 build/config/android/ijar，并做一些调整
     build/config/mac/mac_sdk.gni 中 mac_deployment_target = "10.6" 改为 10.9
 
+工作原理
+======
 
+build/config/android/rules.gni 中是对外使用的 api
+build/config/android/internal_rules.gni 是提供给 rules.gni 使用的 api
 
-
-================
-1、编译 java
-2、编译 android
-3、使用 junit
-4、使用 jtest
-5、编译 iOS
-
-
-
+------
+rules.gni
+------
 generate_jni
 generate_jar_jni
 java_cpp_template
@@ -50,8 +47,9 @@ create_native_executable_dist
 proto_java_library
 uiautomator_test
 
-===========================
-
+------
+internal_rules.gni
+------
 android_lint
 findbugs
 java_binary_script
@@ -73,19 +71,3 @@ test_runner_script
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                
