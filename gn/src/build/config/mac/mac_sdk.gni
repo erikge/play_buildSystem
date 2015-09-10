@@ -9,7 +9,7 @@ declare_args() {
   mac_sdk_min = "10.10"
 
   # Minimum supported version of OSX.
-  mac_deployment_target = "10.6"
+  mac_deployment_target = "10.9"
 
   # Path to a specific version of the Mac SDK, not including a backslash at
   # the end. If empty, the path to the lowest version greater than or equal to
