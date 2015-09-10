@@ -3,7 +3,10 @@
 # found in the LICENSE file.
 
 import("//build/config/android/config.gni")
-import("//third_party/ijar/ijar.gni")
+### erik ###
+#import("//third_party/ijar/ijar.gni")
+import("ijar/ijar.gni")
+### erik ###
 
 assert(is_android)
 

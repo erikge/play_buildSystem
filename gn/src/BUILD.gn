@@ -6,6 +6,7 @@ group("root") {
 
   deps = [
     "//demo_cmd:hello",
+    "//demo_java",
   ]
 
   if (is_android) {

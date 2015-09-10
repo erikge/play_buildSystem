@@ -1,0 +1,22 @@
+import("//build/config/android/rules.gni")
+
+
+java_library("demo_lib") {
+  java_files = [
+    "src/com/erik/library/DemoMath.java",
+    "src/com/erik/library/DemoPrint.java",
+  ]
+#  DEPRECATED_java_in_dir = "src/com/erik/library"
+}
+
+java_binary("demo_java") {
+  deps = [
+    ":demo_lib",
+  ]
+  java_files = [ "src/com/erik/gn/Demo.java" ]
+  main_class = "com.erik.gn.Demo"
+}
+
+#exec_script
+
+#build_utils.FindInDirectories(options.src_gendirs, '*.java')

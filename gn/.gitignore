@@ -1,2 +1,5 @@
 # gn
 out
+
+# python
+*.pyc

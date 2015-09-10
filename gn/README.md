@@ -1,11 +1,16 @@
 GN is a meta-build system that generates ninja files, which is part of the Chromium tree.
 该工程用于熟悉gn的用法。
 
-官方文档
+官方链接
 ======
 
-https://chromium.googlesource.com/chromium/src/+/master/tools/gn/
-https://code.google.com/p/chromium/wiki/gn
+Chromium 源码：
+    https://chromium.googlesource.com/chromium/src/+/master/
+Chromium 源码在线搜索：
+    https://code.google.com/p/chromium/codesearch
+文档：
+    https://chromium.googlesource.com/chromium/src/+/master/tools/gn/
+    https://code.google.com/p/chromium/wiki/gn
  
 目录说明
 =======
