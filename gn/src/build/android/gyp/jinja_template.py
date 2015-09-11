@@ -14,7 +14,8 @@ import sys
 from util import build_utils
 
 # Import jinja2 from third_party/jinja2
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../../third_party'))
+### erik ### sys.path.append(os.path.join(os.path.dirname(__file__), '../../../third_party'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../../build/_addon_'))
 import jinja2  # pylint: disable=F0401
 
 

@@ -22,8 +22,8 @@ import generate_v14_compatible_resources
 from util import build_utils
 
 # Import jinja2 from third_party/jinja2
-sys.path.insert(1,
-    os.path.join(os.path.dirname(__file__), '../../../third_party'))
+### erik ### sys.path.insert(1, os.path.join(os.path.dirname(__file__), '../../../third_party'))
+sys.path.insert(1, os.path.join(os.path.dirname(__file__), '../../../build/_addon_'))
 from jinja2 import Template # pylint: disable=F0401
 
 

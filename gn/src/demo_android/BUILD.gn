@@ -1,0 +1,22 @@
+import("//build/config/android/rules.gni")
+
+
+android_resources("resources") {
+    resource_dirs = [ "app/src/main/res" ]
+    custom_package = "com.erikge.gnandroid"
+}
+
+android_apk("demo_android") {
+    apk_name = "demo_android"
+    android_manifest = "app/src/main/AndroidManifest.xml"
+    asset_location = "app/src/main/assets"
+
+    DEPRECATED_java_in_dir = "app/src/main/java"
+    #native_libs = [
+        #"libcontent_shell_content_view.so"
+    #]
+
+    deps = [
+        ":resources",
+    ]
+}

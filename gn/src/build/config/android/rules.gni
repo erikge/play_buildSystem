@@ -1693,14 +1693,16 @@ template("instrumentation_test_apk") {
     deps = []
     data_deps = []
     forward_variables_from(invoker, "*")
-    data_deps += [
-      "//testing/android/driver:driver_apk",
-      "//tools/android/forwarder2",
-      "//tools/android/md5sum",
-    ]
-    if (defined(test_runner_data_dep)) {
-      data_deps += test_runner_data_dep
-    }
+### erik ###
+#    data_deps += [
+#      "//testing/android/driver:driver_apk",
+#      "//tools/android/forwarder2",
+#      "//tools/android/md5sum",
+#    ]
+#    if (defined(test_runner_data_dep)) {
+#      data_deps += test_runner_data_dep
+#    }
+### erik ###
     deps += [ "//testing/android/broker:broker_java" ]
     run_findbugs = false
   }
@@ -1773,10 +1775,12 @@ template("unittest_apk") {
     if (defined(invoker.deps)) {
       deps += invoker.deps
     }
-    data_deps = [ "//tools/android/md5sum" ]
-    if (host_os == "linux") {
-      data_deps += [ "//tools/android/forwarder2" ]
-    }
+### erik ###
+#    data_deps = [ "//tools/android/md5sum" ]
+#    if (host_os == "linux") {
+#      data_deps += [ "//tools/android/forwarder2" ]
+#    }
+### erik ###
     if (defined(invoker.data_deps)) {
       data_deps += invoker.data_deps
     }

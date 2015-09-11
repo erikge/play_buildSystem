@@ -1,5 +1,23 @@
-
+编译 android 程序
 ================
+
+使用方法
+======
+
+gn gen out/android --args='target_os = "android" target_cpu = "arm"'
+ninja -C out/android/
+adb install -r out/android/apks/demo_android.apk
+
+
+对 build 改造
+======
+
+1、编译 android 用到了 jinja2、markupsafe
+2、rules 中去掉 data_deps
+
+
+
+
 2、编译 android
 3、使用 junit
 4、使用 gtest
