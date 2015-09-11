@@ -4,14 +4,26 @@
 
 group("root") {
 
+  declare_args() {
+    # Is java only build, which is for desk top only (mac, linux or when).
+    # This is used to distinguish java build from android, as java toolchain is part of android toolchain.
+    is_java = false
+  }
+
   deps = [
     "//demo_cmd:hello",
   ]
 
-  if (is_android) {
+  if (is_java && is_android) {
     deps += [
       "//demo_java",
+    ]
+  }
+
+  if (is_android && !is_java) {
+    deps += [
       #"//demo_android",
     ]
   }
+
 }

@@ -8,7 +8,7 @@
     sudo easy_install pip
     sudo pip install colorama
 2. 创建构建。java构建工具是作为android构建工具的一部分存在的，所以 target_os = "android"；在mac机上运行，所以 target_cpu = "x64"
-    gn gen out/java --args='target_os = "android" target_cpu = "x64"'
+    gn gen out/java --args='target_os = "android" target_cpu = "x64" is_java=true'
 3. java 库之间的依赖用到了 third_party 中的 ijar
     third_party/ijar 复制到 build/config/android/ijar，并做一些调整
     build/config/mac/mac_sdk.gni 中 mac_deployment_target = "10.6" 改为 10.9
