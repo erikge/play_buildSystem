@@ -8,6 +8,13 @@ gn gen out/android --args='target_os = "android" target_cpu = "arm"'
 ninja -C out/android/
 adb install -r out/android/apks/demo_android.apk
 
+1、环境变量配置
+    android_sdk_root = "path-to-sdk"
+    android_sdk_version = "22"
+    android_sdk_build_tools_version = "22.0.1"
+    android_ndk_root = "path-to-ndk"
+2、应用程序版本支持，类似 minSdkVersion
+    arm_version
 
 对 build 改造
 ======

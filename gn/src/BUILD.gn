@@ -26,4 +26,10 @@ group("root") {
     ]
   }
 
+  if (is_ios) {
+    deps += [
+      "//demo_ios",
+    ]
+  }
+
 }

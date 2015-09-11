@@ -65,6 +65,8 @@ template("resource_copy_ios") {
 }
 
 template("ios_app") {
+  assert(defined(invoker.ios_files),
+         "ios_files must be specified for $target_name")
   assert(defined(invoker.deps),
          "Dependencies must be specified for $target_name")
   assert(defined(invoker.info_plist),
@@ -110,6 +112,11 @@ template("ios_app") {
       deps = []
     }
     deps += [ ":$plist_gen_target_name" ]
+
+### erik ###
+    sources = invoker.ios_files
+### erik ###
+
   }
 
   # Process the Info.plist

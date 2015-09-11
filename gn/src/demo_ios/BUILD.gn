@@ -4,45 +4,21 @@ import("//build/config/ios/rules.gni")
 ios_app("demo_ios") {
     # TODO(GYP): Make this configurable and only provide a default
     # that can be overridden.
-    info_plist = "gnIos/gnIon/Info.plist"
+
+    info_plist = "gnIos/gnIos/Info.plist"
     app_name = "demo_ios"
-    entitlements_path = "//testing/gtest_ios"
+    entitlements_path = ""
     code_signing_identity = ""
-    testonly = true
 
-    # See above call.
-    set_sources_assignment_filter([])
+    ios_files = [
+        "gnIos/gnIos/AppDelegate.h",
+        "gnIos/gnIos/AppDelegate.m",
+        "gnIos/gnIos/DetailViewController.h",
+        "gnIos/gnIos/DetailViewController.m",
+        "gnIos/gnIos/main.m",
+        "gnIos/gnIos/MasterViewController.h",
+        "gnIos/gnIos/MasterViewController.m",
+    ]
 
-    forward_variables_from(invoker,
-                         [
-                           "all_dependent_configs",
-                           "allow_circular_includes_from",
-                           "cflags",
-                           "cflags_c",
-                           "cflags_cc",
-                           "cflags_objc",
-                           "cflags_objcc",
-                           "check_includes",
-                           "configs",
-                           "data",
-                           "data_deps",
-                           "defines",
-                           "forward_dependent_configs_from",
-                           "include_dirs",
-                           "ldflags",
-                           "libs",
-                           "output_extension",
-                           "output_name",
-                           "public",
-                           "public_configs",
-                           "public_deps",
-                           "sources",
-                           "visibility",
-                         ])
-
-    if (defined(invoker.deps)) {
-    deps = invoker.deps
-    } else {
     deps = []
-    }
 }
