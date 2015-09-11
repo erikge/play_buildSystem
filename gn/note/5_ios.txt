@@ -1,10 +1,10 @@
-编译 android 程序
+编译 iOS 程序
 ================
 
 使用方法
 ======
 
-gn gen out/android --args='target_os = "android" target_cpu = "arm"'
+gn gen out/iOS --args='target_os = "android" target_cpu = "arm"'
 ninja -C out/android/
 adb install -r out/android/apks/demo_android.apk
 
@@ -22,12 +22,6 @@ android_java_prebuilt
 android_aidl
 android_apk
 
-TODO
-======
-后续继续研究
 
-1、打包ndk编译的so
-2、使用预编译好的jar包
-3、android sdk 不同版本的支持和选择
 
 
