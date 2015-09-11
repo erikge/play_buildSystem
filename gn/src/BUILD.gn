@@ -6,10 +6,12 @@ group("root") {
 
   deps = [
     "//demo_cmd:hello",
-    "//demo_java",
   ]
 
   if (is_android) {
-#    deps += [ "//demo_android" ]
+    deps += [
+      "//demo_java",
+      #"//demo_android",
+    ]
   }
 }

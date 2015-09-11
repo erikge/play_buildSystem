@@ -17,7 +17,7 @@ template("generate_interface_jar") {
                              "deps",
                              "testonly",
                            ])
-    tool = "//build/config/android/ijar"
+    tool = "//build/_addon_/ijar"
     inputs = [
       invoker.input_jar,
     ]

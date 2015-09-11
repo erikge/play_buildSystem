@@ -25,7 +25,7 @@ assert(is_win)
 
 ### erik ###
 #gyp_win_tool_path = rebase_path("//tools/gyp/pylib/gyp/win_tool.py", root_build_dir)
-gyp_win_tool_path = rebase_path("gyp_win_tool.py", root_build_dir)
+gyp_win_tool_path = rebase_path("//build/_addon_/gyp/win_tool.py", root_build_dir)
 ### erik ###
 
 toolchain_data = exec_script("setup_toolchain.py",
