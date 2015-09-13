@@ -4,24 +4,20 @@
 使用方法
 ======
 
-gn gen out/iOS --args='target_os = "android" target_cpu = "arm"'
-ninja -C out/android/
-adb install -r out/android/apks/demo_android.apk
+gn gen out/ios --args='target_os = "ios"'
+ninja -C out/ios/
 
 
 对 build 改造
 ======
 
-1、编译 android 用到了 jinja2、markupsafe
-2、rules 中去掉 data_deps
+1、iOS 的构建规则在 build/config/ios/rules.gni
 
-BUILD.gn 中的常用命令
+
+TODO
 ======
-android_resources
-android_java_prebuilt
-android_aidl
-android_apk
 
+iOS的支持还很不完善，暂时不可用。等以后再尝试吧
 
 
 

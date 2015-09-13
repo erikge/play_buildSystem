@@ -16,12 +16,6 @@ adb install -r out/android/apks/demo_android.apk
 2、应用程序版本支持，类似 minSdkVersion
     arm_version
 
-对 build 改造
-======
-
-1、编译 android 用到了 jinja2、markupsafe
-2、rules 中去掉 data_deps
-
 BUILD.gn 中的常用命令
 ======
 android_resources
@@ -29,12 +23,24 @@ android_java_prebuilt
 android_aidl
 android_apk
 
+gn 还是对 eclipse 式的工程结构支持的好，对 gradle 生成的工程支持不好。
+gradle 好多自动生成的潜规则啊，生成的 APK 体积也大好多。。。
+
+
+[SetUp] 对 build 改造
+======
+gn 严重依赖 Chromium 工程，作为 standalone 使用需要改造调整，思路如下：
+
+    1、编译 android 用到了 jinja2、markupsafe
+    2、rules 中去掉 data_deps
+
+
+
 TODO
 ======
 后续继续研究
 
 1、打包ndk编译的so
-2、使用预编译好的jar包
-3、android sdk 不同版本的支持和选择
+
 
 

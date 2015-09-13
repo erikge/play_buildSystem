@@ -8,25 +8,13 @@ gn gen out/java --args='target_os = "android" is_java=true'
 ninja -C out/java/
 ./out/java/bin/demo_java
 
-
-对 build 改造
-======
-
-1. 检查环境。为 python 安装 colorama 模块
-    sudo easy_install pip
-    sudo pip install colorama
-2. 创建构建。java构建工具是作为android构建工具的一部分存在的，所以 target_os = "android"
-    gn gen out/java --args='target_os = "android" is_java=true'
-3. java 库之间的依赖用到了 third_party 中的 ijar
-    third_party/ijar 复制到 build/config/android/ijar，并做一些调整
-    build/config/mac/mac_sdk.gni 中 mac_deployment_target = "10.6" 改为 10.9
-
 工作原理
 ======
 
 build/config/android/rules.gni 中是对外使用的 api
 build/config/android/internal_rules.gni 是提供给 rules.gni 使用的 api
 
+BUILD.gn 中的常用命令如下；
 ------
 rules.gni
 ------
@@ -76,6 +64,22 @@ copy_ex
 deps_dex
 generate_split_manifest
 test_runner_script
+
+
+[SetUp] 对 build 改造
+======
+gn 严重依赖 Chromium 工程，作为 standalone 使用需要改造调整，思路如下：
+
+    1. 检查环境。为 python 安装 colorama 模块
+        sudo easy_install pip
+        sudo pip install colorama
+    2. 创建构建。java构建工具是作为android构建工具的一部分存在的，所以 target_os = "android"
+        gn gen out/java --args='target_os = "android" is_java=true'
+    3. java 库之间的依赖用到了 third_party 中的 ijar
+        third_party/ijar 复制到 build/config/android/ijar，并做一些调整
+        build/config/mac/mac_sdk.gni 中 mac_deployment_target = "10.6" 改为 10.9
+
+
 
 
 
