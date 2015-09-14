@@ -6,13 +6,16 @@ android_apk("demo_android") {
     asset_location = "assets"
 
     DEPRECATED_java_in_dir = "src"
+
     native_libs = [
         "libstyle_javah.so",
+        "libstyle_register.so",
         #"libs/armeabi/libttest.so"
     ]
 
     deps = [
         ":style_javah",
+        ":style_register",
         ":resources",
         ":v4",
     ]
@@ -22,9 +25,15 @@ shared_library("style_javah") {
   sources = [
     "jni/com_erikge_gnandroid_NativeInterface.cpp",
   ]
+}
 
-  #libs = [ "log" ]
-#  libs = [ "android" ]
+shared_library("style_register") {
+  sources = [
+    "jni/registered_interface.cpp",
+    "jni/jni_util.cpp",
+  ]
+
+  libs = [ "log" ]
 }
 
 android_resources("resources") {
