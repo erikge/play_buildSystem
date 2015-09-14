@@ -1254,15 +1254,17 @@ template("android_apk") {
         invoker.enable_relocation_packing) {
       _enable_relocation_packing = true
     }
+### erik ###
+#    _native_lib_version_rule = ""
+#    if (defined(invoker.native_lib_version_rule)) {
+#      _native_lib_version_rule = invoker.native_lib_version_rule
+#    }
+#    _native_lib_version_arg = "\"\""
+#    if (defined(invoker.native_lib_version_arg)) {
+#      _native_lib_version_arg = invoker.native_lib_version_arg
+#    }
+### erik ###
 
-    _native_lib_version_rule = ""
-    if (defined(invoker.native_lib_version_rule)) {
-      _native_lib_version_rule = invoker.native_lib_version_rule
-    }
-    _native_lib_version_arg = "\"\""
-    if (defined(invoker.native_lib_version_arg)) {
-      _native_lib_version_arg = invoker.native_lib_version_arg
-    }
   }
 
   _android_manifest_deps = []
@@ -1321,7 +1323,8 @@ template("android_apk") {
   }
   _srcjar_deps += [ ":$process_resources_target" ]
 
-  if (_native_libs != []) {
+### erik ###  if (_native_libs != []) {
+  if (false && _native_libs != []) {
     _enable_chromium_linker_tests = false
     if (defined(invoker.enable_chromium_linker_tests)) {
       _enable_chromium_linker_tests = invoker.enable_chromium_linker_tests

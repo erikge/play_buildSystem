@@ -7,7 +7,8 @@ android_apk("demo_android") {
 
     DEPRECATED_java_in_dir = "src"
     native_libs = [
-        "libnative_math.so"
+        "libnative_math.so",
+        #"libs/armeabi/libttest.so"
     ]
 
     deps = [
@@ -20,7 +21,14 @@ android_apk("demo_android") {
 shared_library("native_math") {
   sources = [
     "jni/com_erikge_gnandroid_NativeInterface.cpp",
+    #"jni/jni_util.cpp",
   ]
+
+  ldflags = [ "-Wl,--export-dynamic" ]
+
+  #libs = [ "log" ]
+  libs = [ "android" ]
+
 }
 
 android_resources("resources") {
