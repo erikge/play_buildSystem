@@ -8,8 +8,8 @@ import java.lang.System;
 public class NativeInterface {
 
     static {
-        System.out.println("[jni] load lib");
-        System.loadLibrary("native_math");
+        System.out.println("[jni] ====== load native library ======");
+        System.loadLibrary("style_javah");
 //        System.loadLibrary("ttest");
     }
 

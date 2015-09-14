@@ -7,28 +7,24 @@ android_apk("demo_android") {
 
     DEPRECATED_java_in_dir = "src"
     native_libs = [
-        "libnative_math.so",
+        "libstyle_javah.so",
         #"libs/armeabi/libttest.so"
     ]
 
     deps = [
-        ":native_math",
+        ":style_javah",
         ":resources",
         ":v4",
     ]
 }
 
-shared_library("native_math") {
+shared_library("style_javah") {
   sources = [
     "jni/com_erikge_gnandroid_NativeInterface.cpp",
-    #"jni/jni_util.cpp",
   ]
 
-  ldflags = [ "-Wl,--export-dynamic" ]
-
   #libs = [ "log" ]
-  libs = [ "android" ]
-
+#  libs = [ "android" ]
 }
 
 android_resources("resources") {

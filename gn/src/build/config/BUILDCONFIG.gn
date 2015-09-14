@@ -538,8 +538,10 @@ if (is_win) {
 } else if (is_android) {
   # Strip native JNI exports from shared libraries by default. Binaries that
   # want this can remove this config.
-  _shared_library_configs +=
-      [ "//build/config/android:hide_native_jni_exports" ]
+### erik ###
+#  _shared_library_configs +=
+#      [ "//build/config/android:hide_native_jni_exports" ]
+### erik ###
 }
 set_defaults("shared_library") {
   configs = _shared_library_configs

@@ -15,7 +15,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         TextView t = (TextView)findViewById(R.id.my_text);
-        t.setText("add ret: " + NativeInterface.add(3, 4));
+        t.setText("add ret: " + NativeInterface.add(1, 2));
     }
 
 
