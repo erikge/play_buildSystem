@@ -1472,8 +1472,8 @@ template("android_apk") {
         rebase_path(depfile, root_build_dir),
         "--enable-packing=$enable_packing_arg",
         "--exclude-packing-list=$skip_packing_list",
-        "--android-pack-relocations",
-        rebase_path(relocation_packer_exe, root_build_dir),
+### erik ###        "--android-pack-relocations",
+### erik ###        rebase_path(relocation_packer_exe, root_build_dir),
         "--stripped-libraries-dir",
         rebase_path(root_build_dir, root_build_dir),
         "--packed-libraries-dir",
@@ -1481,6 +1481,15 @@ template("android_apk") {
         "--libraries=@FileArg(${_rebased_build_config}:native:libraries)",
         "--clear-dir",
       ]
+
+### erik ###
+      if (_enable_relocation_packing) {
+        args += [
+          "--android-pack-relocations",
+          rebase_path(relocation_packer_exe, root_build_dir),
+        ]
+      }
+### erik ###
 
       if (defined(invoker.deps)) {
         deps += invoker.deps

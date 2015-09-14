@@ -19,6 +19,8 @@ adb install -r out/android/apks/demo_android.apk
 BUILD.gn 中的常用命令
 ======
 android_resources
+android_library
+android_standalone_library
 android_java_prebuilt
 android_aidl
 android_apk

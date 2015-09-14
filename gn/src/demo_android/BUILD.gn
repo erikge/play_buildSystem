@@ -31,5 +31,8 @@ android_resources("resources") {
 
 android_java_prebuilt("v4") {
      jar_path = "libs/android-support-v4.jar"
+     # jar_path 可以有多个
+     # jar_path = "xxx.jar"
+     # jar_path = "yyy.jar"
 }
 

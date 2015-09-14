@@ -2,7 +2,6 @@
 bin
 gen
 obj
-libs
 
 # android studio
 .idea
