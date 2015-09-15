@@ -11,11 +11,12 @@ public class NativeInterface {
         System.out.println("[jni] ====== load native library ======");
         System.loadLibrary("style_javah");
         System.loadLibrary("style_register");
-
-//        System.loadLibrary("ttest");
+        System.loadLibrary("style_3rd");
     }
 
     public static native int add(int x, int y);
 
     public static native int minus(int x, int y);
+
+    public static native int multiply(int x, int y);
 }

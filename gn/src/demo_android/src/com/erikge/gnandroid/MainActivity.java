@@ -16,7 +16,9 @@ public class MainActivity extends Activity {
 
         TextView t = (TextView)findViewById(R.id.my_text);
         t.setText("add ret: " + NativeInterface.add(1, 2) +
-            "\nminus ret: " + NativeInterface.minus(2, 1));
+            "\nminus ret: " + NativeInterface.minus(2, 1) +
+            "\nmultiply ret: " + NativeInterface.multiply(2, 3)
+        );
         
     }
 

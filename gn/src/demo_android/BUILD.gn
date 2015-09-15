@@ -10,12 +10,13 @@ android_apk("demo_android") {
     native_libs = [
         "libstyle_javah.so",
         "libstyle_register.so",
-        #"libs/armeabi/libttest.so"
+        "libstyle_3rd.so"
     ]
 
     deps = [
         ":style_javah",
         ":style_register",
+        ":style_3rd",
         ":resources",
         ":v4",
     ]
@@ -34,6 +35,13 @@ shared_library("style_register") {
   ]
 
   libs = [ "log" ]
+}
+
+copy("style_3rd") {
+    sources = [ "libs/armeabi/libstyle_3rd.so" ]
+    outputs = [
+      "$root_build_dir/{{source_file_part}}",
+    ]
 }
 
 android_resources("resources") {
