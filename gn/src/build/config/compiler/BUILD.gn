@@ -747,7 +747,7 @@ config("runtime_library") {
     ]
 
     lib_dirs += [ "$android_libcpp_root/libs/$android_app_abi" ]
-    libs += [ "$android_libcpp_library" ]
+### erik ###    libs += [ "$android_libcpp_library" ]
 
     if (current_cpu == "mipsel") {
       libs += [
