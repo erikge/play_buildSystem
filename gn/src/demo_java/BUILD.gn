@@ -2,17 +2,16 @@ import("//build/config/android/rules.gni")
 
 
 java_library("demo_lib") {
-#  java_files = [
-#    exec_script( "//build/android/gyp/util/build_utils.py",
-#      [
-#        "FindInDirectories",
-#        rebase_path("src/com/erik/library/", root_build_dir),
-#        "*.java",
-#      ]
-#    )
-#  ]
+  _find_java_ = exec_script("//build/android/gyp/find.py",
+    [
+      "--pattern",
+      "*.java",
+      rebase_path("src/com/erik/library", root_build_dir),
+    ],
+    "list lines")
+  java_files = rebase_path(_find_java_, ".", root_build_dir)
 
-  DEPRECATED_java_in_dir = "src/com/erik/library"
+#  DEPRECATED_java_in_dir = "src/com/erik/library"
 }
 
 java_binary("demo_java") {
