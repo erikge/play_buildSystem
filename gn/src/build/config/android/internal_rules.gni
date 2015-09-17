@@ -1059,6 +1059,12 @@ template("compile_java") {
   if (defined(invoker.srcjars)) {
     _java_srcjars = invoker.srcjars
   }
+
+  _java_files_too_long = false
+  if (defined(invoker.java_files_too_long)) {
+    _java_files_too_long = invoker.java_files_too_long
+  }
+
   foreach(dep, _srcjar_deps) {
     _dep_gen_dir = get_label_info(dep, "target_gen_dir")
     _dep_name = get_label_info(dep, "name")
@@ -1124,7 +1130,14 @@ template("compile_java") {
         "bin/chromium_errorprone",
       ]
     }
-    args += rebase_path(_java_files, root_build_dir)
+
+    if (_java_files_too_long) {
+      _write_file_name_ = "$target_out_dir/${target_name}__java_files"
+      write_file(_write_file_name_, rebase_path(_java_files, root_build_dir))
+      args += [ "--too-long", rebase_path(_write_file_name_, root_build_dir)]
+    } else {
+      args += rebase_path(_java_files, root_build_dir)
+    }
   }
 
   process_java_prebuilt(finish_target_name) {
@@ -1235,6 +1248,11 @@ template("java_library_impl") {
     _srcjars = invoker.srcjars
   }
 
+  _java_files_too_long = false
+  if (defined(invoker.java_files_too_long)) {
+    _java_files_too_long = invoker.java_files_too_long
+  }
+
   _java_files = []
   if (defined(invoker.DEPRECATED_java_in_dir)) {
     _src_dir = invoker.DEPRECATED_java_in_dir + "/src"
@@ -1276,6 +1294,7 @@ template("java_library_impl") {
     jar_path = _jar_path
     build_config = _build_config
     java_files = _java_files
+    java_files_too_long = _java_files_too_long
     srcjar_deps = _srcjar_deps
     srcjars = _srcjars
     chromium_code = _chromium_code

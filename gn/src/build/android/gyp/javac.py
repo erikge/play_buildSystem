@@ -166,6 +166,9 @@ def _ParseOptions(argv):
       help='Key:value pairs to add to the .jar manifest.')
 
   parser.add_option('--stamp', help='Path to touch on success.')
+  parser.add_option(
+        '--too-long',
+        help='To shorten or simplify the javac command line, you can specify a file for all *.java files.')
 
   options, args = parser.parse_args(argv)
   build_utils.CheckOptions(options, parser, required=('jar_path',))
@@ -264,15 +267,18 @@ def main(argv):
       classes_dir = os.path.join(temp_dir, 'classes')
       os.makedirs(classes_dir)
 
-      if java_files:
+      cmd = ""
+      if options.too_long:
+        cmd = javac_cmd + javac_args + ['-d', classes_dir, "@" + options.too_long] + java_files
+      elif java_files:
         # Don't include the output directory in the initial set of args since it
         # being in a temp dir makes it unstable (breaks md5 stamping).
         cmd = javac_cmd + javac_args + ['-d', classes_dir] + java_files
 
-        build_utils.CheckOutput(
-            cmd,
-            print_stdout=options.chromium_code,
-            stderr_filter=ColorJavacOutput)
+      build_utils.CheckOutput(
+        cmd,
+        print_stdout=options.chromium_code,
+        stderr_filter=ColorJavacOutput)
 
       if options.main_class or options.manifest_entry:
         entries = []

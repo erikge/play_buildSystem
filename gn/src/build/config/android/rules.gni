@@ -1380,6 +1380,11 @@ template("android_apk") {
     } else {
       java_files = []
     }
+    java_files_too_long = false
+    if (defined(invoker.java_files_too_long)) {
+      java_files_too_long = invoker.java_files_too_long
+    }
+
     srcjar_deps = _srcjar_deps
     dex_path = base_path + ".dex.jar"
 

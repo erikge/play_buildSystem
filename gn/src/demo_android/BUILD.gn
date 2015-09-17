@@ -5,7 +5,12 @@ android_apk("demo_android") {
     android_manifest = "AndroidManifest.xml"
     asset_location = "assets"
 
-    DEPRECATED_java_in_dir = "src"
+    #DEPRECATED_java_in_dir = "src"
+    java_files = [
+        "src/com/erikge/gnandroid/MainActivity.java",
+        "src/com/erikge/gnandroid/NativeInterface.java",
+    ]
+    java_files_too_long = true
 
     native_libs = [
         "libstyle_javah.so",
