@@ -226,8 +226,8 @@ def main(argv):
   if options.bootclasspath:
     javac_args.extend([
         '-bootclasspath', ':'.join(options.bootclasspath),
-        '-source', '1.7',
-        '-target', '1.7',
+        '-source', '1.6',
+        '-target', '1.6',
         ])
 
   if options.chromium_code:
@@ -292,6 +292,7 @@ def main(argv):
       jar.JarDirectory(classes_dir,
                        options.jar_excluded_classes,
                        options.jar_path,
+                       too_long = options.too_long,
                        manifest_file=manifest_file)
 
     if options.stamp:

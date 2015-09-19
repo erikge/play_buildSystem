@@ -11,7 +11,7 @@ import sys
 from util import build_utils
 
 
-def Jar(class_files, classes_dir, jar_path, manifest_file=None):
+def Jar(class_files, classes_dir, jar_path, too_long=False, manifest_file=None):
   jar_path = os.path.abspath(jar_path)
 
   # The paths of the files in the jar will be the same as they are passed in to
@@ -19,11 +19,15 @@ def Jar(class_files, classes_dir, jar_path, manifest_file=None):
   # options.classes_dir so the .class file paths in the jar are correct.
   jar_cwd = classes_dir
   class_files_rel = [os.path.relpath(f, jar_cwd) for f in class_files]
+  classes_dir_rel = os.path.relpath(classes_dir, jar_cwd)
   jar_cmd = ['jar', 'cf0', jar_path]
   if manifest_file:
     jar_cmd[1] += 'm'
     jar_cmd.append(os.path.abspath(manifest_file))
-  jar_cmd.extend(class_files_rel)
+  if too_long:
+    jar_cmd.extend( ['-C', classes_dir_rel, '.'] )
+  else:
+    jar_cmd.extend(class_files_rel)
 
   with build_utils.TempDir() as temp_dir:
     empty_file = os.path.join(temp_dir, '.empty')
@@ -33,12 +37,14 @@ def Jar(class_files, classes_dir, jar_path, manifest_file=None):
     build_utils.Touch(jar_path, fail_if_missing=True)
 
 
-def JarDirectory(classes_dir, excluded_classes, jar_path, manifest_file=None):
-  class_files = build_utils.FindInDirectory(classes_dir, '*.class')
-  class_files = [f for f in class_files
+def JarDirectory(classes_dir, excluded_classes, jar_path, too_long=False, manifest_file=None):
+  class_files = []
+  if not too_long:
+    class_files = build_utils.FindInDirectory(classes_dir, '*.class')
+    class_files = [f for f in class_files
                  if not build_utils.MatchesGlob(f, excluded_classes)]
 
-  Jar(class_files, classes_dir, jar_path, manifest_file=manifest_file)
+  Jar(class_files, classes_dir, jar_path, too_long=too_long, manifest_file=manifest_file)
 
 
 def main():

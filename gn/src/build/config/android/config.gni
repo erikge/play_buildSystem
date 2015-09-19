@@ -19,16 +19,16 @@ if (is_android) {
 #    default_android_sdk_root = "//third_party/android_tools/sdk"
 #    default_android_sdk_version = "23"
 #    default_android_sdk_build_tools_version = "23.0.0"
-    default_android_sdk_root = "/Users/erikge/bin/android/android-sdk-macosx"
-    default_android_sdk_version = "22"
-    default_android_sdk_build_tools_version = "22.0.1"
+    default_android_sdk_root = getenv("ANDROID_SDK_HOME")
+    default_android_sdk_version = "18"
+    default_android_sdk_build_tools_version = "18.0.1"
 ### erik ###
   }
 
 ### erik ###
   if (!defined(default_android_ndk_root)) {
 #    default_android_ndk_root = "//third_party/android_tools/ndk"
-    default_android_ndk_root = "/Users/erikge/bin/android/android-ndk-r10d"
+    default_android_ndk_root = getenv("ANDROID_NDK_HOME")
   }
 ### erik ###
 

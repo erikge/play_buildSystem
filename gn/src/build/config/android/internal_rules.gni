@@ -1233,7 +1233,7 @@ template("java_library_impl") {
     }
   }
 
-  _chromium_code = true
+  _chromium_code = false
   if (defined(invoker.chromium_code)) {
     _chromium_code = invoker.chromium_code
   }
@@ -1349,6 +1349,13 @@ template("java_library_impl") {
             ":$_compile_java_target",
           ]
         }
+      }
+    } else {
+      if (defined(invoker.android_manifest)) {
+        print(invoker.android_manifest)
+      }
+      if (defined(invoker.run_findbugs)) {
+        print(invoker.run_findbugs)
       }
     }
 
