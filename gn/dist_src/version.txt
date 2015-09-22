@@ -1,0 +1,38 @@
+更新方法和当前版本
+================
+
+https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1
+
+gn
+======
+DEPS        'buildtools_revision': 'f7310ee61725e68b1c8921e381830362cf4f0999',
+https://chromium.googlesource.com/chromium/buildtools.git/+/f7310ee61725e68b1c8921e381830362cf4f0999
+
+mac/gn      https://storage.googleapis.com/chromium-gn/1baa70c3b3e434389ac2d00681693f065ed5d168
+linux64/gn  https://storage.googleapis.com/chromium-gn/e5266b9b95c21e5be89e9fd4acbb8a6359e99142
+win/gn.exe  https://storage.googleapis.com/chromium-gn/72d6ce4b7accae5a6afaedda1d8e9cf2c1ed09a4
+
+gyp
+======
+DEPS        'src/tools/gyp':
+                Var('chromium_git') + '/external/gyp.git' + '@' + '01528c7244837168a1c80f06ff60fa5a9793c824',
+https://chromium.googlesource.com/external/gyp.git/+/01528c7244837168a1c80f06ff60fa5a9793c824/pylib/gyp
+
+ijar
+======
+https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1/third_party/ijar/
+
+jinja2
+======
+https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1/third_party/jinja2/
+
+markupsafe
+======
+https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1/third_party/markupsafe/
+
+
+build
+======
+
+https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1/build/
+
