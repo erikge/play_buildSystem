@@ -489,7 +489,7 @@ template("package_apk") {
     _ant_script = "//build/android/ant/apk-package.xml"
 
     depfile = "$target_gen_dir/$target_name.d"
-    data_deps = [ "//tools/android/md5sum" ]  # Used when deploying APKs
+### erik ###    data_deps = [ "//tools/android/md5sum" ]  # Used when deploying APKs
 
     inputs = [
       invoker.resource_packaged_apk_path,

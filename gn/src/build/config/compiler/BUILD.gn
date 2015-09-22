@@ -1029,7 +1029,7 @@ if (is_clang) {
     "-Wno-unneeded-internal-declaration",
 
     # TODO(hans): Get this cleaned up, http://crbug.com/428099
-    "-Wno-inconsistent-missing-override",
+### erik ###    "-Wno-inconsistent-missing-override",
   ]
 
   if (is_posix && !is_mac && !is_ios) {
