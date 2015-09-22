@@ -65,8 +65,6 @@ template("resource_copy_ios") {
 }
 
 template("ios_app") {
-  assert(defined(invoker.ios_files),
-         "ios_files must be specified for $target_name")
   assert(defined(invoker.deps),
          "Dependencies must be specified for $target_name")
   assert(defined(invoker.info_plist),
@@ -95,6 +93,29 @@ template("ios_app") {
 
     output_name = "${_app_name}.app/${_app_name}"
 
+    forward_variables_from(invoker,
+                           [
+                             "all_dependent_configs",
+                             "allow_circular_includes_from",
+                             "cflags",
+                             "cflags_c",
+                             "cflags_cc",
+                             "cflags_objc",
+                             "cflags_objcc",
+                             "configs",
+                             "check_includes",
+                             "data",
+                             "data_deps",
+                             "defines",
+                             "forward_dependent_configs_from",
+                             "include_dirs",
+                             "ldflags",
+                             "public",
+                             "public_configs",
+                             "public_deps",
+                             "sources",
+                           ])
+
     if (defined(invoker.libs)) {
       libs = invoker.libs
     } else {
@@ -112,11 +133,6 @@ template("ios_app") {
       deps = []
     }
     deps += [ ":$plist_gen_target_name" ]
-
-### erik ###
-    sources = invoker.ios_files
-### erik ###
-
   }
 
   # Process the Info.plist

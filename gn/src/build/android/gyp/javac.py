@@ -166,9 +166,11 @@ def _ParseOptions(argv):
       help='Key:value pairs to add to the .jar manifest.')
 
   parser.add_option('--stamp', help='Path to touch on success.')
+### erik ###
   parser.add_option(
-        '--too-long',
-        help='To shorten or simplify the javac command line, you can specify a file for all *.java files.')
+      '--too-long',
+      help='To shorten or simplify the javac command line, you can specify a file for all *.java files.')
+### erik ###
 
   options, args = parser.parse_args(argv)
   build_utils.CheckOptions(options, parser, required=('jar_path',))
@@ -226,8 +228,12 @@ def main(argv):
   if options.bootclasspath:
     javac_args.extend([
         '-bootclasspath', ':'.join(options.bootclasspath),
+### erik ###
+#        '-source', '1.7',
+#        '-target', '1.7',
         '-source', '1.6',
         '-target', '1.6',
+### erik ###
         ])
 
   if options.chromium_code:
@@ -267,18 +273,23 @@ def main(argv):
       classes_dir = os.path.join(temp_dir, 'classes')
       os.makedirs(classes_dir)
 
+### erik ###
       cmd = ""
       if options.too_long:
         cmd = javac_cmd + javac_args + ['-d', classes_dir, "@" + options.too_long] + java_files
       elif java_files:
+#      if java_files:
+### erik ###
         # Don't include the output directory in the initial set of args since it
         # being in a temp dir makes it unstable (breaks md5 stamping).
         cmd = javac_cmd + javac_args + ['-d', classes_dir] + java_files
 
+### erik ###
       build_utils.CheckOutput(
         cmd,
         print_stdout=options.chromium_code,
         stderr_filter=ColorJavacOutput)
+### erik ###
 
       if options.main_class or options.manifest_entry:
         entries = []
@@ -292,7 +303,9 @@ def main(argv):
       jar.JarDirectory(classes_dir,
                        options.jar_excluded_classes,
                        options.jar_path,
+### erik ###
                        too_long = options.too_long,
+### erik ###
                        manifest_file=manifest_file)
 
     if options.stamp:

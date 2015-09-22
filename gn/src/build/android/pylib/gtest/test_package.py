@@ -15,6 +15,7 @@ class TestPackage(object):
   """
   def __init__(self, suite_name):
     self.suite_name = suite_name
+    self.tool = None
 
   def ClearApplicationState(self, device):
     """Clears the application state.
@@ -74,3 +75,6 @@ class TestPackage(object):
       directory: The host directory to which files should be pulled.
     """
     raise NotImplementedError('Method must be overridden.')
+
+  def SetPermissions(self, device):
+    pass

@@ -5,22 +5,19 @@
 """Defines TestPackageApk to help run APK-based native tests."""
 # pylint: disable=W0212
 
-import itertools
 import logging
 import os
-import posixpath
-import shlex
 import sys
-import tempfile
 import time
 
+from devil.android import apk_helper
 from devil.android import device_errors
 from devil.android.sdk import intent
 from pylib import constants
 from pylib import pexpect
 from pylib.gtest import gtest_test_instance
-from pylib.gtest import local_device_gtest_run
 from pylib.gtest.test_package import TestPackage
+from pylib.local.device import local_device_gtest_run
 
 
 class TestPackageApk(TestPackage):
@@ -43,7 +40,9 @@ class TestPackageApk(TestPackage):
       self._package_info = constants.PACKAGE_INFO['gtest']
 
     if suite_name == 'net_unittests':
-      self._extras = {'RunInSubThread': None}
+      self._extras = {
+        'org.chromium.native_test.NativeTestActivity.RunInSubThread': None
+      }
     else:
       self._extras = []
 
@@ -64,7 +63,7 @@ class TestPackageApk(TestPackage):
   def _WatchFifo(self, device, timeout, logfile=None):
     for i in range(100):
       if device.FileExists(self._GetFifo()):
-        logging.info('Fifo created. Slept for %f secs' % (i * 0.5))
+        logging.info('Fifo created. Slept for %f secs', i * 0.5)
         break
       time.sleep(0.5)
     else:
@@ -164,3 +163,9 @@ class TestPackageApk(TestPackage):
   def PullAppFiles(self, device, files, directory):
     local_device_gtest_run.PullAppFilesImpl(
         device, self._package_info.package, files, directory)
+
+  #override
+  def SetPermissions(self, device):
+    permissions = apk_helper.ApkHelper(self.suite_path).GetPermissions()
+    device.GrantPermissions(
+        apk_helper.GetPackageName(self.suite_path), permissions)

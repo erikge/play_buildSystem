@@ -9,12 +9,12 @@ import tempfile
 
 from devil.android import device_errors
 from devil.android import ports
+from devil.android.perf import perf_control
 from pylib import pexpect
 from pylib.base import base_test_result
 from pylib.base import base_test_runner
-from pylib.gtest import gtest_test_instance
 from pylib.local import local_test_server_spawner
-from pylib.perf import perf_control
+
 
 # Test case statuses.
 RE_RUN = re.compile('\\[ RUN      \\] ?(.*)\r\n')
@@ -177,6 +177,7 @@ class TestRunner(base_test_runner.BaseTestRunner):
       self.test_package.ClearApplicationState(self.device)
       self.test_package.CreateCommandLineFileOnDevice(
           self.device, test, self._test_arguments)
+      self.test_package.SetPermissions(self.device)
       test_results = self._ParseTestOutput(
           self.test_package.SpawnTestProcess(self.device))
       if self._app_data_files:
