@@ -36,3 +36,14 @@ build
 
 https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1/build/
 
+
+==========
+跟踪Chromium方法
+==========
+
+1. copy Chromium build to "trace_origin", make a patch. (figure out what changed)
+2. patch to "trace_standalone" to check whether worked.
+3. If there are good ideas, try to immigrate to src.
+
+
+
