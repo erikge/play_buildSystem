@@ -1,0 +1,24 @@
+import("//build/config/ios/rules.gni")
+
+
+ios_app("demo_ios") {
+    # TODO(GYP): Make this configurable and only provide a default
+    # that can be overridden.
+
+    info_plist = "gnIos/gnIos/Info.plist"
+    app_name = "demo_ios"
+    entitlements_path = ""
+    code_signing_identity = ""
+
+    ios_files = [
+        "gnIos/gnIos/AppDelegate.h",
+        "gnIos/gnIos/AppDelegate.m",
+        "gnIos/gnIos/DetailViewController.h",
+        "gnIos/gnIos/DetailViewController.m",
+        "gnIos/gnIos/main.m",
+        "gnIos/gnIos/MasterViewController.h",
+        "gnIos/gnIos/MasterViewController.m",
+    ]
+
+    deps = []
+}

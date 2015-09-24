@@ -1,0 +1,35 @@
+# Copyright 2014 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+declare_args() {
+  # Is java only build, which is for desk top only (mac, linux or when).
+  # This is used to distinguish java build from android, as java toolchain is part of android toolchain.
+  is_java = false
+}
+
+group("root") {
+
+  deps = [
+    "//demo_cmd:hello",
+  ]
+
+  if (is_java && is_android) {
+    deps += [
+      "//demo_java",
+    ]
+  }
+
+  if (is_android && !is_java) {
+    deps += [
+      "//demo_android",
+    ]
+  }
+
+  if (is_ios) {
+    deps += [
+      "//demo_ios",
+    ]
+  }
+
+}
