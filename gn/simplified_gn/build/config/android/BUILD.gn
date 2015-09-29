@@ -18,6 +18,17 @@ config("sdk") {
                                sysroot,
                              ],
                              "value") ]
+    abcd =  [ exec_script(sysroot_ld_path,
+                             [
+                               rebase_path("//build/linux/sysroot_ld_path.sh"),
+                               sysroot,
+                             ],
+                             "value") ]
+    print("======= erik =====")
+    print(sysroot)
+    print(abcd)
+    print(ldflags)
+    print("======= erik =====")
   }
 }
 

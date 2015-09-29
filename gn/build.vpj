@@ -162,6 +162,85 @@
                         <F N="simplified_gn/build/_addon_/markupsafe/README.chromium"/>
                     </Folder>
                 </Folder>
+                <Folder Name="addon">
+                    <Folder Name="ios">
+                        <F N="simplified_gn/build/addon/ios/chrome_ios.croc"/>
+                        <F N="simplified_gn/build/addon/ios/clean_env.py"/>
+                        <F N="simplified_gn/build/addon/ios/grit_whitelist.txt"/>
+                        <F N="simplified_gn/build/addon/ios/PRESUBMIT.py"/>
+                    </Folder>
+                    <Folder Name="linux">
+                        <Folder Name="bin">
+                            <F N="simplified_gn/build/addon/linux/bin/eu-strip.sha1"/>
+                        </Folder>
+                        <Folder Name="sysroot_scripts">
+                            <F N="simplified_gn/build/addon/linux/sysroot_scripts/install-sysroot.py"/>
+                            <F N="simplified_gn/build/addon/linux/sysroot_scripts/packagelist.trusty.arm"/>
+                            <F N="simplified_gn/build/addon/linux/sysroot_scripts/packagelist.wheezy.amd64"/>
+                            <F N="simplified_gn/build/addon/linux/sysroot_scripts/packagelist.wheezy.arm"/>
+                            <F N="simplified_gn/build/addon/linux/sysroot_scripts/packagelist.wheezy.i386"/>
+                            <F N="simplified_gn/build/addon/linux/sysroot_scripts/sysroot-creator-test.sh"/>
+                            <F N="simplified_gn/build/addon/linux/sysroot_scripts/sysroot-creator-trusty.sh"/>
+                            <F N="simplified_gn/build/addon/linux/sysroot_scripts/sysroot-creator-wheezy.sh"/>
+                            <F N="simplified_gn/build/addon/linux/sysroot_scripts/sysroot-creator.sh"/>
+                        </Folder>
+                        <Folder Name="unbundle">
+                            <F N="simplified_gn/build/addon/linux/unbundle/expat.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/ffmpeg.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/flac.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/harfbuzz.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/icu.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/jsoncpp.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/libevent.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/libjpeg.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/libpng.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/libusb.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/libvpx.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/libwebp.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/libxml.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/libXNVCtrl.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/libxslt.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/opus.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/protobuf.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/re2.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/remove_bundled_libraries.py"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/replace_gyp_files.py"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/snappy.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/sqlite.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/v8.gyp"/>
+                            <F N="simplified_gn/build/addon/linux/unbundle/zlib.gyp"/>
+                        </Folder>
+                        <F N="simplified_gn/build/addon/linux/BUILD.gn"/>
+                        <F N="simplified_gn/build/addon/linux/chrome_linux.croc"/>
+                        <F N="simplified_gn/build/addon/linux/dump_app_syms.py"/>
+                        <F N="simplified_gn/build/addon/linux/install-chromeos-fonts.py"/>
+                        <F N="simplified_gn/build/addon/linux/rewrite_dirs.py"/>
+                        <F N="simplified_gn/build/addon/linux/sysroot_ld_path.sh"/>
+                        <F N="simplified_gn/build/addon/linux/system.gyp"/>
+                    </Folder>
+                    <Folder Name="win">
+                        <Folder Name="dbghelp_xp">
+                            <F N="simplified_gn/build/addon/win/dbghelp_xp/dbghelp.dll"/>
+                            <F N="simplified_gn/build/addon/win/dbghelp_xp/README.chromium"/>
+                        </Folder>
+                        <Folder Name="importlibs">
+                            <Folder Name="x86">
+                                <F N="simplified_gn/build/addon/win/importlibs/x86/user32.winxp.imports"/>
+                                <F N="simplified_gn/build/addon/win/importlibs/x86/user32.winxp.lib"/>
+                            </Folder>
+                            <F N="simplified_gn/build/addon/win/importlibs/create_importlib_win.py"/>
+                            <F N="simplified_gn/build/addon/win/importlibs/filter_export_list.py"/>
+                        </Folder>
+                        <F N="simplified_gn/build/addon/win/as_invoker.manifest"/>
+                        <F N="simplified_gn/build/addon/win/asan.gyp"/>
+                        <F N="simplified_gn/build/addon/win/BUILD.gn"/>
+                        <F N="simplified_gn/build/addon/win/chrome_win.croc"/>
+                        <F N="simplified_gn/build/addon/win/common_controls.manifest"/>
+                        <F N="simplified_gn/build/addon/win/compatibility.manifest"/>
+                        <F N="simplified_gn/build/addon/win/reorder-imports.py"/>
+                        <F N="simplified_gn/build/addon/win/use_ansi_codes.py"/>
+                    </Folder>
+                </Folder>
                 <Folder Name="android">
                     <Folder Name="ant">
                         <Folder Name="empty">
@@ -169,9 +248,7 @@
                                 <F N="simplified_gn/build/android/ant/empty/res/.keep"/>
                             </Folder>
                         </Folder>
-                        <F
-                            N="simplified_gn/build/android/ant/apk-package.xml"
-                            Type="Ant"/>
+                        <F N="simplified_gn/build/android/ant/apk-package.xml"/>
                         <F N="simplified_gn/build/android/ant/chromium-debug.keystore"/>
                     </Folder>
                     <Folder Name="devil">
@@ -685,61 +762,6 @@
                     <F N="simplified_gn/build/config/sysroot.gni"/>
                     <F N="simplified_gn/build/config/zip.gni"/>
                 </Folder>
-                <Folder Name="ios">
-                    <F N="simplified_gn/build/ios/chrome_ios.croc"/>
-                    <F N="simplified_gn/build/ios/clean_env.py"/>
-                    <F N="simplified_gn/build/ios/grit_whitelist.txt"/>
-                    <F N="simplified_gn/build/ios/PRESUBMIT.py"/>
-                </Folder>
-                <Folder Name="linux">
-                    <Folder Name="bin">
-                        <F N="simplified_gn/build/linux/bin/eu-strip.sha1"/>
-                    </Folder>
-                    <Folder Name="sysroot_scripts">
-                        <F N="simplified_gn/build/linux/sysroot_scripts/install-sysroot.py"/>
-                        <F N="simplified_gn/build/linux/sysroot_scripts/packagelist.trusty.arm"/>
-                        <F N="simplified_gn/build/linux/sysroot_scripts/packagelist.wheezy.amd64"/>
-                        <F N="simplified_gn/build/linux/sysroot_scripts/packagelist.wheezy.arm"/>
-                        <F N="simplified_gn/build/linux/sysroot_scripts/packagelist.wheezy.i386"/>
-                        <F N="simplified_gn/build/linux/sysroot_scripts/sysroot-creator-test.sh"/>
-                        <F N="simplified_gn/build/linux/sysroot_scripts/sysroot-creator-trusty.sh"/>
-                        <F N="simplified_gn/build/linux/sysroot_scripts/sysroot-creator-wheezy.sh"/>
-                        <F N="simplified_gn/build/linux/sysroot_scripts/sysroot-creator.sh"/>
-                    </Folder>
-                    <Folder Name="unbundle">
-                        <F N="simplified_gn/build/linux/unbundle/expat.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/ffmpeg.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/flac.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/harfbuzz.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/icu.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/jsoncpp.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/libevent.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/libjpeg.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/libpng.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/libusb.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/libvpx.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/libwebp.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/libxml.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/libXNVCtrl.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/libxslt.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/opus.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/protobuf.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/re2.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/remove_bundled_libraries.py"/>
-                        <F N="simplified_gn/build/linux/unbundle/replace_gyp_files.py"/>
-                        <F N="simplified_gn/build/linux/unbundle/snappy.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/sqlite.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/v8.gyp"/>
-                        <F N="simplified_gn/build/linux/unbundle/zlib.gyp"/>
-                    </Folder>
-                    <F N="simplified_gn/build/linux/BUILD.gn"/>
-                    <F N="simplified_gn/build/linux/chrome_linux.croc"/>
-                    <F N="simplified_gn/build/linux/dump_app_syms.py"/>
-                    <F N="simplified_gn/build/linux/install-chromeos-fonts.py"/>
-                    <F N="simplified_gn/build/linux/rewrite_dirs.py"/>
-                    <F N="simplified_gn/build/linux/sysroot_ld_path.sh"/>
-                    <F N="simplified_gn/build/linux/system.gyp"/>
-                </Folder>
                 <Folder Name="mac">
                     <F N="simplified_gn/build/mac/asan.gyp"/>
                     <F N="simplified_gn/build/mac/change_mach_o_flags.py"/>
@@ -750,6 +772,51 @@
                     <F N="simplified_gn/build/mac/edit_xibs.sh"/>
                     <F N="simplified_gn/build/mac/find_sdk.py"/>
                     <F N="simplified_gn/build/mac/tweak_info_plist.py"/>
+                </Folder>
+                <Folder Name="script">
+                    <F N="simplified_gn/build/script/apply_locales.py"/>
+                    <F N="simplified_gn/build/script/build-ctags.sh"/>
+                    <F N="simplified_gn/build/script/build_config.h"/>
+                    <F N="simplified_gn/build/script/check_return_value.py"/>
+                    <F N="simplified_gn/build/script/check_sdk_extras_version.py"/>
+                    <F N="simplified_gn/build/script/clobber.py"/>
+                    <F N="simplified_gn/build/script/common.croc"/>
+                    <F N="simplified_gn/build/script/compiled_action.gni"/>
+                    <F N="simplified_gn/build/script/compiler_version.py"/>
+                    <F N="simplified_gn/build/script/copy_test_data_ios.py"/>
+                    <F N="simplified_gn/build/script/cp.py"/>
+                    <F N="simplified_gn/build/script/detect_host_arch.py"/>
+                    <F N="simplified_gn/build/script/dir_exists.py"/>
+                    <F N="simplified_gn/build/script/download_gold_plugin.py"/>
+                    <F N="simplified_gn/build/script/download_nacl_toolchains.py"/>
+                    <F N="simplified_gn/build/script/download_sdk_extras.py"/>
+                    <F N="simplified_gn/build/script/env_dump.py"/>
+                    <F N="simplified_gn/build/script/extract_from_cab.py"/>
+                    <F N="simplified_gn/build/script/find_isolated_tests.py"/>
+                    <F N="simplified_gn/build/script/get_landmines.py"/>
+                    <F N="simplified_gn/build/script/get_sdk_extras_packages.py"/>
+                    <F N="simplified_gn/build/script/get_syzygy_binaries.py"/>
+                    <F N="simplified_gn/build/script/gn_helpers.py"/>
+                    <F N="simplified_gn/build/script/gn_run_binary.py"/>
+                    <F N="simplified_gn/build/script/install-android-sdks.sh"/>
+                    <F N="simplified_gn/build/script/install-build-deps-android.sh"/>
+                    <F N="simplified_gn/build/script/install-build-deps.py"/>
+                    <F N="simplified_gn/build/script/install-build-deps.sh"/>
+                    <F N="simplified_gn/build/script/install-chroot.sh"/>
+                    <F N="simplified_gn/build/script/inverse_depth.py"/>
+                    <F N="simplified_gn/build/script/json_schema_api.gni"/>
+                    <F N="simplified_gn/build/script/landmine_utils.py"/>
+                    <F N="simplified_gn/build/script/landmines.py"/>
+                    <F N="simplified_gn/build/script/output_dll_copy.rules"/>
+                    <F N="simplified_gn/build/script/precompile.cc"/>
+                    <F N="simplified_gn/build/script/precompile.h"/>
+                    <F N="simplified_gn/build/script/protoc_java.py"/>
+                    <F N="simplified_gn/build/script/rmdir_and_stamp.py"/>
+                    <F N="simplified_gn/build/script/symlink.py"/>
+                    <F N="simplified_gn/build/script/tree_truth.sh"/>
+                    <F N="simplified_gn/build/script/update-linux-sandbox.sh"/>
+                    <F N="simplified_gn/build/script/vs_toolchain.py"/>
+                    <F N="simplified_gn/build/script/win_is_xtree_patched.py"/>
                 </Folder>
                 <Folder Name="toolchain">
                     <Folder Name="android">
@@ -780,71 +847,6 @@
                     <F N="simplified_gn/build/toolchain/nacl_toolchain.gni"/>
                     <F N="simplified_gn/build/toolchain/toolchain.gni"/>
                 </Folder>
-                <Folder Name="win">
-                    <Folder Name="dbghelp_xp">
-                        <F N="simplified_gn/build/win/dbghelp_xp/dbghelp.dll"/>
-                        <F N="simplified_gn/build/win/dbghelp_xp/README.chromium"/>
-                    </Folder>
-                    <Folder Name="importlibs">
-                        <Folder Name="x86">
-                            <F N="simplified_gn/build/win/importlibs/x86/user32.winxp.imports"/>
-                            <F N="simplified_gn/build/win/importlibs/x86/user32.winxp.lib"/>
-                        </Folder>
-                        <F N="simplified_gn/build/win/importlibs/create_importlib_win.py"/>
-                        <F N="simplified_gn/build/win/importlibs/filter_export_list.py"/>
-                    </Folder>
-                    <F N="simplified_gn/build/win/as_invoker.manifest"/>
-                    <F N="simplified_gn/build/win/asan.gyp"/>
-                    <F N="simplified_gn/build/win/BUILD.gn"/>
-                    <F N="simplified_gn/build/win/chrome_win.croc"/>
-                    <F N="simplified_gn/build/win/common_controls.manifest"/>
-                    <F N="simplified_gn/build/win/compatibility.manifest"/>
-                    <F N="simplified_gn/build/win/reorder-imports.py"/>
-                    <F N="simplified_gn/build/win/use_ansi_codes.py"/>
-                </Folder>
-                <F N="simplified_gn/build/apply_locales.py"/>
-                <F N="simplified_gn/build/build-ctags.sh"/>
-                <F N="simplified_gn/build/build_config.h"/>
-                <F N="simplified_gn/build/check_return_value.py"/>
-                <F N="simplified_gn/build/check_sdk_extras_version.py"/>
-                <F N="simplified_gn/build/clobber.py"/>
-                <F N="simplified_gn/build/common.croc"/>
-                <F N="simplified_gn/build/compiled_action.gni"/>
-                <F N="simplified_gn/build/compiler_version.py"/>
-                <F N="simplified_gn/build/copy_test_data_ios.py"/>
-                <F N="simplified_gn/build/cp.py"/>
-                <F N="simplified_gn/build/detect_host_arch.py"/>
-                <F N="simplified_gn/build/dir_exists.py"/>
-                <F N="simplified_gn/build/download_gold_plugin.py"/>
-                <F N="simplified_gn/build/download_nacl_toolchains.py"/>
-                <F N="simplified_gn/build/download_sdk_extras.py"/>
-                <F N="simplified_gn/build/env_dump.py"/>
-                <F N="simplified_gn/build/extract_from_cab.py"/>
-                <F N="simplified_gn/build/find_isolated_tests.py"/>
-                <F N="simplified_gn/build/get_landmines.py"/>
-                <F N="simplified_gn/build/get_sdk_extras_packages.py"/>
-                <F N="simplified_gn/build/get_syzygy_binaries.py"/>
-                <F N="simplified_gn/build/gn_helpers.py"/>
-                <F N="simplified_gn/build/gn_run_binary.py"/>
-                <F N="simplified_gn/build/install-android-sdks.sh"/>
-                <F N="simplified_gn/build/install-build-deps-android.sh"/>
-                <F N="simplified_gn/build/install-build-deps.py"/>
-                <F N="simplified_gn/build/install-build-deps.sh"/>
-                <F N="simplified_gn/build/install-chroot.sh"/>
-                <F N="simplified_gn/build/inverse_depth.py"/>
-                <F N="simplified_gn/build/json_schema_api.gni"/>
-                <F N="simplified_gn/build/landmine_utils.py"/>
-                <F N="simplified_gn/build/landmines.py"/>
-                <F N="simplified_gn/build/output_dll_copy.rules"/>
-                <F N="simplified_gn/build/precompile.cc"/>
-                <F N="simplified_gn/build/precompile.h"/>
-                <F N="simplified_gn/build/protoc_java.py"/>
-                <F N="simplified_gn/build/rmdir_and_stamp.py"/>
-                <F N="simplified_gn/build/symlink.py"/>
-                <F N="simplified_gn/build/tree_truth.sh"/>
-                <F N="simplified_gn/build/update-linux-sandbox.sh"/>
-                <F N="simplified_gn/build/vs_toolchain.py"/>
-                <F N="simplified_gn/build/win_is_xtree_patched.py"/>
             </Folder>
         </Folder>
     </Files>

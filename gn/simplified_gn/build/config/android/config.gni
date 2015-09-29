@@ -5,14 +5,6 @@
 # This file contains common system config stuff for the Android build.
 
 if (is_android) {
-  has_chrome_android_internal =
-      exec_script("//build/dir_exists.py",
-                  [ rebase_path("//clank", root_build_dir) ],
-                  "string") == "True"
-
-  if (has_chrome_android_internal) {
-    import("//clank/config.gni")
-  }
 
   if (!defined(default_android_sdk_root)) {
 ### erik ###
