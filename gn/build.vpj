@@ -1,0 +1,851 @@
+<!DOCTYPE Project SYSTEM "http://www.slickedit.com/dtd/vse/10.0/vpj.dtd">
+<Project
+    Version="10.0"
+    VendorName="SlickEdit"
+    TemplateName="Python - Empty Project"
+    WorkingDir=".">
+    <CustomFolders>
+        <Folder
+            Name="Source Files"
+            Filters="*.py"></Folder>
+        <Folder
+            Name="Other Files"
+            Filters=""></Folder>
+    </CustomFolders>
+    <Config
+        Name="Debug"
+        DebugCallbackName="pydbgp"
+        Type="python"
+        OutputFile=""
+        AppType="python"
+        CompilerConfigName="">
+        <Menu>
+            <Target
+                Name="Execute"
+                MenuCaption="E&amp;xecute"
+                Dialog="_python_options_form Run"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveNone"
+                RunFromDir="%rw"
+                Deletable="0">
+                <Exec CmdLine='python %(SLICKEDIT_PYTHON_EXECUTE_ARGS) "%f"'/>
+            </Target>
+            <Target
+                Name="Debug"
+                MenuCaption="&amp;Debug"
+                Dialog="_python_options_form Debug"
+                CaptureOutputWith="ProcessBuffer"
+                SaveOption="SaveNone"
+                RunFromDir="%rw"
+                Deletable="0">
+                <Exec
+                    CmdLine="python_debug"
+                    Type="Slick-C"/>
+            </Target>
+            <Target
+                Name="Python Options"
+                MenuCaption="Python &amp;Options"
+                ShowOnMenu="HideIfNoCmdLine"
+                Deletable="0">
+                <Exec
+                    CmdLine="pythonoptions"
+                    Type="Slick-C"/>
+            </Target>
+        </Menu>
+        <List Name="Python Options">
+            <Item
+                Name="DefaultFile"
+                Value=""/>
+        </List>
+        <List Name="pydbgp Options">
+            <Item
+                Name="ServerHost"
+                Value="127.0.0.1"/>
+            <Item
+                Name="ServerPort"
+                Value="0"/>
+            <Item
+                Name="ListenInBackground"
+                Value="1"/>
+            <Item
+                Name="show_hidden"
+                Value="0"/>
+        </List>
+    </Config>
+    <Files AutoFolders="DirectoryView">
+        <Folder Name="note">
+            <F N="note/0_install.txt"/>
+            <F N="note/1_standalone.txt"/>
+            <F N="note/2_usage.txt"/>
+            <F N="note/3_java.txt"/>
+            <F N="note/4_android.txt"/>
+            <F N="note/5_ios.txt"/>
+            <F N="note/9_TODO.txt"/>
+        </Folder>
+        <Folder Name="simplified_gn">
+            <Folder Name="build">
+                <Folder Name="_addon_">
+                    <Folder Name="gyp">
+                        <F N="simplified_gn/build/_addon_/gyp/mac_tool.py"/>
+                        <F N="simplified_gn/build/_addon_/gyp/win_tool.py"/>
+                    </Folder>
+                    <Folder Name="ijar">
+                        <F N="simplified_gn/build/_addon_/ijar/BUILD.gn"/>
+                        <F N="simplified_gn/build/_addon_/ijar/classfile.cc"/>
+                        <F N="simplified_gn/build/_addon_/ijar/common.h"/>
+                        <F N="simplified_gn/build/_addon_/ijar/ijar.cc"/>
+                        <F N="simplified_gn/build/_addon_/ijar/ijar.gni"/>
+                        <F N="simplified_gn/build/_addon_/ijar/README.chromium"/>
+                        <F N="simplified_gn/build/_addon_/ijar/README.txt"/>
+                        <F N="simplified_gn/build/_addon_/ijar/zip.cc"/>
+                        <F N="simplified_gn/build/_addon_/ijar/zip.h"/>
+                        <F N="simplified_gn/build/_addon_/ijar/zip_main.cc"/>
+                    </Folder>
+                    <Folder Name="jinja2">
+                        <F N="simplified_gn/build/_addon_/jinja2/__init__.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/__init__.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/_compat.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/_compat.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/_stringdefs.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/bccache.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/bccache.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/compiler.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/compiler.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/constants.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/debug.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/defaults.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/defaults.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/environment.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/environment.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/exceptions.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/exceptions.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/ext.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/filters.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/filters.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/get_jinja2.sh"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/Jinja2-2.7.1.tar.gz.md5"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/Jinja2-2.7.1.tar.gz.sha512"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/lexer.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/lexer.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/loaders.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/loaders.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/meta.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/nodes.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/nodes.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/optimizer.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/optimizer.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/parser.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/parser.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/README.chromium"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/runtime.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/runtime.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/sandbox.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/tests.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/tests.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/utils.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/utils.pyc"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/visitor.py"/>
+                        <F N="simplified_gn/build/_addon_/jinja2/visitor.pyc"/>
+                    </Folder>
+                    <Folder Name="markupsafe">
+                        <F N="simplified_gn/build/_addon_/markupsafe/__init__.py"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/__init__.pyc"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/_compat.py"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/_compat.pyc"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/_constants.py"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/_native.py"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/_native.pyc"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/_speedups.c"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/get_markupsafe.sh"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/MarkupSafe-0.18.tar.gz.md5"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/MarkupSafe-0.18.tar.gz.sha512"/>
+                        <F N="simplified_gn/build/_addon_/markupsafe/README.chromium"/>
+                    </Folder>
+                </Folder>
+                <Folder Name="android">
+                    <Folder Name="ant">
+                        <Folder Name="empty">
+                            <Folder Name="res">
+                                <F N="simplified_gn/build/android/ant/empty/res/.keep"/>
+                            </Folder>
+                        </Folder>
+                        <F
+                            N="simplified_gn/build/android/ant/apk-package.xml"
+                            Type="Ant"/>
+                        <F N="simplified_gn/build/android/ant/chromium-debug.keystore"/>
+                    </Folder>
+                    <Folder Name="devil">
+                        <Folder Name="android">
+                            <Folder Name="perf">
+                                <F N="simplified_gn/build/android/devil/android/perf/__init__.py"/>
+                                <F N="simplified_gn/build/android/devil/android/perf/cache_control.py"/>
+                                <F N="simplified_gn/build/android/devil/android/perf/perf_control.py"/>
+                                <F N="simplified_gn/build/android/devil/android/perf/perf_control_unittest.py"/>
+                                <F N="simplified_gn/build/android/devil/android/perf/surface_stats_collector.py"/>
+                                <F N="simplified_gn/build/android/devil/android/perf/thermal_throttle.py"/>
+                            </Folder>
+                            <Folder Name="sdk">
+                                <F N="simplified_gn/build/android/devil/android/sdk/__init__.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/__init__.pyc"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/aapt.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/adb_wrapper.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/adb_wrapper_test.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/dexdump.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/intent.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/keyevent.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/keyevent.pyc"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/shared_prefs.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/shared_prefs_test.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/split_select.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/version_codes.py"/>
+                                <F N="simplified_gn/build/android/devil/android/sdk/version_codes.pyc"/>
+                            </Folder>
+                            <F N="simplified_gn/build/android/devil/android/__init__.py"/>
+                            <F N="simplified_gn/build/android/devil/android/__init__.pyc"/>
+                            <F N="simplified_gn/build/android/devil/android/apk_helper.py"/>
+                            <F N="simplified_gn/build/android/devil/android/battery_utils.py"/>
+                            <F N="simplified_gn/build/android/devil/android/battery_utils_test.py"/>
+                            <F N="simplified_gn/build/android/devil/android/decorators.py"/>
+                            <F N="simplified_gn/build/android/devil/android/decorators_test.py"/>
+                            <F N="simplified_gn/build/android/devil/android/device_blacklist.py"/>
+                            <F N="simplified_gn/build/android/devil/android/device_errors.py"/>
+                            <F N="simplified_gn/build/android/devil/android/device_list.py"/>
+                            <F N="simplified_gn/build/android/devil/android/device_signal.py"/>
+                            <F N="simplified_gn/build/android/devil/android/device_temp_file.py"/>
+                            <F N="simplified_gn/build/android/devil/android/device_temp_file_test.py"/>
+                            <F N="simplified_gn/build/android/devil/android/device_utils.py"/>
+                            <F N="simplified_gn/build/android/devil/android/device_utils_device_test.py"/>
+                            <F N="simplified_gn/build/android/devil/android/device_utils_test.py"/>
+                            <F N="simplified_gn/build/android/devil/android/logcat_monitor.py"/>
+                            <F N="simplified_gn/build/android/devil/android/logcat_monitor_test.py"/>
+                            <F N="simplified_gn/build/android/devil/android/md5sum.py"/>
+                            <F N="simplified_gn/build/android/devil/android/md5sum_test.py"/>
+                            <F N="simplified_gn/build/android/devil/android/ports.py"/>
+                        </Folder>
+                        <Folder Name="utils">
+                            <F N="simplified_gn/build/android/devil/utils/__init__.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/cmd_helper.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/cmd_helper_test.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/host_utils.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/lsusb.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/mock_calls.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/mock_calls_test.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/parallelizer.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/parallelizer_test.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/reraiser_thread.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/reraiser_thread_unittest.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/reset_usb.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/run_tests_helper.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/timeout_retry.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/timeout_retry_unittest.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/watchdog_timer.py"/>
+                            <F N="simplified_gn/build/android/devil/utils/zip_utils.py"/>
+                        </Folder>
+                        <F N="simplified_gn/build/android/devil/__init__.py"/>
+                        <F N="simplified_gn/build/android/devil/__init__.pyc"/>
+                        <F N="simplified_gn/build/android/devil/base_error.py"/>
+                    </Folder>
+                    <Folder Name="findbugs_filter">
+                        <F N="simplified_gn/build/android/findbugs_filter/findbugs_exclude.xml"/>
+                    </Folder>
+                    <Folder Name="gn">
+                        <F N="simplified_gn/build/android/gn/zip.py"/>
+                    </Folder>
+                    <Folder Name="gyp">
+                        <Folder Name="test">
+                            <Folder Name="java">
+                                <Folder Name="org">
+                                    <Folder Name="chromium">
+                                        <Folder Name="helloworld">
+                                            <F N="simplified_gn/build/android/gyp/test/java/org/chromium/helloworld/HelloWorldMain.java"/>
+                                            <F N="simplified_gn/build/android/gyp/test/java/org/chromium/helloworld/HelloWorldPrinter.java"/>
+                                        </Folder>
+                                    </Folder>
+                                </Folder>
+                            </Folder>
+                            <F N="simplified_gn/build/android/gyp/test/BUILD.gn"/>
+                        </Folder>
+                        <Folder Name="util">
+                            <F N="simplified_gn/build/android/gyp/util/__init__.py"/>
+                            <F N="simplified_gn/build/android/gyp/util/__init__.pyc"/>
+                            <F N="simplified_gn/build/android/gyp/util/build_device.py"/>
+                            <F N="simplified_gn/build/android/gyp/util/build_utils.py"/>
+                            <F N="simplified_gn/build/android/gyp/util/build_utils.pyc"/>
+                            <F N="simplified_gn/build/android/gyp/util/md5_check.py"/>
+                            <F N="simplified_gn/build/android/gyp/util/md5_check.pyc"/>
+                            <F N="simplified_gn/build/android/gyp/util/md5_check_test.py"/>
+                            <F N="simplified_gn/build/android/gyp/util/proguard_util.py"/>
+                        </Folder>
+                        <F N="simplified_gn/build/android/gyp/aidl.py"/>
+                        <F N="simplified_gn/build/android/gyp/ant.py"/>
+                        <F N="simplified_gn/build/android/gyp/apk_install.py"/>
+                        <F N="simplified_gn/build/android/gyp/apk_obfuscate.py"/>
+                        <F N="simplified_gn/build/android/gyp/copy_ex.py"/>
+                        <F N="simplified_gn/build/android/gyp/create_device_library_links.py"/>
+                        <F N="simplified_gn/build/android/gyp/create_dist_jar.py"/>
+                        <F N="simplified_gn/build/android/gyp/create_java_binary_script.py"/>
+                        <F N="simplified_gn/build/android/gyp/create_placeholder_files.py"/>
+                        <F N="simplified_gn/build/android/gyp/create_standalone_apk.py"/>
+                        <F N="simplified_gn/build/android/gyp/create_test_runner_script.py"/>
+                        <F N="simplified_gn/build/android/gyp/dex.py"/>
+                        <F N="simplified_gn/build/android/gyp/emma_instr.py"/>
+                        <F N="simplified_gn/build/android/gyp/finalize_apk.py"/>
+                        <F N="simplified_gn/build/android/gyp/finalize_splits.py"/>
+                        <F N="simplified_gn/build/android/gyp/find.py"/>
+                        <F N="simplified_gn/build/android/gyp/find_sun_tools_jar.py"/>
+                        <F N="simplified_gn/build/android/gyp/gcc_preprocess.py"/>
+                        <F N="simplified_gn/build/android/gyp/generate_resource_rewriter.py"/>
+                        <F N="simplified_gn/build/android/gyp/generate_split_manifest.py"/>
+                        <F N="simplified_gn/build/android/gyp/generate_v14_compatible_resources.py"/>
+                        <F N="simplified_gn/build/android/gyp/generate_v14_compatible_resources.pyc"/>
+                        <F N="simplified_gn/build/android/gyp/get_device_configuration.py"/>
+                        <F N="simplified_gn/build/android/gyp/insert_chromium_version.py"/>
+                        <F N="simplified_gn/build/android/gyp/jar.py"/>
+                        <F N="simplified_gn/build/android/gyp/jar.pyc"/>
+                        <F N="simplified_gn/build/android/gyp/jar_toc.py"/>
+                        <F N="simplified_gn/build/android/gyp/java_cpp_enum.py"/>
+                        <F N="simplified_gn/build/android/gyp/java_cpp_enum_tests.py"/>
+                        <F N="simplified_gn/build/android/gyp/javac.py"/>
+                        <F N="simplified_gn/build/android/gyp/jinja_template.py"/>
+                        <F N="simplified_gn/build/android/gyp/lint.py"/>
+                        <F N="simplified_gn/build/android/gyp/locale_pak_resources.py"/>
+                        <F N="simplified_gn/build/android/gyp/main_dex_list.py"/>
+                        <F N="simplified_gn/build/android/gyp/pack_relocations.py"/>
+                        <F N="simplified_gn/build/android/gyp/package_resources.py"/>
+                        <F N="simplified_gn/build/android/gyp/process_resources.py"/>
+                        <F N="simplified_gn/build/android/gyp/proguard.py"/>
+                        <F N="simplified_gn/build/android/gyp/push_libraries.py"/>
+                        <F N="simplified_gn/build/android/gyp/strip_library_for_device.py"/>
+                        <F N="simplified_gn/build/android/gyp/touch.py"/>
+                        <F N="simplified_gn/build/android/gyp/write_build_config.py"/>
+                        <F N="simplified_gn/build/android/gyp/write_ordered_libraries.py"/>
+                        <F N="simplified_gn/build/android/gyp/write_ordered_libraries.pyc"/>
+                        <F N="simplified_gn/build/android/gyp/zip.py"/>
+                    </Folder>
+                    <Folder Name="incremental_install">
+                        <Folder Name="java">
+                            <Folder Name="org">
+                                <Folder Name="chromium">
+                                    <Folder Name="incrementalinstall">
+                                        <F N="simplified_gn/build/android/incremental_install/java/org/chromium/incrementalinstall/BootstrapApplication.java"/>
+                                        <F N="simplified_gn/build/android/incremental_install/java/org/chromium/incrementalinstall/ClassLoaderPatcher.java"/>
+                                        <F N="simplified_gn/build/android/incremental_install/java/org/chromium/incrementalinstall/LockFile.java"/>
+                                        <F N="simplified_gn/build/android/incremental_install/java/org/chromium/incrementalinstall/Reflect.java"/>
+                                    </Folder>
+                                </Folder>
+                            </Folder>
+                        </Folder>
+                        <F N="simplified_gn/build/android/incremental_install/BUILD.gn"/>
+                        <F N="simplified_gn/build/android/incremental_install/create_install_script.py"/>
+                        <F N="simplified_gn/build/android/incremental_install/generate_android_manifest.py"/>
+                        <F N="simplified_gn/build/android/incremental_install/installer.py"/>
+                    </Folder>
+                    <Folder Name="lint">
+                        <F N="simplified_gn/build/android/lint/suppress.py"/>
+                        <F N="simplified_gn/build/android/lint/suppressions.xml"/>
+                    </Folder>
+                    <Folder Name="pylib">
+                        <Folder Name="base">
+                            <F N="simplified_gn/build/android/pylib/base/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/base_setup.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/base_test_result.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/base_test_result_unittest.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/base_test_runner.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/environment.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/environment_factory.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/test_collection.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/test_dispatcher.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/test_dispatcher_unittest.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/test_instance.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/test_instance_factory.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/test_run.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/test_run_factory.py"/>
+                            <F N="simplified_gn/build/android/pylib/base/test_server.py"/>
+                        </Folder>
+                        <Folder Name="constants">
+                            <F N="simplified_gn/build/android/pylib/constants/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/constants/__init__.pyc"/>
+                        </Folder>
+                        <Folder Name="device">
+                            <Folder Name="commands">
+                                <Folder Name="java">
+                                    <Folder Name="src">
+                                        <Folder Name="org">
+                                            <Folder Name="chromium">
+                                                <Folder Name="android">
+                                                    <Folder Name="commands">
+                                                        <Folder Name="unzip">
+                                                            <F N="simplified_gn/build/android/pylib/device/commands/java/src/org/chromium/android/commands/unzip/Unzip.java"/>
+                                                        </Folder>
+                                                    </Folder>
+                                                </Folder>
+                                            </Folder>
+                                        </Folder>
+                                    </Folder>
+                                </Folder>
+                                <F N="simplified_gn/build/android/pylib/device/commands/__init__.py"/>
+                                <F N="simplified_gn/build/android/pylib/device/commands/BUILD.gn"/>
+                                <F N="simplified_gn/build/android/pylib/device/commands/commands.gyp"/>
+                                <F N="simplified_gn/build/android/pylib/device/commands/install_commands.py"/>
+                            </Folder>
+                            <F N="simplified_gn/build/android/pylib/device/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/adb_wrapper.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/battery_utils.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/decorators.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/device_blacklist.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/device_errors.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/device_list.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/device_utils.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/intent.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/logcat_monitor.py"/>
+                            <F N="simplified_gn/build/android/pylib/device/shared_prefs.py"/>
+                        </Folder>
+                        <Folder Name="gtest">
+                            <F N="simplified_gn/build/android/pylib/gtest/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/gtest/gtest_config.py"/>
+                            <F N="simplified_gn/build/android/pylib/gtest/gtest_test_instance.py"/>
+                            <F N="simplified_gn/build/android/pylib/gtest/gtest_test_instance_test.py"/>
+                            <F N="simplified_gn/build/android/pylib/gtest/setup.py"/>
+                            <F N="simplified_gn/build/android/pylib/gtest/test_options.py"/>
+                            <F N="simplified_gn/build/android/pylib/gtest/test_package.py"/>
+                            <F N="simplified_gn/build/android/pylib/gtest/test_package_apk.py"/>
+                            <F N="simplified_gn/build/android/pylib/gtest/test_package_exe.py"/>
+                            <F N="simplified_gn/build/android/pylib/gtest/test_runner.py"/>
+                        </Folder>
+                        <Folder Name="host_driven">
+                            <F N="simplified_gn/build/android/pylib/host_driven/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/host_driven/setup.py"/>
+                            <F N="simplified_gn/build/android/pylib/host_driven/test_case.py"/>
+                            <F N="simplified_gn/build/android/pylib/host_driven/test_info_collection.py"/>
+                            <F N="simplified_gn/build/android/pylib/host_driven/test_runner.py"/>
+                            <F N="simplified_gn/build/android/pylib/host_driven/test_server.py"/>
+                            <F N="simplified_gn/build/android/pylib/host_driven/tests_annotations.py"/>
+                        </Folder>
+                        <Folder Name="instrumentation">
+                            <F N="simplified_gn/build/android/pylib/instrumentation/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/instrumentation_parser.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/instrumentation_parser_test.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/instrumentation_test_instance.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/instrumentation_test_instance_test.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/json_perf_parser.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/setup.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/test_jar.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/test_options.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/test_package.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/test_result.py"/>
+                            <F N="simplified_gn/build/android/pylib/instrumentation/test_runner.py"/>
+                        </Folder>
+                        <Folder Name="junit">
+                            <F N="simplified_gn/build/android/pylib/junit/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/junit/setup.py"/>
+                            <F N="simplified_gn/build/android/pylib/junit/test_dispatcher.py"/>
+                            <F N="simplified_gn/build/android/pylib/junit/test_runner.py"/>
+                        </Folder>
+                        <Folder Name="linker">
+                            <F N="simplified_gn/build/android/pylib/linker/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/linker/setup.py"/>
+                            <F N="simplified_gn/build/android/pylib/linker/test_case.py"/>
+                            <F N="simplified_gn/build/android/pylib/linker/test_runner.py"/>
+                        </Folder>
+                        <Folder Name="local">
+                            <Folder Name="device">
+                                <F N="simplified_gn/build/android/pylib/local/device/__init__.py"/>
+                                <F N="simplified_gn/build/android/pylib/local/device/local_device_environment.py"/>
+                                <F N="simplified_gn/build/android/pylib/local/device/local_device_gtest_run.py"/>
+                                <F N="simplified_gn/build/android/pylib/local/device/local_device_instrumentation_test_run.py"/>
+                                <F N="simplified_gn/build/android/pylib/local/device/local_device_test_run.py"/>
+                            </Folder>
+                            <F N="simplified_gn/build/android/pylib/local/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/local/local_test_server_spawner.py"/>
+                        </Folder>
+                        <Folder Name="monkey">
+                            <F N="simplified_gn/build/android/pylib/monkey/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/monkey/setup.py"/>
+                            <F N="simplified_gn/build/android/pylib/monkey/test_options.py"/>
+                            <F N="simplified_gn/build/android/pylib/monkey/test_runner.py"/>
+                        </Folder>
+                        <Folder Name="perf">
+                            <F N="simplified_gn/build/android/pylib/perf/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/perf/cache_control.py"/>
+                            <F N="simplified_gn/build/android/pylib/perf/perf_control.py"/>
+                            <F N="simplified_gn/build/android/pylib/perf/setup.py"/>
+                            <F N="simplified_gn/build/android/pylib/perf/surface_stats_collector.py"/>
+                            <F N="simplified_gn/build/android/pylib/perf/test_options.py"/>
+                            <F N="simplified_gn/build/android/pylib/perf/test_runner.py"/>
+                            <F N="simplified_gn/build/android/pylib/perf/thermal_throttle.py"/>
+                        </Folder>
+                        <Folder Name="remote">
+                            <Folder Name="device">
+                                <Folder Name="dummy">
+                                    <Folder Name="src">
+                                        <Folder Name="org">
+                                            <Folder Name="chromium">
+                                                <Folder Name="dummy">
+                                                    <F N="simplified_gn/build/android/pylib/remote/device/dummy/src/org/chromium/dummy/Dummy.java"/>
+                                                </Folder>
+                                            </Folder>
+                                        </Folder>
+                                    </Folder>
+                                    <F N="simplified_gn/build/android/pylib/remote/device/dummy/BUILD.gn"/>
+                                    <F N="simplified_gn/build/android/pylib/remote/device/dummy/dummy.gyp"/>
+                                </Folder>
+                                <F N="simplified_gn/build/android/pylib/remote/device/__init__.py"/>
+                                <F N="simplified_gn/build/android/pylib/remote/device/appurify_constants.py"/>
+                                <F N="simplified_gn/build/android/pylib/remote/device/appurify_sanitized.py"/>
+                                <F N="simplified_gn/build/android/pylib/remote/device/remote_device_environment.py"/>
+                                <F N="simplified_gn/build/android/pylib/remote/device/remote_device_gtest_run.py"/>
+                                <F N="simplified_gn/build/android/pylib/remote/device/remote_device_helper.py"/>
+                                <F N="simplified_gn/build/android/pylib/remote/device/remote_device_instrumentation_test_run.py"/>
+                                <F N="simplified_gn/build/android/pylib/remote/device/remote_device_test_run.py"/>
+                                <F N="simplified_gn/build/android/pylib/remote/device/remote_device_uirobot_test_run.py"/>
+                            </Folder>
+                            <F N="simplified_gn/build/android/pylib/remote/__init__.py"/>
+                        </Folder>
+                        <Folder Name="results">
+                            <Folder Name="flakiness_dashboard">
+                                <F N="simplified_gn/build/android/pylib/results/flakiness_dashboard/__init__.py"/>
+                                <F N="simplified_gn/build/android/pylib/results/flakiness_dashboard/json_results_generator.py"/>
+                                <F N="simplified_gn/build/android/pylib/results/flakiness_dashboard/json_results_generator_unittest.py"/>
+                                <F N="simplified_gn/build/android/pylib/results/flakiness_dashboard/results_uploader.py"/>
+                            </Folder>
+                            <F N="simplified_gn/build/android/pylib/results/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/results/json_results.py"/>
+                            <F N="simplified_gn/build/android/pylib/results/json_results_test.py"/>
+                            <F N="simplified_gn/build/android/pylib/results/report_results.py"/>
+                        </Folder>
+                        <Folder Name="sdk">
+                            <F N="simplified_gn/build/android/pylib/sdk/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/sdk/aapt.py"/>
+                            <F N="simplified_gn/build/android/pylib/sdk/dexdump.py"/>
+                            <F N="simplified_gn/build/android/pylib/sdk/split_select.py"/>
+                        </Folder>
+                        <Folder Name="symbols">
+                            <Folder Name="mock_addr2line">
+                                <F N="simplified_gn/build/android/pylib/symbols/mock_addr2line/__init__.py"/>
+                            </Folder>
+                            <F N="simplified_gn/build/android/pylib/symbols/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/symbols/elf_symbolizer.py"/>
+                            <F N="simplified_gn/build/android/pylib/symbols/elf_symbolizer_unittest.py"/>
+                            <F N="simplified_gn/build/android/pylib/symbols/PRESUBMIT.py"/>
+                        </Folder>
+                        <Folder Name="uiautomator">
+                            <F N="simplified_gn/build/android/pylib/uiautomator/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/uiautomator/setup.py"/>
+                            <F N="simplified_gn/build/android/pylib/uiautomator/test_options.py"/>
+                            <F N="simplified_gn/build/android/pylib/uiautomator/test_package.py"/>
+                            <F N="simplified_gn/build/android/pylib/uiautomator/test_runner.py"/>
+                        </Folder>
+                        <Folder Name="uirobot">
+                            <F N="simplified_gn/build/android/pylib/uirobot/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/uirobot/uirobot_test_instance.py"/>
+                        </Folder>
+                        <Folder Name="utils">
+                            <F N="simplified_gn/build/android/pylib/utils/__init__.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/apk_helper.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/base_error.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/command_option_parser.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/device_temp_file.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/emulator.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/findbugs.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/host_utils.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/isolator.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/logging_utils.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/md5sum.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/mock_calls.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/parallelizer.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/proguard.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/proguard_test.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/repo_utils.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/reraiser_thread.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/run_tests_helper.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/test_environment.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/time_profile.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/timeout_retry.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/watchdog_timer.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/xvfb.py"/>
+                            <F N="simplified_gn/build/android/pylib/utils/zip_utils.py"/>
+                        </Folder>
+                        <F N="simplified_gn/build/android/pylib/__init__.py"/>
+                        <F N="simplified_gn/build/android/pylib/__init__.pyc"/>
+                        <F N="simplified_gn/build/android/pylib/chrome_test_server_spawner.py"/>
+                        <F N="simplified_gn/build/android/pylib/cmd_helper.py"/>
+                        <F N="simplified_gn/build/android/pylib/content_settings.py"/>
+                        <F N="simplified_gn/build/android/pylib/device_settings.py"/>
+                        <F N="simplified_gn/build/android/pylib/device_signal.py"/>
+                        <F N="simplified_gn/build/android/pylib/efficient_android_directory_copy.sh"/>
+                        <F N="simplified_gn/build/android/pylib/flag_changer.py"/>
+                        <F N="simplified_gn/build/android/pylib/forwarder.py"/>
+                        <F N="simplified_gn/build/android/pylib/pexpect.py"/>
+                        <F N="simplified_gn/build/android/pylib/restart_adbd.sh"/>
+                        <F N="simplified_gn/build/android/pylib/screenshot.py"/>
+                        <F N="simplified_gn/build/android/pylib/valgrind_tools.py"/>
+                    </Folder>
+                    <Folder Name="rezip">
+                        <F N="simplified_gn/build/android/rezip/BUILD.gn"/>
+                        <F N="simplified_gn/build/android/rezip/RezipApk.java"/>
+                    </Folder>
+                    <F N="simplified_gn/build/android/android.isolate"/>
+                    <F N="simplified_gn/build/android/android_no_jni_exports.lst"/>
+                    <F N="simplified_gn/build/android/AndroidManifest.xml"/>
+                    <F N="simplified_gn/build/android/asan_symbolize.py"/>
+                    <F N="simplified_gn/build/android/avd.py"/>
+                    <F N="simplified_gn/build/android/bb_run_sharded_steps.py"/>
+                    <F N="simplified_gn/build/android/BUILD.gn"/>
+                    <F N="simplified_gn/build/android/chrome_with_libs.gyp"/>
+                    <F N="simplified_gn/build/android/emma_coverage_stats.py"/>
+                    <F N="simplified_gn/build/android/emma_coverage_stats_test.py"/>
+                    <F N="simplified_gn/build/android/empty_proguard.flags"/>
+                    <F N="simplified_gn/build/android/enable_asserts.py"/>
+                    <F N="simplified_gn/build/android/envsetup.sh"/>
+                    <F N="simplified_gn/build/android/findbugs_diff.py"/>
+                    <F N="simplified_gn/build/android/generate_emma_html.py"/>
+                    <F N="simplified_gn/build/android/host_heartbeat.py"/>
+                    <F N="simplified_gn/build/android/install_emulator_deps.py"/>
+                    <F N="simplified_gn/build/android/lighttpd_server.py"/>
+                    <F N="simplified_gn/build/android/main_dex_classes.flags"/>
+                    <F N="simplified_gn/build/android/method_count.py"/>
+                    <F N="simplified_gn/build/android/ndk.gyp"/>
+                    <F N="simplified_gn/build/android/preprocess_google_play_services.config.json"/>
+                    <F N="simplified_gn/build/android/preprocess_google_play_services.py"/>
+                    <F N="simplified_gn/build/android/PRESUBMIT.py"/>
+                    <F N="simplified_gn/build/android/provision_devices.py"/>
+                    <F N="simplified_gn/build/android/rezip.gyp"/>
+                    <F N="simplified_gn/build/android/screenshot.py"/>
+                    <F N="simplified_gn/build/android/setup.gyp"/>
+                    <F N="simplified_gn/build/android/symbolize.py"/>
+                    <F N="simplified_gn/build/android/symbolize_test.py"/>
+                    <F N="simplified_gn/build/android/test_runner.py"/>
+                    <F N="simplified_gn/build/android/tombstones.py"/>
+                    <F N="simplified_gn/build/android/update_verification.py"/>
+                </Folder>
+                <Folder Name="config">
+                    <Folder Name="android">
+                        <F N="simplified_gn/build/config/android/BUILD.gn"/>
+                        <F N="simplified_gn/build/config/android/config.gni"/>
+                        <F N="simplified_gn/build/config/android/internal_rules.gni"/>
+                        <F N="simplified_gn/build/config/android/rules.gni"/>
+                    </Folder>
+                    <Folder Name="clang">
+                        <F N="simplified_gn/build/config/clang/BUILD.gn"/>
+                        <F N="simplified_gn/build/config/clang/clang.gni"/>
+                    </Folder>
+                    <Folder Name="compiler">
+                        <F N="simplified_gn/build/config/compiler/BUILD.gn"/>
+                        <F N="simplified_gn/build/config/compiler/compiler.gni"/>
+                    </Folder>
+                    <Folder Name="gcc">
+                        <F N="simplified_gn/build/config/gcc/BUILD.gn"/>
+                        <F N="simplified_gn/build/config/gcc/gcc_version.gni"/>
+                    </Folder>
+                    <Folder Name="ios">
+                        <F N="simplified_gn/build/config/ios/BUILD.gn"/>
+                        <F N="simplified_gn/build/config/ios/find_signing_identity.py"/>
+                        <F N="simplified_gn/build/config/ios/ios_app.py"/>
+                        <F N="simplified_gn/build/config/ios/ios_sdk.gni"/>
+                        <F N="simplified_gn/build/config/ios/ios_sdk.py"/>
+                        <F N="simplified_gn/build/config/ios/ios_sim.py"/>
+                        <F N="simplified_gn/build/config/ios/lldb_start_commands.txt"/>
+                        <F N="simplified_gn/build/config/ios/rules.gni"/>
+                    </Folder>
+                    <Folder Name="linux">
+                        <Folder Name="gtk2">
+                            <F N="simplified_gn/build/config/linux/gtk2/BUILD.gn"/>
+                        </Folder>
+                        <Folder Name="gtk3">
+                            <F N="simplified_gn/build/config/linux/gtk3/BUILD.gn"/>
+                        </Folder>
+                        <F N="simplified_gn/build/config/linux/BUILD.gn"/>
+                        <F N="simplified_gn/build/config/linux/pkg-config.py"/>
+                        <F N="simplified_gn/build/config/linux/pkg_config.gni"/>
+                        <F N="simplified_gn/build/config/linux/sysroot_ld_path.py"/>
+                    </Folder>
+                    <Folder Name="mac">
+                        <F N="simplified_gn/build/config/mac/BUILD.gn"/>
+                        <F N="simplified_gn/build/config/mac/mac_app.py"/>
+                        <F N="simplified_gn/build/config/mac/mac_sdk.gni"/>
+                        <F N="simplified_gn/build/config/mac/rules.gni"/>
+                    </Folder>
+                    <Folder Name="nacl">
+                        <F N="simplified_gn/build/config/nacl/BUILD.gn"/>
+                    </Folder>
+                    <Folder Name="sanitizers">
+                        <F N="simplified_gn/build/config/sanitizers/BUILD.gn"/>
+                        <F N="simplified_gn/build/config/sanitizers/sanitizers.gni"/>
+                    </Folder>
+                    <Folder Name="win">
+                        <F N="simplified_gn/build/config/win/BUILD.gn"/>
+                        <F N="simplified_gn/build/config/win/manifest.gni"/>
+                        <F N="simplified_gn/build/config/win/msvs_dependencies.isolate"/>
+                        <F N="simplified_gn/build/config/win/visual_studio_version.gni"/>
+                    </Folder>
+                    <F N="simplified_gn/build/config/arm.gni"/>
+                    <F N="simplified_gn/build/config/BUILDCONFIG.gn"/>
+                    <F N="simplified_gn/build/config/chrome_build.gni"/>
+                    <F N="simplified_gn/build/config/mips.gni"/>
+                    <F N="simplified_gn/build/config/sysroot.gni"/>
+                    <F N="simplified_gn/build/config/zip.gni"/>
+                </Folder>
+                <Folder Name="ios">
+                    <F N="simplified_gn/build/ios/chrome_ios.croc"/>
+                    <F N="simplified_gn/build/ios/clean_env.py"/>
+                    <F N="simplified_gn/build/ios/grit_whitelist.txt"/>
+                    <F N="simplified_gn/build/ios/PRESUBMIT.py"/>
+                </Folder>
+                <Folder Name="linux">
+                    <Folder Name="bin">
+                        <F N="simplified_gn/build/linux/bin/eu-strip.sha1"/>
+                    </Folder>
+                    <Folder Name="sysroot_scripts">
+                        <F N="simplified_gn/build/linux/sysroot_scripts/install-sysroot.py"/>
+                        <F N="simplified_gn/build/linux/sysroot_scripts/packagelist.trusty.arm"/>
+                        <F N="simplified_gn/build/linux/sysroot_scripts/packagelist.wheezy.amd64"/>
+                        <F N="simplified_gn/build/linux/sysroot_scripts/packagelist.wheezy.arm"/>
+                        <F N="simplified_gn/build/linux/sysroot_scripts/packagelist.wheezy.i386"/>
+                        <F N="simplified_gn/build/linux/sysroot_scripts/sysroot-creator-test.sh"/>
+                        <F N="simplified_gn/build/linux/sysroot_scripts/sysroot-creator-trusty.sh"/>
+                        <F N="simplified_gn/build/linux/sysroot_scripts/sysroot-creator-wheezy.sh"/>
+                        <F N="simplified_gn/build/linux/sysroot_scripts/sysroot-creator.sh"/>
+                    </Folder>
+                    <Folder Name="unbundle">
+                        <F N="simplified_gn/build/linux/unbundle/expat.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/ffmpeg.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/flac.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/harfbuzz.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/icu.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/jsoncpp.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/libevent.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/libjpeg.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/libpng.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/libusb.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/libvpx.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/libwebp.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/libxml.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/libXNVCtrl.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/libxslt.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/opus.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/protobuf.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/re2.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/remove_bundled_libraries.py"/>
+                        <F N="simplified_gn/build/linux/unbundle/replace_gyp_files.py"/>
+                        <F N="simplified_gn/build/linux/unbundle/snappy.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/sqlite.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/v8.gyp"/>
+                        <F N="simplified_gn/build/linux/unbundle/zlib.gyp"/>
+                    </Folder>
+                    <F N="simplified_gn/build/linux/BUILD.gn"/>
+                    <F N="simplified_gn/build/linux/chrome_linux.croc"/>
+                    <F N="simplified_gn/build/linux/dump_app_syms.py"/>
+                    <F N="simplified_gn/build/linux/install-chromeos-fonts.py"/>
+                    <F N="simplified_gn/build/linux/rewrite_dirs.py"/>
+                    <F N="simplified_gn/build/linux/sysroot_ld_path.sh"/>
+                    <F N="simplified_gn/build/linux/system.gyp"/>
+                </Folder>
+                <Folder Name="mac">
+                    <F N="simplified_gn/build/mac/asan.gyp"/>
+                    <F N="simplified_gn/build/mac/change_mach_o_flags.py"/>
+                    <F N="simplified_gn/build/mac/change_mach_o_flags_from_xcode.sh"/>
+                    <F N="simplified_gn/build/mac/chrome_mac.croc"/>
+                    <F N="simplified_gn/build/mac/copy_asan_runtime_dylib.sh"/>
+                    <F N="simplified_gn/build/mac/copy_framework_unversioned.sh"/>
+                    <F N="simplified_gn/build/mac/edit_xibs.sh"/>
+                    <F N="simplified_gn/build/mac/find_sdk.py"/>
+                    <F N="simplified_gn/build/mac/tweak_info_plist.py"/>
+                </Folder>
+                <Folder Name="toolchain">
+                    <Folder Name="android">
+                        <F N="simplified_gn/build/toolchain/android/BUILD.gn"/>
+                    </Folder>
+                    <Folder Name="cros">
+                        <F N="simplified_gn/build/toolchain/cros/BUILD.gn"/>
+                    </Folder>
+                    <Folder Name="linux">
+                        <F N="simplified_gn/build/toolchain/linux/BUILD.gn"/>
+                    </Folder>
+                    <Folder Name="mac">
+                        <F N="simplified_gn/build/toolchain/mac/BUILD.gn"/>
+                        <F N="simplified_gn/build/toolchain/mac/setup_toolchain.py"/>
+                    </Folder>
+                    <Folder Name="nacl">
+                        <F N="simplified_gn/build/toolchain/nacl/BUILD.gn"/>
+                    </Folder>
+                    <Folder Name="win">
+                        <F N="simplified_gn/build/toolchain/win/BUILD.gn"/>
+                        <F N="simplified_gn/build/toolchain/win/midl.gni"/>
+                        <F N="simplified_gn/build/toolchain/win/setup_toolchain.py"/>
+                    </Folder>
+                    <F N="simplified_gn/build/toolchain/ccache.gni"/>
+                    <F N="simplified_gn/build/toolchain/gcc_toolchain.gni"/>
+                    <F N="simplified_gn/build/toolchain/get_concurrent_links.py"/>
+                    <F N="simplified_gn/build/toolchain/goma.gni"/>
+                    <F N="simplified_gn/build/toolchain/nacl_toolchain.gni"/>
+                    <F N="simplified_gn/build/toolchain/toolchain.gni"/>
+                </Folder>
+                <Folder Name="win">
+                    <Folder Name="dbghelp_xp">
+                        <F N="simplified_gn/build/win/dbghelp_xp/dbghelp.dll"/>
+                        <F N="simplified_gn/build/win/dbghelp_xp/README.chromium"/>
+                    </Folder>
+                    <Folder Name="importlibs">
+                        <Folder Name="x86">
+                            <F N="simplified_gn/build/win/importlibs/x86/user32.winxp.imports"/>
+                            <F N="simplified_gn/build/win/importlibs/x86/user32.winxp.lib"/>
+                        </Folder>
+                        <F N="simplified_gn/build/win/importlibs/create_importlib_win.py"/>
+                        <F N="simplified_gn/build/win/importlibs/filter_export_list.py"/>
+                    </Folder>
+                    <F N="simplified_gn/build/win/as_invoker.manifest"/>
+                    <F N="simplified_gn/build/win/asan.gyp"/>
+                    <F N="simplified_gn/build/win/BUILD.gn"/>
+                    <F N="simplified_gn/build/win/chrome_win.croc"/>
+                    <F N="simplified_gn/build/win/common_controls.manifest"/>
+                    <F N="simplified_gn/build/win/compatibility.manifest"/>
+                    <F N="simplified_gn/build/win/reorder-imports.py"/>
+                    <F N="simplified_gn/build/win/use_ansi_codes.py"/>
+                </Folder>
+                <F N="simplified_gn/build/apply_locales.py"/>
+                <F N="simplified_gn/build/build-ctags.sh"/>
+                <F N="simplified_gn/build/build_config.h"/>
+                <F N="simplified_gn/build/check_return_value.py"/>
+                <F N="simplified_gn/build/check_sdk_extras_version.py"/>
+                <F N="simplified_gn/build/clobber.py"/>
+                <F N="simplified_gn/build/common.croc"/>
+                <F N="simplified_gn/build/compiled_action.gni"/>
+                <F N="simplified_gn/build/compiler_version.py"/>
+                <F N="simplified_gn/build/copy_test_data_ios.py"/>
+                <F N="simplified_gn/build/cp.py"/>
+                <F N="simplified_gn/build/detect_host_arch.py"/>
+                <F N="simplified_gn/build/dir_exists.py"/>
+                <F N="simplified_gn/build/download_gold_plugin.py"/>
+                <F N="simplified_gn/build/download_nacl_toolchains.py"/>
+                <F N="simplified_gn/build/download_sdk_extras.py"/>
+                <F N="simplified_gn/build/env_dump.py"/>
+                <F N="simplified_gn/build/extract_from_cab.py"/>
+                <F N="simplified_gn/build/find_isolated_tests.py"/>
+                <F N="simplified_gn/build/get_landmines.py"/>
+                <F N="simplified_gn/build/get_sdk_extras_packages.py"/>
+                <F N="simplified_gn/build/get_syzygy_binaries.py"/>
+                <F N="simplified_gn/build/gn_helpers.py"/>
+                <F N="simplified_gn/build/gn_run_binary.py"/>
+                <F N="simplified_gn/build/install-android-sdks.sh"/>
+                <F N="simplified_gn/build/install-build-deps-android.sh"/>
+                <F N="simplified_gn/build/install-build-deps.py"/>
+                <F N="simplified_gn/build/install-build-deps.sh"/>
+                <F N="simplified_gn/build/install-chroot.sh"/>
+                <F N="simplified_gn/build/inverse_depth.py"/>
+                <F N="simplified_gn/build/json_schema_api.gni"/>
+                <F N="simplified_gn/build/landmine_utils.py"/>
+                <F N="simplified_gn/build/landmines.py"/>
+                <F N="simplified_gn/build/output_dll_copy.rules"/>
+                <F N="simplified_gn/build/precompile.cc"/>
+                <F N="simplified_gn/build/precompile.h"/>
+                <F N="simplified_gn/build/protoc_java.py"/>
+                <F N="simplified_gn/build/rmdir_and_stamp.py"/>
+                <F N="simplified_gn/build/symlink.py"/>
+                <F N="simplified_gn/build/tree_truth.sh"/>
+                <F N="simplified_gn/build/update-linux-sandbox.sh"/>
+                <F N="simplified_gn/build/vs_toolchain.py"/>
+                <F N="simplified_gn/build/win_is_xtree_patched.py"/>
+            </Folder>
+        </Folder>
+    </Files>
+</Project>
