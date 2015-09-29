@@ -39,7 +39,7 @@ action("cpplib_stripped") {
   _input_so = "${android_libcpp_root}/libs/${android_app_abi}/${_soname}"
   _output_so = "${root_shlib_dir}/${_soname}"
 
-  script = "//build/gn_run_binary.py"
+  script = "//build/script/gn_run_binary.py"
   inputs = [
     _strip_bin,
   ]

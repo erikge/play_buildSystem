@@ -4,25 +4,9 @@
 
 # This file contains common system config stuff for the Android build.
 
+import("//build/config_env.gni")
+
 if (is_android) {
-
-  if (!defined(default_android_sdk_root)) {
-### erik ###
-#    default_android_sdk_root = "//third_party/android_tools/sdk"
-#    default_android_sdk_version = "23"
-#    default_android_sdk_build_tools_version = "23.0.0"
-    default_android_sdk_root = getenv("ANDROID_SDK_HOME")
-    default_android_sdk_version = "22"
-    default_android_sdk_build_tools_version = "22.0.1"
-### erik ###
-  }
-
-### erik ###
-  if (!defined(default_android_ndk_root)) {
-#    default_android_ndk_root = "//third_party/android_tools/ndk"
-    default_android_ndk_root = getenv("ANDROID_NDK_HOME")
-  }
-### erik ###
 
   if (!defined(default_android_keystore_path)) {
     default_android_keystore_path =
