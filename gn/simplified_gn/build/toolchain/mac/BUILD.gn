@@ -6,18 +6,10 @@
 # some enhancements since the commands on Mac are slightly different than on
 # Linux.
 
-import("../goma.gni")
 import("//build/config/ios/ios_sdk.gni")
 
 assert(host_os == "mac")
 
-import("//build/toolchain/goma.gni")
-
-if (use_goma) {
-  goma_prefix = "$goma_dir/gomacc "
-} else {
-  goma_prefix = ""
-}
 
 # This will copy the gyp-mac-tool to the build directory. We pass in the source
 # file of the win tool.
@@ -221,14 +213,9 @@ template("mac_toolchain") {
 mac_toolchain("clang_arm") {
   toolchain_cpu = "arm"
   toolchain_os = "mac"
-### erik ###
-#  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-#                       root_build_dir)
-#  cc = "${goma_prefix}$prefix/clang"
-#  cxx = "${goma_prefix}$prefix/clang++"
+
   cc = "clang"
   cxx = "clang++"
-### erik ###
   ld = cxx
   is_clang = true
 }
@@ -240,14 +227,9 @@ mac_toolchain("ios_clang_arm") {
 
   # TODO(GYP): We need to support being able to use the version of clang
   # shipped w/ XCode instead of the one pulled from upstream.
-### erik ###
-#  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-#                       root_build_dir)
-#  cc = "${goma_prefix}$prefix/clang"
-#  cxx = "${goma_prefix}$prefix/clang++"
+
   cc = "clang"
   cxx = "clang++"
-### erik ###
   ld = cxx
   is_clang = true
 }
@@ -255,8 +237,8 @@ mac_toolchain("ios_clang_arm") {
 mac_toolchain("arm") {
   toolchain_cpu = "arm"
   toolchain_os = "mac"
-  cc = "${goma_prefix}/gcc"
-  cxx = "${goma_prefix}/g++"
+  cc = "gcc"
+  cxx = "g++"
   ld = cxx
   is_clang = false
 }
@@ -264,12 +246,7 @@ mac_toolchain("arm") {
 mac_toolchain("clang_x64") {
   toolchain_cpu = "x64"
   toolchain_os = "mac"
-### erik ###
-#  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-#                       root_build_dir)
-#  cc = "${goma_prefix}$prefix/clang"
-#  cxx = "${goma_prefix}$prefix/clang++"
-### erik ###
+
   cc = "clang"
   cxx = "clang++"
   ld = cxx
@@ -279,8 +256,8 @@ mac_toolchain("clang_x64") {
 mac_toolchain("x64") {
   toolchain_cpu = "x64"
   toolchain_os = "mac"
-  cc = "${goma_prefix}/gcc"
-  cxx = "${goma_prefix}/g++"
+  cc = "gcc"
+  cxx = "g++"
   ld = cxx
   is_clang = false
 }

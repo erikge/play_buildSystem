@@ -5,12 +5,8 @@
 import("//build/config/sysroot.gni")
 import("//build/toolchain/ccache.gni")
 import("//build/toolchain/gcc_toolchain.gni")
-import("//build/toolchain/goma.gni")
 
-if (use_goma) {
-  assert(!use_ccache, "Goma and ccache can't be used together.")
-  compiler_prefix = "$goma_dir/gomacc "
-} else if (use_ccache) {
+if (use_ccache) {
   compiler_prefix = "ccache "
 } else {
   compiler_prefix = ""

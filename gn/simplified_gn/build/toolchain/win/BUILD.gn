@@ -12,7 +12,6 @@ declare_args() {
 }
 
 import("//build/config/win/visual_studio_version.gni")
-import("//build/toolchain/goma.gni")
 
 # Should only be running on Windows.
 assert(is_win)
@@ -42,14 +41,6 @@ if (vc_bin_dir == "") {
   vc_bin_dir = toolchain_data.vc_bin_dir
 }
 
-if (use_goma) {
-  goma_prefix = "$goma_dir/gomacc.exe "
-} else {
-  goma_prefix = ""
-}
-
-# This value will be inherited in the toolchain below.
-concurrent_links = exec_script("../get_concurrent_links.py", [], "value")
 
 # Copy the VS runtime DLL for the default toolchain the root build directory so
 # things will run.
@@ -231,15 +222,13 @@ if (current_cpu == "x86") {
   msvc_toolchain("x86") {
     environment = "environment.x86"
     current_cpu = "x86"
-    cl = "${goma_prefix}\"${vc_bin_dir}/cl.exe\""
+    cl = "\"${vc_bin_dir}/cl.exe\""
     is_clang = false
   }
   msvc_toolchain("clang_x86") {
     environment = "environment.x86"
     current_cpu = "x86"
-    prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-                         root_build_dir)
-    cl = "${goma_prefix}$prefix/clang-cl.exe"
+    cl = "clang-cl.exe"
     current_os = "win"
     is_clang = true
   }
@@ -249,15 +238,13 @@ if (current_cpu == "x64") {
   msvc_toolchain("x64") {
     environment = "environment.x64"
     current_cpu = "x64"
-    cl = "${goma_prefix}\"${vc_bin_dir}/cl.exe\""
+    cl = "\"${vc_bin_dir}/cl.exe\""
     is_clang = false
   }
   msvc_toolchain("clang_x64") {
     environment = "environment.x64"
     current_cpu = "x64"
-    prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-                         root_build_dir)
-    cl = "${goma_prefix}$prefix/clang-cl.exe"
+    cl = "clang-cl.exe"
     current_os = "win"
     is_clang = true
   }
@@ -266,7 +253,7 @@ if (current_cpu == "x64") {
 # WinRT toolchains
 msvc_toolchain("winrt_x86") {
   environment = "environment.winrt_x86"
-  cl = "${goma_prefix}\"${vc_bin_dir}/cl.exe\""
+  cl = "\"${vc_bin_dir}/cl.exe\""
   is_clang = false
 
   current_cpu = "x86"
@@ -275,7 +262,7 @@ msvc_toolchain("winrt_x86") {
 
 msvc_toolchain("winrt_x64") {
   environment = "environment.winrt_x64"
-  cl = "${goma_prefix}\"${vc_bin_dir}/cl.exe\""
+  cl = "\"${vc_bin_dir}/cl.exe\""
   is_clang = false
 
   current_cpu = "x64"
