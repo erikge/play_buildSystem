@@ -356,6 +356,7 @@ _native_compiler_configs = [
   "//build/config/compiler:default_symbols",
   "//build/config/compiler:no_rtti",
   "//build/config/compiler:runtime_library",
+  "//build/config/sanitizers:default_sanitizer_flags",
 ]
 if (is_win) {
   _native_compiler_configs += [
@@ -385,6 +386,11 @@ if (is_linux) {
   _native_compiler_configs += [ "//build/config/ios:sdk" ]
 } else if (is_android) {
   _native_compiler_configs += [ "//build/config/android:sdk" ]
+}
+
+if (is_android) {
+  _native_compiler_configs +=
+      [ "//build/config/android:default_cygprofile_instrumentation" ]
 }
 
 if (is_clang && !is_nacl) {

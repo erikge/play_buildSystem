@@ -110,9 +110,14 @@
               'use_aura%': 1,
             }],
 
-            ['chromecast==1 and OS!="android"', {
-              'embedded%': 1,
-              'use_ozone%': 1,
+            ['chromecast==1', {
+              'use_libpci': 0,
+              'conditions': [
+                ['OS!="android"', {
+                  'embedded%': 1,
+                  'use_ozone%': 1,
+                }],
+              ],
             }],
 
             # Ozone uses Aura.
@@ -1834,9 +1839,7 @@
 
         'proprietary_codecs%': '<(proprietary_codecs)',
 
-        # safe_browsing defaults to 2 for public builds and is switched to 3 in
-        # //clank/supplement.gypi since mode 3 requires an internal API.
-        'safe_browsing%': 2,
+        'safe_browsing%': 3,
 
         'enable_web_speech%': 0,
         'java_bridge%': 1,
@@ -2616,6 +2619,9 @@
 
         # TODO(thakis): Enable this, crbug.com/507717
         '-Wno-shift-negative-value',
+
+        # TODO(thakis): Consider enabling this?
+        '-Wno-bitfield-width',
       ],
     },
     'includes': [ 'set_clang_warning_flags.gypi', ],
@@ -3099,12 +3105,6 @@
       ['enable_wexit_time_destructors==1 and OS!="win"', {
         # TODO: Enable on Windows too, http://crbug.com/404525
         'variables': { 'clang_warning_flags': ['-Wexit-time-destructors']},
-      }],
-      ['"<!(python <(DEPTH)/tools/clang/scripts/update.py --print-revision)"!="245965-1"', {
-        # TODO(thakis): Move this to the global clang_warning_flags block once
-        # clang is rolled far enough that the pinned clang understands this flag
-        # TODO(thakis): Consider enabling this?
-        'variables': { 'clang_warning_flags': ['-Wno-bitfield-width']},
       }],
       ['chromium_code==0', {
         'variables': {
@@ -4590,23 +4590,17 @@
           }],
           ['order_profiling!=0 and OS=="android"', {
             'target_conditions' : [
-              # crazy_linker has an upstream gyp file we can't edit, and we
-              # don't want to instrument it.
-              ['_toolset=="target" and _target_name!="crazy_linker"', {
+              ['_toolset=="target"', {
                 'cflags': [
                   '-finstrument-functions',
                   # Allow mmx intrinsics to inline, so that the
                   # compiler can expand the intrinsics.
                   '-finstrument-functions-exclude-file-list=mmintrin.h',
-                ],
-                'defines': ['CYGPROFILE_INSTRUMENTATION'],
-              }],
-              ['_toolset=="target"', {
-                'cflags': [
                   # Avoids errors with current NDK:
                   # "third_party/android_tools/ndk/toolchains/arm-linux-androideabi-4.6/prebuilt/linux-x86_64/bin/../lib/gcc/arm-linux-androideabi/4.6/include/arm_neon.h:3426:3: error: argument must be a constant"
                   '-finstrument-functions-exclude-file-list=arm_neon.h,SaturatedArithmeticARM.h',
                 ],
+                'defines': ['CYGPROFILE_INSTRUMENTATION'],
               }],
             ],
           }],
@@ -5716,7 +5710,6 @@
             ],
             'GenerateDebugInformation': 'true',
             'MapFileName': '$(OutDir)\\$(TargetName).map',
-            'ImportLibrary': '$(OutDir)\\lib\\$(TargetName).lib',
             'FixedBaseAddress': '1',
             # SubSystem values:
             #   0 == not set

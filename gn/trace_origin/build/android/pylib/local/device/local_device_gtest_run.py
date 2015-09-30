@@ -21,11 +21,18 @@ _EXTRA_COMMAND_LINE_FILE = (
     'org.chromium.native_test.NativeTestActivity.CommandLineFile')
 _EXTRA_COMMAND_LINE_FLAGS = (
     'org.chromium.native_test.NativeTestActivity.CommandLineFlags')
+_EXTRA_SHARD_NANO_TIMEOUT = (
+    'org.chromium.native_test.NativeTestInstrumentationTestRunner'
+        '.ShardNanoTimeout')
 _EXTRA_TEST_LIST = (
     'org.chromium.native_test.NativeTestInstrumentationTestRunner'
         '.TestList')
 
 _MAX_SHARD_SIZE = 256
+_SECONDS_TO_NANOS = int(1e9)
+
+# The amount of time a test executable may run before it gets killed.
+_TEST_TIMEOUT_SECONDS = 30*60
 
 # TODO(jbudorick): Move this up to the test instance if the net test server is
 # handled outside of the APK for the remote_device environment.
@@ -64,6 +71,14 @@ class _ApkDelegate(object):
 
   def Run(self, test, device, flags=None, **kwargs):
     extras = dict(self._extras)
+
+    if 'timeout' in kwargs:
+      # Make sure the instrumentation doesn't kill the test before the
+      # scripts do. The provided timeout value is in seconds, but the
+      # instrumentation deals with nanoseconds because that's how Android
+      # handles time.
+      extras[_EXTRA_SHARD_NANO_TIMEOUT] = int(
+          kwargs['timeout'] * _SECONDS_TO_NANOS)
 
     with device_temp_file.DeviceTempFile(device.adb) as command_line_file:
       device.WriteFile(command_line_file.name, '_ %s' % flags if flags else '_')
@@ -219,7 +234,7 @@ class LocalDeviceGtestRun(local_device_test_run.LocalDeviceTestRun):
   #override
   def _RunTest(self, device, test):
     # Run the test.
-    timeout = 900 * self.GetTool(device).GetTimeoutScale()
+    timeout = _TEST_TIMEOUT_SECONDS * self.GetTool(device).GetTimeoutScale()
     output = self._delegate.Run(
         test, device, timeout=timeout, retries=0)
     for s in self._servers[str(device)]:
@@ -238,8 +253,7 @@ class LocalDeviceGtestRun(local_device_test_run.LocalDeviceTestRun):
   def TearDown(self):
     @local_device_test_run.handle_shard_failures
     def individual_device_tear_down(dev):
-      for s in self._servers[str(dev)]:
+      for s in self._servers.get(str(dev), []):
         s.TearDown()
 
     self._env.parallel_devices.pMap(individual_device_tear_down)
-

@@ -103,10 +103,9 @@ declare_args() {
   # for safe browsing feature. Safe browsing can be compiled in 4 different
   # levels: 0 disables it, 1 enables it fully, and 2 enables only UI and
   # reporting features for use with Data Saver on Mobile, and 3 enables
-  # extended mobile protection via an external API.  When 3 is fully deployed,
-  # it will replace 2.
+  # extended mobile protection via an external API.
   if (is_android) {
-    safe_browsing_mode = 2
+    safe_browsing_mode = 3
   } else if (is_ios) {
     safe_browsing_mode = 0
   } else {
@@ -142,11 +141,11 @@ enable_spellcheck = !is_ios
 use_browser_spellchecker = is_android || is_mac
 
 # Enable basic printing support and UI.
-enable_basic_printing = !is_chromeos && !is_chromecast
+enable_basic_printing = !is_chromeos && !is_chromecast && !is_ios
 
 # Enable printing with print preview. It does not imply
 # enable_basic_printing. It's possible to build Chrome with preview only.
-enable_print_preview = !is_android && !is_chromecast
+enable_print_preview = !is_android && !is_chromecast && !is_ios
 
 # Enables the use of CDMs in pepper plugins.
 enable_pepper_cdms =

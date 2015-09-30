@@ -85,6 +85,16 @@ if (is_android) {
     # Disables process isolation when building _incremental targets.
     # Required for Android M+ due to SELinux policies (stronger sandboxing).
     disable_incremental_isolated_processes = false
+
+    # Speed up incremental compiles by compiling only changed files.
+    incremental_javac = false
+
+    # Speed up dexing using dx --incremental.
+    incremental_dx = true
+
+    # Adds intrumentation to each function. Writes a file with the order that
+    # functions are called at startup.
+    use_order_profiling = false
   }
 
   # Host stuff -----------------------------------------------------------------
@@ -205,11 +215,6 @@ if (is_android) {
   # Toolchain stuff ------------------------------------------------------------
 
   android_libcpp_root = "$android_ndk_root/sources/cxx-stl/llvm-libc++"
-  if (is_component_build) {
-    android_libcpp_library = "c++_shared"
-  } else {
-    android_libcpp_library = "c++_static"
-  }
 
   # ABI ------------------------------------------------------------------------
 

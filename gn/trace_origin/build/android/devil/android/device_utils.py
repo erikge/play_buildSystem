@@ -584,9 +584,6 @@ class DeviceUtils(object):
     host_checksums = None
     if not device_apk_paths:
       apks_to_install = all_apks
-    elif not reinstall:
-      self.Uninstall(package_name)
-      apks_to_install = all_apks
     elif len(device_apk_paths) > 1 and not split_apks:
       logging.warning(
           'Installing non-split APK when split APK was previously installed')
@@ -596,8 +593,15 @@ class DeviceUtils(object):
           'Installing split APK when non-split APK was previously installed')
       apks_to_install = all_apks
     else:
-      apks_to_install, host_checksums = (
-          self._ComputeStaleApks(package_name, all_apks))
+      try:
+        apks_to_install, host_checksums = (
+            self._ComputeStaleApks(package_name, all_apks))
+      except EnvironmentError as e:
+        logging.warning('Error calculating md5: %s', e)
+        apks_to_install, host_checksums = all_apks, None
+      if apks_to_install and not reinstall:
+        self.Uninstall(package_name)
+        apks_to_install = all_apks
 
     if apks_to_install:
       # Assume that we won't know the resulting device state.
@@ -748,7 +752,7 @@ class DeviceUtils(object):
     def handle_large_output(cmd, large_output_mode):
       if large_output_mode:
         with device_temp_file.DeviceTempFile(self.adb) as large_output_file:
-          cmd = '%s > %s' % (cmd, large_output_file.name)
+          cmd = '( %s )>%s' % (cmd, large_output_file.name)
           logging.debug('Large output mode enabled. Will write output to '
                         'device and read results from file.')
           handle_large_command(cmd)
