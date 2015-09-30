@@ -1,16 +1,16 @@
 更新方法和当前版本
 ================
 
-https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1
+https://chromium.googlesource.com/chromium/src/+/a6fba430209b9239e6a8833d30168529f710d83f
 
 gn
 ======
-DEPS        'buildtools_revision': 'f7310ee61725e68b1c8921e381830362cf4f0999',
-https://chromium.googlesource.com/chromium/buildtools.git/+/f7310ee61725e68b1c8921e381830362cf4f0999
+DEPS        'buildtools_revision': 'e7111440c07a883b82ffbbe6d26c744dfc6c9673',
+https://chromium.googlesource.com/chromium/buildtools.git/+/e7111440c07a883b82ffbbe6d26c744dfc6c9673
 
-mac/gn      https://storage.googleapis.com/chromium-gn/1baa70c3b3e434389ac2d00681693f065ed5d168
-linux64/gn  https://storage.googleapis.com/chromium-gn/e5266b9b95c21e5be89e9fd4acbb8a6359e99142
-win/gn.exe  https://storage.googleapis.com/chromium-gn/72d6ce4b7accae5a6afaedda1d8e9cf2c1ed09a4
+mac/gn      https://storage.googleapis.com/chromium-gn/cdde1c865ebe9fc25b1a69ec76129388d3c11e8a
+linux64/gn  https://storage.googleapis.com/chromium-gn/81338f81ebd8f93853081c07d6b8e68d2ef48403
+win/gn.exe  https://storage.googleapis.com/chromium-gn/d30f7fa662a1dd57272d281502793b5d2a6b66d5
 
 gyp
 ======
@@ -20,25 +20,25 @@ https://chromium.googlesource.com/external/gyp.git/+/01528c7244837168a1c80f06ff6
 
 ijar
 ======
-https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1/third_party/ijar/
+https://chromium.googlesource.com/chromium/src/+/a6fba430209b9239e6a8833d30168529f710d83f/third_party/ijar/
 
 jinja2
 ======
-https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1/third_party/jinja2/
+https://chromium.googlesource.com/chromium/src/+/a6fba430209b9239e6a8833d30168529f710d83f/third_party/jinja2/
 
 markupsafe
 ======
-https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1/third_party/markupsafe/
+https://chromium.googlesource.com/chromium/src/+/a6fba430209b9239e6a8833d30168529f710d83f/third_party/markupsafe/
 
 
 build
 ======
 
-https://chromium.googlesource.com/chromium/src/+/394057986ff5d00a841a976f3bd8d599603acaa1/build/
+https://chromium.googlesource.com/chromium/src/+/a6fba430209b9239e6a8833d30168529f710d83f/build/
 
 
 ==========
-跟踪Chromium方法
+跟踪Chromium方法，跟踪build修改内容的方法
 ==========
 
 1. copy Chromium build to "trace_origin", make a patch. (figure out what changed)
