@@ -4,9 +4,33 @@
 
 # This file contains common system config stuff for the Android build.
 
-import("//build/config_env.gni")
-
 if (is_android) {
+  has_chrome_android_internal =
+      exec_script("//build/dir_exists.py",
+                  [ rebase_path("//clank", root_build_dir) ],
+                  "string") == "True"
+
+  if (has_chrome_android_internal) {
+    import("//clank/config.gni")
+  }
+
+  if (!defined(default_android_sdk_root)) {
+### erik ###
+#    default_android_sdk_root = "//third_party/android_tools/sdk"
+#    default_android_sdk_version = "23"
+#    default_android_sdk_build_tools_version = "23.0.0"
+    default_android_sdk_root = getenv("ANDROID_SDK_HOME")
+    default_android_sdk_version = "22"
+    default_android_sdk_build_tools_version = "22.0.1"
+### erik ###
+  }
+
+### erik ###
+  if (!defined(default_android_ndk_root)) {
+#    default_android_ndk_root = "//third_party/android_tools/ndk"
+    default_android_ndk_root = getenv("ANDROID_NDK_HOME")
+  }
+### erik ###
 
   if (!defined(default_android_keystore_path)) {
     default_android_keystore_path =
@@ -61,6 +85,16 @@ if (is_android) {
     # Disables process isolation when building _incremental targets.
     # Required for Android M+ due to SELinux policies (stronger sandboxing).
     disable_incremental_isolated_processes = false
+
+    # Speed up incremental compiles by compiling only changed files.
+    incremental_javac = false
+
+    # Speed up dexing using dx --incremental.
+    incremental_dx = true
+
+    # Adds intrumentation to each function. Writes a file with the order that
+    # functions are called at startup.
+    use_order_profiling = false
   }
 
   # Host stuff -----------------------------------------------------------------
@@ -181,11 +215,6 @@ if (is_android) {
   # Toolchain stuff ------------------------------------------------------------
 
   android_libcpp_root = "$android_ndk_root/sources/cxx-stl/llvm-libc++"
-  if (is_component_build) {
-    android_libcpp_library = "c++_shared"
-  } else {
-    android_libcpp_library = "c++_static"
-  }
 
   # ABI ------------------------------------------------------------------------
 
