@@ -2,14 +2,9 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//build/config/nacl/config.gni")
-import("//build/config/sanitizers/sanitizers.gni")
 import("//build/toolchain/ccache.gni")
-import("//build/toolchain/goma.gni")
-import("//build/toolchain/toolchain.gni")
+import("//build/toolchain/lib_naming.gni")
 
-# This value will be inherited in the toolchain below.
-concurrent_links = exec_script("get_concurrent_links.py", [], "value")
 
 # This template defines a toolchain for something that works like gcc
 # (including clang).
@@ -56,7 +51,7 @@ concurrent_links = exec_script("get_concurrent_links.py", [], "value")
 #  - shlib_extension
 #      If this string is specified it will be used for the file extension
 #      for a shared library, rather than default value specified in
-#      toolchain.gni
+#      lib_naming.gni
 #  - strip
 #      Location of the strip executable. When specified, strip will be run on
 #      all shared libraries and executables as they are built. The pre-stripped
@@ -78,9 +73,6 @@ concurrent_links = exec_script("get_concurrent_links.py", [], "value")
 #  - use_ccache
 #      Override the global use_ccache setting, useful to opt-out of ccache in
 #      a particular toolchain by setting use_ccache = false in it.
-#  - use_goma
-#      Override the global use_goma setting, useful to opt-out of goma in a
-#      particular toolchain by setting use_gome = false in it.
 template("gcc_toolchain") {
   toolchain(target_name) {
     assert(defined(invoker.cc), "gcc_toolchain() must specify a \"cc\" value")
@@ -95,13 +87,7 @@ template("gcc_toolchain") {
     if (defined(invoker.use_ccache)) {
       use_ccache = invoker.use_ccache
     }
-    if (defined(invoker.use_goma)) {
-      use_goma = invoker.use_goma
-    }
-    if (use_goma) {
-      assert(!use_ccache, "Goma and ccache can't be used together.")
-      compiler_prefix = "$goma_dir/gomacc "
-    } else if (use_ccache) {
+    if (use_ccache) {
       compiler_prefix = "ccache "
     } else {
       compiler_prefix = ""
@@ -205,12 +191,6 @@ template("gcc_toolchain") {
     tool("alink") {
       rspfile = "{{output}}.rsp"
       arflags = ""
-      if (is_cfi && invoker.toolchain_os != "nacl") {
-        gold_plugin_path = rebase_path(
-                "//third_party/llvm-build/Release+Asserts/lib/LLVMgold.so",
-                root_build_dir)
-        arflags = "--plugin $gold_plugin_path"
-      }
       command = "rm -f {{output}} && $ar rcs $arflags {{output}} @$rspfile"
       description = "AR {{output}}"
       rspfile_content = "{{inputs}}"
@@ -346,15 +326,6 @@ template("gcc_toolchain") {
                                "is_nacl_glibc",
                              ])
 
-      if (defined(invoker.clear_sanitizers) && invoker.clear_sanitizers) {
-        is_asan = false
-        is_cfi = false
-        is_lsan = false
-        is_msan = false
-        is_syzyasan = false
-        is_tsan = false
-        is_ubsan = false
-      }
     }
 
     forward_variables_from(invoker, [ "deps" ])

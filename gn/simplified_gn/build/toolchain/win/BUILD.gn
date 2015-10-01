@@ -48,8 +48,6 @@ if (use_goma) {
   goma_prefix = ""
 }
 
-# This value will be inherited in the toolchain below.
-concurrent_links = exec_script("../get_concurrent_links.py", [], "value")
 
 # Copy the VS runtime DLL for the default toolchain the root build directory so
 # things will run.

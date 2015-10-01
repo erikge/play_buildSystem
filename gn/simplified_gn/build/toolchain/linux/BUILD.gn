@@ -2,15 +2,9 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//build/config/sysroot.gni")
 import("//build/toolchain/gcc_toolchain.gni")
 
 gcc_toolchain("clang_arm") {
-### erik ###
-#  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-#                       root_build_dir)
-#  cc = "$prefix/clang"
-#  cxx = "$prefix/clang++"
   cc = "clang"
   cxx = "clang++"
 
@@ -43,14 +37,8 @@ gcc_toolchain("arm") {
 }
 
 gcc_toolchain("clang_x86") {
-### erik ###
-#  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-#                       root_build_dir)
-#  cc = "${compiler_prefix}$prefix/clang"
-#  cxx = "${compiler_prefix}$prefix/clang++"
   cc = "clang"
   cxx = "clang++"
-### erik ###
   readelf = "readelf"
   nm = "nm"
   ar = "ar"
@@ -76,14 +64,8 @@ gcc_toolchain("x86") {
 }
 
 gcc_toolchain("clang_x64") {
-### erik ###
-#  prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-#                       root_build_dir)
-#  cc = "${compiler_prefix}$prefix/clang"
-#  cxx = "${compiler_prefix}$prefix/clang++"
   cc = "clang"
   cxx = "clang++"
-### erik ###
 
   readelf = "readelf"
   nm = "nm"

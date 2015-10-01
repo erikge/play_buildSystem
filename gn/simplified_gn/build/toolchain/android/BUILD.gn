@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//build/config/sysroot.gni")  # Imports android/config.gni.
+import("//build/config/android/config.gni")
 import("//build/toolchain/gcc_toolchain.gni")
 
 # The Android GCC toolchains share most of the same parameters, so we have this
@@ -33,17 +33,10 @@ template("android_gcc_toolchain") {
     # The tools should be run relative to the build dir.
     tool_prefix = rebase_path(invoker.tool_prefix, root_build_dir)
 
-
     is_clang = invoker.is_clang
     if (is_clang) {
-### erik ###
-#      prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
-#                           root_build_dir)
-#      cc = "$prefix/clang"
-#      cxx = "$prefix/clang++"
       cc = "clang"
       cxx = "clang++"
-### erik ###
     } else {
       cc = "${tool_prefix}gcc"
       cxx = "${tool_prefix}g++"
