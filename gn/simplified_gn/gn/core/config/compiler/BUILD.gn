@@ -1,0 +1,385 @@
+# Copyright (c) 2013 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+import("//gn/core/config/android/env.gni")
+
+if (current_cpu == "arm") {
+  import("//gn/core/config/compiler/arm.gni")
+}
+if (current_cpu == "mipsel" || current_cpu == "mips64el") {
+  import("//gn/core/config/compiler/mips.gni")
+}
+if (is_win) {
+  import("//gn/core/config/win/env.gni")
+}
+
+declare_args() {
+  # Compile in such a way as to enable profiling of the generated code. For
+  # example, don't omit the frame pointer and leave in symbols.
+  enable_profiling = false
+
+  # Compile in such a way as to make it possible for the profiler to unwind full
+  # stack frames. Setting this flag has a large effect on the performance of the
+  # generated code than just setting profiling, but gives the profiler more
+  # information to analyze.
+  # Requires profiling to be set to true.
+  enable_full_stack_frames_for_profiling = false
+
+  if (is_win) {
+    # Whether the VS xtree header has been patched to disable warning 4702. If
+    # it has, then we don't need to disable 4702 (unreachable code warning).
+    # The patch is preapplied to the internal toolchain and hence all bots.
+    msvs_xtree_patched = false
+  }
+}
+
+
+# compiler ---------------------------------------------------------------------
+#
+# Base compiler configuration.
+#
+# See also "runtime_library" below for related stuff and a discussion about
+# where stuff should go. Put warning related stuff in the "warnings" config.
+
+config("compiler") {
+  asmflags = []
+  cflags = []
+  cflags_c = []
+  cflags_cc = []
+  cflags_objc = []
+  cflags_objcc = []
+  ldflags = []
+  defines = []
+  configs = []
+
+  # System-specific flags. If your compiler flags apply to one of the
+  # categories here, add it to the associated file to keep this shared config
+  # smaller.
+  if (is_win) {
+    configs += [ "//gn/core/config/win:compiler" ]
+  } else if (is_android) {
+    configs += [ "//gn/core/config/android:compiler" ]
+  }
+
+  # In general, Windows is totally different, but all the other builds share
+  # some common GCC configuration.
+  if (!is_win) {
+    # Common GCC compiler flags setup.
+    # --------------------------------
+    cflags += [ "-fno-strict-aliasing" ]  # See http://crbug.com/32204
+    cflags_cc += [
+      "-fno-threadsafe-statics",
+
+      # Not exporting C++ inline functions can generally be applied anywhere
+      # so we do so here. Normal function visibility is controlled by
+      # //gn/core/config/gcc:symbol_visibility_hidden.
+      "-fvisibility-inlines-hidden",
+    ]
+
+    # Stack protection.
+    if (is_mac) {
+      cflags += [ "-fstack-protector-all" ]
+    } else if (is_posix && !is_chromeos && !is_nacl) {
+      # TODO(phajdan.jr): Use -fstack-protector-strong when our gcc supports it.
+      cflags += [ "--param=ssp-buffer-size=4" ]
+      if (is_android && (current_cpu == "arm64" || current_cpu == "x86")) {
+        cflags += [ "-fno-stack-protector" ]
+      } else {
+        cflags += [ "-fstack-protector" ]
+      }
+    }
+
+    # Linker warnings.
+    if (!(is_chromeos && current_cpu == "arm") &&
+        !(is_android && use_order_profiling) && !is_mac && !is_ios) {
+      # TODO(jochen): Enable this on chromeos on arm. http://crbug.com/356580
+      # TODO(azarchs): Fix link errors when linking with order_profiling=1
+      # crbug.com/485542
+      ldflags += [ "-Wl,--fatal-warnings" ]
+    }
+  }
+
+  if (is_clang && is_debug) {
+    # Allow comparing the address of references and 'this' against 0
+    # in debug builds. Technically, these can never be null in
+    # well-defined C/C++ and Clang can optimize such checks away in
+    # release builds, but they may be used in asserts in debug builds.
+    cflags_cc += [
+      "-Wno-undefined-bool-conversion",
+      "-Wno-tautological-undefined-compare",
+    ]
+  }
+
+
+  # Mac-specific compiler flags setup.
+  # ----------------------------------
+  if (is_mac || is_ios) {
+    # These flags are shared between the C compiler and linker.
+    common_mac_flags = []
+
+    # CPU architecture.
+    if (current_cpu == "x64") {
+      common_mac_flags += [
+        "-arch",
+        "x86_64",
+      ]
+    } else if (current_cpu == "x86") {
+      common_mac_flags += [
+        "-arch",
+        "i386",
+      ]
+    } else if (current_cpu == "arm") {
+      # TODO(GYP): we may need to distinguish between "arm64", "armv7",
+      # and "armv7s" for iOS, and hence need multiple current_cpu values
+      # rather than just "arm".
+      common_mac_flags += [
+        "-arch",
+        "arm64",
+      ]
+    }
+
+    cflags += common_mac_flags
+
+    # Without this, the constructors and destructors of a C++ object inside
+    # an Objective C struct won't be called, which is very bad.
+    cflags_objcc += [ "-fobjc-call-cxx-cdtors" ]
+
+    cflags_c += [ "-std=c99" ]
+
+    ldflags += common_mac_flags
+  } else if (is_posix) {
+    # Non-Mac Posix compiler flags setup.
+    # -----------------------------------
+    if (enable_profiling && !is_debug) {
+      # The GYP build spams this define into every compilation unit, as we do
+      # here, but it only appears to be used in base and a couple other places.
+      # TODO(abarth): Should we move this define closer to where it's used?
+      defines += [ "ENABLE_PROFILING" ]
+
+      cflags += [
+        "-fno-omit-frame-pointer",
+        "-g",
+      ]
+
+      if (enable_full_stack_frames_for_profiling) {
+        cflags += [
+          "-fno-inline",
+          "-fno-optimize-sibling-calls",
+        ]
+      }
+    }
+
+    # CPU architecture. We may or may not be doing a cross compile now, so for
+    # simplicity we always explicitly set the architecture.
+    if (current_cpu == "x64") {
+      cflags += [
+        "-m64",
+        "-march=x86-64",
+      ]
+      ldflags += [ "-m64" ]
+    } else if (current_cpu == "x86") {
+      cflags += [ "-m32" ]
+      ldflags += [ "-m32" ]
+      if (is_clang) {
+        cflags += [
+          # Else building libyuv gives clang's register allocator issues,
+          # see llvm.org/PR15798 / crbug.com/233709
+          "-momit-leaf-frame-pointer",
+
+          # Align the stack on 16-byte boundaries, http://crbug.com/418554.
+          "-mstack-alignment=16",
+          "-mstackrealign",
+        ]
+      }
+    } else if (current_cpu == "arm") {
+      if (is_clang && !is_android && !is_nacl) {
+        cflags += [
+          "-target",
+          "arm-linux-gnueabihf",
+        ]
+        ldflags += [
+          "-target",
+          "arm-linux-gnueabihf",
+        ]
+
+        # We need to disable clang's builtin assembler as it can't
+        # handle several asm files, crbug.com/124610
+        cflags += [ "-no-integrated-as" ]
+      }
+      if (!is_nacl) {
+        cflags += [
+          "-march=$arm_arch",
+          "-mfloat-abi=$arm_float_abi",
+        ]
+        if (arm_use_thumb) {
+          cflags += [ "-mthumb" ]
+          if (is_android && !is_clang) {
+            # Clang doesn't support this option.
+            cflags += [ "-mthumb-interwork" ]
+          }
+        }
+      }
+      if (arm_tune != "") {
+        cflags += [ "-mtune=$arm_tune" ]
+      }
+      if (!is_clang) {
+        # Clang doesn't support these flags.
+        cflags += [
+          # The tree-sra optimization (scalar replacement for
+          # aggregates enabling subsequent optimizations) leads to
+          # invalid code generation when using the Android NDK's
+          # compiler (r5-r7). This can be verified using
+          # webkit_unit_tests' WTF.Checked_int8_t test.
+          "-fno-tree-sra",
+
+          # The following option is disabled to improve binary
+          # size and performance in gcc 4.9.
+          "-fno-caller-saves",
+        ]
+      }
+    } else if (current_cpu == "mipsel") {
+      if (mips_arch_variant == "r6") {
+        cflags += [
+          "-mips32r6",
+          "-Wa,-mips32r6",
+        ]
+        if (is_android) {
+          ldflags += [
+            "-mips32r6",
+            "-Wl,-melf32ltsmip",
+          ]
+        }
+      } else if (mips_arch_variant == "r2") {
+        cflags += [
+          "-mips32r2",
+          "-Wa,-mips32r2",
+        ]
+        if (mips_float_abi == "hard" && mips_fpu_mode != "") {
+          cflags += [ "-m$mips_fpu_mode" ]
+        }
+      } else if (mips_arch_variant == "r1") {
+        cflags += [
+          "-mips32",
+          "-Wa,-mips32",
+        ]
+      }
+
+      if (mips_dsp_rev == 1) {
+        cflags += [ "-mdsp" ]
+      } else if (mips_dsp_rev == 2) {
+        cflags += [ "-mdspr2" ]
+      }
+
+      cflags += [ "-m${mips_float_abi}-float" ]
+    } else if (current_cpu == "mips64el") {
+      if (mips_arch_variant == "r6") {
+        cflags += [
+          "-mips64r6",
+          "-Wa,-mips64r6",
+        ]
+        ldflags += [ "-mips64r6" ]
+      } else if (mips_arch_variant == "r2") {
+        cflags += [
+          "-mips64r2",
+          "-Wa,-mips64r2",
+        ]
+        ldflags += [ "-mips64r2" ]
+      }
+    }
+
+    defines += [ "_FILE_OFFSET_BITS=64" ]
+
+    if (!is_android) {
+      defines += [
+        "_LARGEFILE_SOURCE",
+        "_LARGEFILE64_SOURCE",
+      ]
+    }
+
+    # Omit unwind support in official builds to save space. We can use breakpad
+    # for these builds.
+    if (!is_debug) {
+      cflags += [
+        "-fno-unwind-tables",
+        "-fno-asynchronous-unwind-tables",
+      ]
+      defines += [ "NO_UNWIND_TABLES" ]
+    } else {
+      cflags += [ "-funwind-tables" ]
+    }
+  }
+
+  # Linux/Android common flags setup.
+  # ---------------------------------
+  if (is_linux || is_android) {
+    cflags += [
+      "-fPIC",
+      "-pipe",  # Use pipes for communicating between sub-processes. Faster.
+    ]
+
+    ldflags += [
+      "-fPIC",
+      "-Wl,-z,noexecstack",
+      "-Wl,-z,now",
+      "-Wl,-z,relro",
+    ]
+    ldflags += [ "-Wl,-z,defs" ]
+  }
+
+  # Linux-specific compiler flags setup.
+  # ------------------------------------
+  if (is_linux) {
+    cflags += [ "-pthread" ]
+    ldflags += [ "-pthread" ]
+  }
+
+  # Clang-specific compiler flags setup.
+  # ------------------------------------
+  if (is_clang) {
+    cflags += [ "-fcolor-diagnostics" ]
+  }
+
+  # C++11 compiler flags setup.
+  # ---------------------------
+  if (is_linux || is_android || (is_nacl && is_clang)) {
+    # gnu++11 instead of c++11 is needed because some code uses typeof() (a
+    # GNU extension).
+    # TODO(thakis): Eventually switch this to c++11 instead,
+    # http://crbug.com/427584
+    cflags_cc += [ "-std=gnu++11" ]
+  } else if (!is_win && !is_nacl) {
+    # TODO(mcgrathr) - the NaCl GCC toolchain doesn't support either gnu++11
+    # or c++11; we technically don't need this toolchain any more, but there
+    # are still a few buildbots using it, so until those are turned off
+    # we need the !is_nacl clause and the (is_nacl && is_clang) clause, above.
+    cflags_cc += [ "-std=c++11" ]
+  }
+
+  # Pass the same C/C++ flags to the objective C/C++ compiler.
+  cflags_objc += cflags_c
+  cflags_objcc += cflags_cc
+
+  # Assign any flags set for the C compiler to asmflags so that they are sent
+  # to the assembler. The Windows assembler takes different types of flags
+  # so only do so for posix platforms.
+  if (is_posix) {
+    asmflags += cflags
+    asmflags += cflags_c
+  }
+}
+
+config("compiler_arm_fpu") {
+  if (current_cpu == "arm" && !is_ios && !is_nacl) {
+    cflags = [ "-mfpu=$arm_fpu" ]
+    asmflags = cflags
+  }
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,181 @@
+# =============================================================================
+# TARGET DEFAULTS
+# =============================================================================
+#
+# Set up the default configuration for every build target of the given type.
+# The values configured here will be automatically set on the scope of the
+# corresponding target. Target definitions can add or remove to the settings
+# here as needed.
+
+# Holds all configs used for making native executables and libraries, to avoid
+# duplication in each target below.
+_native_compiler_configs = [
+  "//gn/core/config/compiler:compiler",
+  "//gn/core/config/compiler:compiler_arm_fpu",
+  "//gn/core/config/compiler/optimization:default_optimization",
+  "//gn/core/config/compiler/rtti:no_rtti",
+  "//gn/core/config/compiler/runtime_library:runtime_library",
+  "//gn/core/config/compiler/symbols:default_symbols",
+  "//gn/core/config/compiler/warning:higher_warning",
+]
+
+if (is_win) {
+  _native_compiler_configs += [
+    "//gn/core/config/win:lean_and_mean",
+    "//gn/core/config/win:nominmax",
+    "//gn/core/config/win:sdk",
+    "//gn/core/config/win:unicode",
+    "//gn/core/config/win:winver",
+  ]
+}
+if (current_os == "winrt_81" || current_os == "winrt_81_phone" ||
+    current_os == "winrt_10") {
+  _native_compiler_configs += [ "//gn/core/config/win:target_winrt" ]
+}
+
+if (is_posix) {
+  _native_compiler_configs += [
+    "//gn/core/config/gcc:no_exceptions",
+    "//gn/core/config/gcc:symbol_visibility_hidden",
+  ]
+}
+if (is_linux) {
+  _native_compiler_configs += [ "//gn/core/config/compiler/binutils:compiler" ]
+  _native_compiler_configs += [ "//gn/core/config/linux:sdk" ]
+} else if (is_mac) {
+  _native_compiler_configs += [ "//gn/core/config/mac:sdk" ]
+} else if (is_ios) {
+  _native_compiler_configs += [ "//gn/core/config/ios:sdk" ]
+} else if (is_android) {
+  _native_compiler_configs += [ "//gn/core/config/android:sdk" ]
+}
+
+if (is_android) {
+  _native_compiler_configs +=
+      [ "//gn/core/config/android:default_cygprofile_instrumentation" ]
+}
+
+
+if (is_clang && !is_nacl) {
+  _native_compiler_configs += [
+    "//gn/core/config/compiler/clang:extra_warnings",
+  ]
+}
+
+# Debug/release-related defines.
+if (is_debug) {
+  _native_compiler_configs += [ "//gn/core/config:debug" ]
+} else {
+  _native_compiler_configs += [ "//gn/core/config:release" ]
+}
+
+# Windows linker setup for EXEs and DLLs.
+if (is_win) {
+  _windows_linker_configs = [
+    "//gn/core/config/win:default_incremental_linking",
+    "//gn/core/config/win:sdk_link",
+    "//gn/core/config/win:common_linker_setup",
+
+    # Default to console-mode apps. Most of our targets are tests and such
+    # that shouldn't use the windows subsystem.
+    "//gn/core/config/win:console",
+  ]
+}
+
+# Executable defaults.
+# ==============================================================================
+_executable_configs = _native_compiler_configs
+if (is_win) {
+  _executable_configs += _windows_linker_configs
+} else if (is_mac) {
+  _executable_configs += [
+    "//gn/core/config/mac:mac_dynamic_flags",
+    "//gn/core/config/mac:mac_executable_flags",
+  ]
+} else if (is_linux || is_android) {
+  _executable_configs += [ "//gn/core/config/gcc:executable_ldconfig" ]
+  if (is_android) {
+    _executable_configs += [ "//gn/core/config/android:executable_config" ]
+  }
+}
+
+# Static library defaults.
+# ==============================================================================
+_static_library_configs = _native_compiler_configs
+
+# Shared library defaults (also for components in component mode).
+# ==============================================================================
+_shared_library_configs = _native_compiler_configs
+if (is_win) {
+  _shared_library_configs += _windows_linker_configs
+} else if (is_mac) {
+  _shared_library_configs += [ "//gn/core/config/mac:mac_dynamic_flags" ]
+} else if (is_android) {
+  # Strip native JNI exports from shared libraries by default. Binaries that
+  # want this can remove this config.
+#  __shared_library_configs +=
+#      [ "//gn/core/config/android:hide_native_jni_exports" ]
+}
+
+
+# ==============================================================================
+# HOOK: customed target defaults
+# ==============================================================================
+has_customed =
+      exec_script("//gn/script/file_exists.py",
+                  [ rebase_path("//BUILD.gni", root_build_dir) ],
+                  "string") == "True"
+
+if (has_customed) {
+  import("//BUILD.gni")
+
+  if (custom_executable != []) {
+    _executable_configs += custom_executable
+  }
+  if (custom_static_library != []) {
+    _static_library_configs += custom_static_library
+  }
+  if (custom_shared_library != []) {
+    _shared_library_configs += custom_shared_library
+  }
+}
+
+
+# Apply target defaults.
+# ==============================================================================
+set_defaults("executable") {
+  configs = _executable_configs
+}
+
+set_defaults("static_library") {
+  configs = _static_library_configs
+}
+
+set_defaults("shared_library") {
+  configs = _shared_library_configs
+}
+
+if (is_component_build) {
+  set_defaults("component") {
+    configs = _shared_library_configs
+  }
+}
+
+# Source set defaults (also for components in non-component mode).
+set_defaults("source_set") {
+  configs = _static_library_configs
+}
+if (!is_component_build) {
+  set_defaults("component") {
+    configs = _static_library_configs
+  }
+}
+
+# Test defaults.
+set_defaults("test") {
+  if (is_android) {
+    configs = _shared_library_configs
+  } else {
+    configs = _executable_configs
+  }
+}

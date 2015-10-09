@@ -1,0 +1,72 @@
+# GNU Binutils
+# The GNU Binutils are a collection of binary tools.
+# https://www.gnu.org/software/binutils/
+
+import("//gn/core/toolchain/ccache.gni")
+
+assert(is_linux)
+
+declare_args() {
+  # Whether to use the binary binutils checked into third_party/binutils.
+  # These are not multi-arch so cannot be used except on x86 and x86-64 (the
+  # only two architectures that are currently checked in). Turn this off when
+  # you are using a custom toolchain and need to control -B in cflags.
+  linux_use_bundled_binutils = is_linux && current_cpu == "x64"
+  binutils_path = rebase_path("//third_party/binutils/Linux_x64/Release/bin",
+                              root_build_dir)
+
+  # TODO(GYP): We should be using 64-bit gold for linking on both 64-bit Linux
+  # and 32-bit linux; 32-bit Gold runs out of address-space on 32-bit builds.
+  # However, something isn't quite working right on the 32-bit builds.
+  use_gold = is_linux && current_cpu == "x64"
+
+  # When we are going to use gold we need to find it.
+  if (use_gold) {
+    gold_path = rebase_path("//third_party/binutils/Linux_x64/Release/bin",
+                            root_build_dir)
+  } else {
+    gold_path = ""
+  }
+
+  # use_debug_fission: whether to use split DWARF debug info
+  # files. This can reduce link time significantly, but is incompatible
+  # with some utilities such as icecc and ccache. Requires gold and
+  # gcc >= 4.8 or clang.
+  # http://gcc.gnu.org/wiki/DebugFission
+  use_debug_fission = is_debug && !is_win && use_gold &&
+                      linux_use_bundled_binutils && !use_ccache
+}
+
+config("compiler") {
+  if (linux_use_bundled_binutils) {
+    cflags += [ "-B$binutils_path" ]
+  }
+
+  if (use_gold) {
+    ldflags += [
+      "-B$gold_path",
+
+      # Newer gccs and clangs support -fuse-ld, use the flag to force gold
+      # selection.
+      # gcc -- http://gcc.gnu.org/onlinedocs/gcc-4.8.0/gcc/Optimize-Options.html
+      "-fuse-ld=gold",
+
+      # Experimentation found that using four linking threads
+      # saved ~20% of link time.
+      # https://groups.google.com/a/chromium.org/group/chromium-dev/browse_thread/thread/281527606915bb36
+      # Only apply this to the target linker, since the host
+      # linker might not be gold, but isn't used much anyway.
+      # TODO(raymes): Disable threading because gold is frequently
+      # crashing on the bots: crbug.com/161942.
+      #"-Wl,--threads",
+      #"-Wl,--thread-count=4",
+    ]
+
+  }
+}
+
+config("has_symbols") {
+  if (use_debug_fission) {
+    cflags += [ "-gsplit-dwarf" ]
+  }
+}

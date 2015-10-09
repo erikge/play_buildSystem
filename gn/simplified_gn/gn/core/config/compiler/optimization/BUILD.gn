@@ -1,0 +1,174 @@
+
+import("../symbols/config.gni")
+
+declare_args() {
+  # Normally, Android builds are lightly optimized, even for debug builds, to
+  # keep binary size down. Setting this flag to true disables such optimization
+  android_full_debug = false
+}
+
+# Optimization -----------------------------------------------------------------
+#
+# The BUILDCONFIG file sets the "default_optimization" config on targets by
+# default. It will be equivalent to either "optimize" (release) or
+# "no_optimize" (debug) optimization configs.
+#
+# You can override the optimization level on a per-target basis by removing the
+# default config and then adding the named one you want:
+#
+#   configs -= [ "//gn/core/config/compiler:default_optimization" ]
+#   configs += [ "//gn/core/config/compiler:optimize_max" ]
+
+# Shared settings for both "optimize" and "optimize_max" configs.
+# IMPORTANT: On Windows "/O1" and "/O2" must go before the common flags.
+if (is_win) {
+  common_optimize_on_cflags = [
+    "/Ob2",  # Both explicit and auto inlining.
+    "/Oy-",  # Disable omitting frame pointers, must be after /O2.
+    "/d2Zi+",  # Improve debugging of optimized code.
+    "/Zc:inline",  # Remove unreferenced COMDAT (faster links).
+  ]
+  if (!is_asan) {
+    common_optimize_on_cflags += [
+      # Put data in separate COMDATs. This allows the linker
+      # to put bit-identical constants at the same address even if
+      # they're unrelated constants, which saves binary size.
+      # This optimization can't be used when ASan is enabled because
+      # it is not compatible with the ASan ODR checker.
+      "/Gw",
+    ]
+  }
+  common_optimize_on_ldflags = [ "/OPT:ICF" ]
+  if (is_official_build) {
+    common_optimize_on_ldflags += [
+      # Link-time code generation.
+      "/LTCG",
+
+      # Set the number of LTCG code-gen threads to eight. The default is four.
+      # This gives a 5-10% link speedup.
+      "/cgthreads:8",
+    ]
+  }
+} else {
+  common_optimize_on_cflags = [
+    # Don't emit the GCC version ident directives, they just end up in the
+    # .comment section taking up binary size.
+    "-fno-ident",
+
+    # Put data and code in their own sections, so that unused symbols
+    # can be removed at link time with --gc-sections.
+    "-fdata-sections",
+    "-ffunction-sections",
+  ]
+  common_optimize_on_ldflags = []
+
+  if (is_android) {
+    common_optimize_on_cflags += [ "-fomit-frame-pointer" ]
+
+    # TODO(jdduke) Re-enable on mips after resolving linking
+    # issues with libc++ (crbug.com/456380).
+    if (current_cpu != "mipsel" && current_cpu != "mips64el") {
+      common_optimize_on_ldflags += [
+        # Warn in case of text relocations.
+        "-Wl,--warn-shared-textrel",
+      ]
+    }
+  }
+
+  if (is_mac || is_ios) {
+    if (symbol_level == 2) {
+      # Mac dead code stripping requires symbols.
+      common_optimize_on_ldflags += [ "-Wl,-dead_strip" ]
+    }
+  } else {
+    # Non-Mac Posix linker flags.
+    common_optimize_on_ldflags += [
+      # Specifically tell the linker to perform optimizations.
+      # See http://lwn.net/Articles/192624/ .
+      "-Wl,-O1",
+      "-Wl,--gc-sections",
+    ]
+
+    common_optimize_on_ldflags += [ "-Wl,--as-needed" ]
+  }
+}
+
+# Default "optimization on" config.
+config("optimize") {
+  if (is_win) {
+    # Favor size over speed, /O1 must be before the common flags. The GYP
+    # build also specifies /Os and /GF but these are implied by /O1.
+    cflags = [ "/O1" ] + common_optimize_on_cflags + [ "/Oi" ]
+  } else if (is_android || is_ios) {
+    # Favor size over speed.
+    cflags = [ "-Os" ] + common_optimize_on_cflags
+  } else {
+    # Linux & Mac favor speed over size.
+    # TODO(brettw) it's weird that Mac and desktop Linux are different. We should
+    # explore favoring size over speed in this case as well.
+    cflags = [ "-O2" ] + common_optimize_on_cflags
+  }
+  ldflags = common_optimize_on_ldflags
+}
+
+# Turn off optimizations.
+config("no_optimize") {
+  if (is_win) {
+    cflags = [
+      "/Od",  # Disable optimization.
+      "/Ob0",  # Disable all inlining (on by default).
+      "/RTC1",  # Runtime checks for stack frame and uninitialized variables.
+    ]
+  } else if (is_android && !android_full_debug) {
+    # On Android we kind of optimize some things that don't affect debugging
+    # much even when optimization is disabled to get the binary size down.
+    cflags = [
+      "-Os",
+      "-fdata-sections",
+      "-ffunction-sections",
+    ]
+    cflags += [ "-fomit-frame-pointer" ]
+    ldflags = common_optimize_on_ldflags
+  } else {
+    cflags = [ "-O0" ]
+    ldflags = []
+  }
+}
+
+# Turns up the optimization level. On Windows, this implies whole program
+# optimization and link-time code generation which is very expensive and should
+# be used sparingly.
+config("optimize_max") {
+  ldflags = common_optimize_on_ldflags
+  if (is_win) {
+    # Favor speed over size, /O2 must be before the common flags. The GYP
+    # build also specifies /Ot, /Oi, and /GF, but these are implied by /O2.
+    cflags = [ "/O2" ] + common_optimize_on_cflags
+    if (is_official_build) {
+      # TODO(GYP): TODO(dpranke): Should these only be on in an official
+      # build, or on all the time? For now we'll require official build so
+      # that the compile is clean.
+      cflags += [
+        "/GL",  # Whole program optimization.
+
+        # Disable Warning 4702 ("Unreachable code") for the WPO/PGO builds.
+        # Probably anything that this would catch that wouldn't be caught in a
+        # normal build isn't going to actually be a bug, so the incremental
+        # value of C4702 for PGO builds is likely very small.
+        "/wd4702",
+      ]
+    }
+  } else {
+    cflags = [ "-O2" ] + common_optimize_on_cflags
+  }
+}
+
+# The default optimization applied to all targets. This will be equivalent to
+# either "optimize" or "no_optimize", depending on the build flags.
+config("default_optimization") {
+  if (is_debug) {
+    configs = [ ":no_optimize" ]
+  } else {
+    configs = [ ":optimize" ]
+  }
+}

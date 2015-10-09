@@ -1,0 +1,19 @@
+# =============================================================================
+# CUSTOM TARGET DEFAULTS
+# =============================================================================
+
+declare_args() {
+  # The default configuration for executable build target.
+  custom_executable = []
+
+  # The default configuration for static library and source set build target.
+  custom_static_library = []
+
+  # The default configuration for shared library and component build target.
+  custom_shared_library = []
+
+}
+
+#custom_static_library += [
+#  "//gn/feature/precompile:precompiled_headers",
+#]

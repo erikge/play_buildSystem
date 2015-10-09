@@ -1,0 +1,26 @@
+# =============================================================================
+# GLOBAL BUILD FLAGS
+# =============================================================================
+#
+# This block lists input arguments to the build, along with their default
+# values.
+#
+# If a value is specified on the command line, it will overwrite the defaults
+# given in a declare_args block, otherwise the default will be used.
+#
+# YOU SHOULD ALMOST NEVER NEED TO ADD FLAGS TO THIS FILE.
+
+declare_args() {
+  # Component build.
+  is_component_build = false
+
+  # Debug build.
+  is_debug = false
+
+  # Set to true when compiling with the Clang compiler. Typically this is used
+  # to configure warnings.
+  is_clang = current_os == "mac" || current_os == "ios" ||
+             current_os == "linux" || current_os == "chromeos"
+
+  # DON'T ADD MORE FLAGS HERE. Read the comment above.
+}

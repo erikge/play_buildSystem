@@ -8,6 +8,7 @@ declare_args() {
   is_java = false
 }
 
+
 group("root") {
 
   deps = [
@@ -22,7 +23,7 @@ group("root") {
 
   if (is_android && !is_java) {
     deps += [
-      "//demo_android",
+#      "//demo_android",
     ]
   }
 

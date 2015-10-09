@@ -1,0 +1,82 @@
+
+import("//gn/core/config/compiler/symbols/config.gni")
+
+# Symbols ----------------------------------------------------------------------
+
+# The BUILDCONFIG file sets the "default_symbols" config on targets by
+# default. It will be equivalent to one the three specific symbol levels.
+#
+# You can override the symbol level on a per-target basis by removing the
+# default config and then adding the named one you want:
+#
+#   configs -= [ "//gn/core/config/compiler:default_symbols" ]
+#   configs += [ "//gn/core/config/compiler:symbols" ]
+
+# Full symbols.
+config("symbols") {
+  if (is_win) {
+    import("//gn/core/toolchain/goma.gni")
+    if (use_goma) {
+      cflags = [ "/Z7" ]  # No PDB file
+    } else {
+      cflags = [ "/Zi" ]  # Produce PDB file, no edit and continue.
+    }
+    if (is_win_fastlink) {
+      # Tell VS 2015+ to create a PDB that references debug
+      # information in .obj and .lib files instead of copying
+      # it all. This flag is incompatible with /PROFILE
+      ldflags = [ "/DEBUG:FASTLINK" ]
+    } else {
+      ldflags = [ "/DEBUG" ]
+    }
+  } else {
+    cflags = [ "-g2" ]
+    asmflags = cflags
+    ldflags = []
+  }
+}
+
+# Minimal symbols.
+config("minimal_symbols") {
+  if (is_win) {
+    # Linker symbols for backtraces only.
+    cflags = []
+    if (is_win_fastlink) {
+      # Tell VS 2015+ to create a PDB that references debug
+      # information in .obj and .lib files instead of copying
+      # it all. This flag is incompatible with /PROFILE
+      ldflags = [ "/DEBUG:FASTLINK" ]
+    } else {
+      ldflags = [ "/DEBUG" ]
+    }
+  } else {
+    cflags = [ "-g1" ]
+    asmflags = cflags
+    ldflags = []
+  }
+}
+
+# No symbols.
+config("no_symbols") {
+  if (!is_win) {
+    cflags = [ "-g0" ]
+    asmflags = cflags
+  }
+}
+
+# Default symbols.
+config("default_symbols") {
+  if (symbol_level == 0) {
+    configs = [ ":no_symbols" ]
+  } else if (symbol_level == 1) {
+    configs = [ ":minimal_symbols" ]
+  } else if (symbol_level == 2) {
+    configs = [ ":symbols" ]
+  } else {
+    assert(false)
+  }
+
+  if (is_linux && symbol_level > 0) {
+    configs += ["//gn/core/config/binutils/has_symbols" ]
+  }
+}

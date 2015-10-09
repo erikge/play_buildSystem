@@ -1,0 +1,27 @@
+
+# runtime_library -------------------------------------------------------------
+#
+# Sets the runtime library and associated options.
+#
+# How do you determine what should go in here vs. "compiler" above? Consider if
+# a target might choose to use a different runtime library (ignore for a moment
+# if this is possible or reasonable on your system). If such a target would want
+# to change or remove your option, put it in the runtime_library config. If a
+# target wants the option regardless, put it in the compiler config.
+
+config("runtime_library") {
+  configs = []
+
+  # System-specific flags. If your compiler flags apply to one of the
+  # categories here, add it to the associated file to keep this shared config
+  # smaller.
+  if (is_win) {
+    configs += [ "//gn/core/config/win:runtime_library" ]
+  } else if (is_android) {
+    configs += [ "//gn/core/config/android:runtime_library" ]
+  }
+
+  if (is_component_build) {
+    defines += [ "COMPONENT_BUILD" ]
+  }
+}

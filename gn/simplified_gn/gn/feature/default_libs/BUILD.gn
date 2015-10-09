@@ -1,0 +1,82 @@
+# Default libraries ------------------------------------------------------------
+
+# This config defines the default libraries applied to all targets.
+config("default_libs") {
+  if (is_win) {
+    # TODO(brettw) this list of defaults should probably be smaller, and
+    # instead the targets that use the less common ones (e.g. wininet or
+    # winspool) should include those explicitly.
+    libs = [
+      "advapi32.lib",
+      "comdlg32.lib",
+      "dbghelp.lib",
+      "delayimp.lib",
+      "dnsapi.lib",
+      "gdi32.lib",
+      "kernel32.lib",
+      "msimg32.lib",
+      "odbc32.lib",
+      "odbccp32.lib",
+      "ole32.lib",
+      "oleaut32.lib",
+      "psapi.lib",
+      "shell32.lib",
+      "shlwapi.lib",
+      "user32.lib",
+      "usp10.lib",
+      "uuid.lib",
+      "version.lib",
+      "wininet.lib",
+      "winmm.lib",
+      "winspool.lib",
+      "ws2_32.lib",
+
+      # Please don't add more stuff here. We should actually be making this
+      # list smaller, since all common things should be covered. If you need
+      # some extra libraries, please just add a libs = [ "foo.lib" ] to your
+      # target that needs it.
+    ]
+  } else if (is_android) {
+    # Android uses -nostdlib so we need to add even libc here.
+    libs = [
+      # TODO(brettw) write a version of this, hopefully we can express this
+      # without forking out to GCC just to get the library name. The android
+      # toolchain directory should probably be extracted into a .gni file that
+      # this file and the android toolchain .gn file can share.
+      #   # Manually link the libgcc.a that the cross compiler uses.
+      #   '<!(<(android_toolchain)/*-gcc -print-libgcc-file-name)',
+      "c",
+      "dl",
+      "m",
+    ]
+
+    # The libc++ runtime library.
+    if (is_component_build) {
+      libs += [ "c++_shared" ]
+    } else {
+      libs += [ "c++_static" ]
+    }
+  } else if (is_mac) {
+    libs = [
+      "AppKit.framework",
+      "ApplicationServices.framework",
+      "Carbon.framework",
+      "CoreFoundation.framework",
+      "Foundation.framework",
+      "IOKit.framework",
+      "OpenGL.framework",
+      "Security.framework",
+    ]
+  } else if (is_ios) {
+    # The libraries listed here will be specified for both the target and the
+    # host. Only the common ones should be listed here.
+    libs = [
+      "CoreFoundation.framework",
+      "CoreGraphics.framework",
+      "CoreText.framework",
+      "Foundation.framework",
+    ]
+  } else if (is_linux) {
+    libs = [ "dl" ]
+  }
+}

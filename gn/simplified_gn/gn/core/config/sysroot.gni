@@ -1,0 +1,45 @@
+# Copyright (c) 2013 The Chromium Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+
+# This header file defines the "sysroot" variable which is the absolute path
+# of the sysroot. If no sysroot applies, the variable will be an empty string.
+
+
+declare_args() {
+  # The absolute path of the sysroot that is applied when compiling using
+  # the target toolchain.
+  target_sysroot = ""
+}
+
+if (current_toolchain == default_toolchain && target_sysroot != "") {
+  sysroot = target_sysroot
+} else if (is_android) {
+  import("//gn/core/config/android/env.gni")
+  if (current_cpu == "x86") {
+    sysroot = rebase_path("$android_ndk_root/$x86_android_sysroot_subdir")
+  } else if (current_cpu == "arm") {
+    sysroot = rebase_path("$android_ndk_root/$arm_android_sysroot_subdir")
+  } else if (current_cpu == "mipsel") {
+    sysroot = rebase_path("$android_ndk_root/$mips_android_sysroot_subdir")
+  } else if (current_cpu == "x64") {
+    sysroot = rebase_path("$android_ndk_root/$x86_64_android_sysroot_subdir")
+  } else if (current_cpu == "arm64") {
+    sysroot = rebase_path("$android_ndk_root/$arm64_android_sysroot_subdir")
+  } else if (current_cpu == "mips64") {
+    sysroot = rebase_path("$android_ndk_root/$mips64_android_sysroot_subdir")
+  } else {
+    sysroot = ""
+  }
+} else if (is_linux) {
+  sysroot = ""
+} else if (is_mac) {
+  import("//gn/core/config/mac/env.gni")
+
+  sysroot = mac_sdk_path
+} else if (is_ios) {
+  import("//gn/core/config/ios/env.gni")
+  sysroot = ios_sdk_path
+} else {
+  sysroot = ""
+}
