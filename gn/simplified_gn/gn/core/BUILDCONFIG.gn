@@ -110,7 +110,7 @@ if (current_os == "") {
 # - Don't call exec_script inside declare_args. This will execute the script
 #   even if the value is overridden, which is wasteful. See first bullet.
 
-import("//gn/core/user/switch.gni")
+import("//gn/core/switch.gni")
 
 declare_args() {
   # Whether we're a traditional desktop unix.
@@ -330,7 +330,7 @@ set_sources_assignment_filter(sources_assignment_filter)
 # TARGET DEFAULTS
 # =============================================================================
 
-import("//gn/core/user/target_default.gni")
+import("//gn/core/config/target_default.gni")
 
 # ==============================================================================
 # TOOLCHAIN SETUP

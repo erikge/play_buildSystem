@@ -123,19 +123,19 @@ if (is_win) {
 # ==============================================================================
 has_customed =
       exec_script("//gn/script/file_exists.py",
-                  [ rebase_path("//BUILD.gni", root_build_dir) ],
+                  [ rebase_path("//config.gni", root_build_dir) ],
                   "string") == "True"
 
 if (has_customed) {
-  import("//BUILD.gni")
+  import("//config.gni")
 
-  if (custom_executable != []) {
+  if (defined(custom_executable) && custom_executable != []) {
     _executable_configs += custom_executable
   }
-  if (custom_static_library != []) {
+  if (defined(custom_static_library) && custom_static_library != []) {
     _static_library_configs += custom_static_library
   }
-  if (custom_shared_library != []) {
+  if (defined(custom_shared_library) && custom_shared_library != []) {
     _shared_library_configs += custom_shared_library
   }
 }
