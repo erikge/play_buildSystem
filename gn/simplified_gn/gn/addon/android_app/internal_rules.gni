@@ -21,104 +21,7 @@ if (is_debug) {
   android_configuration_name = "Debug"
 }
 
-template("android_lint") {
-  set_sources_assignment_filter([])
 
-  jar_path = invoker.jar_path
-  android_manifest = invoker.android_manifest
-  java_files = invoker.java_files
-  base_path = "$target_gen_dir/$target_name"
-
-  action(target_name) {
-    forward_variables_from(invoker,
-                           [
-                             "deps",
-                             "data_deps",
-                             "public_deps",
-                             "testonly",
-                           ])
-    script = "//gn/android/gyp/lint.py"
-    result_path = base_path + "/result.xml"
-    config_path = base_path + "/config.xml"
-    suppressions_file = "//gn/android/lint/suppressions.xml"
-    inputs = [
-               suppressions_file,
-               android_manifest,
-               jar_path,
-             ] + java_files
-
-    outputs = [
-      config_path,
-      result_path,
-    ]
-
-    rebased_java_files = rebase_path(java_files, root_build_dir)
-
-    args = [
-      "--lint-path=$rebased_android_sdk_root/tools/lint",
-      "--config-path",
-      rebase_path(suppressions_file, root_build_dir),
-      "--manifest-path",
-      rebase_path(android_manifest, root_build_dir),
-      "--product-dir=.",
-      "--jar-path",
-      rebase_path(jar_path, root_build_dir),
-      "--processed-config-path",
-      rebase_path(config_path, root_build_dir),
-      "--result-path",
-      rebase_path(result_path, root_build_dir),
-      "--java-files=$rebased_java_files",
-      "--enable",
-    ]
-  }
-}
-
-template("findbugs") {
-  jar_path = invoker.jar_path
-
-  build_config = invoker.build_config
-
-  action(target_name) {
-    forward_variables_from(invoker,
-                           [
-                             "deps",
-                             "testonly",
-                           ])
-    script = "//gn/android/findbugs_diff.py"
-    depfile = "$target_gen_dir/$target_name.d"
-    result_path = "$target_gen_dir/$target_name/result.xml"
-    exclusions_file = "//gn/android/findbugs_filter/findbugs_exclude.xml"
-
-    rebased_build_config = rebase_path(build_config, root_build_dir)
-
-    inputs = [
-      "//gn/android/pylib/utils/findbugs.py",
-      exclusions_file,
-      jar_path,
-    ]
-
-    outputs = [
-      depfile,
-      result_path,
-    ]
-
-    args = [
-      "--depfile",
-      rebase_path(depfile, root_build_dir),
-      "--exclude",
-      rebase_path(exclusions_file, root_build_dir),
-      "--auxclasspath-gyp",
-      "@FileArg($rebased_build_config:javac:classpath)",
-      "--output-file",
-      rebase_path(result_path, root_build_dir),
-      rebase_path(jar_path, root_build_dir),
-    ]
-
-    if (findbugs_verbose) {
-      args += [ "-vv" ]
-    }
-  }
-}
 
 # Generates a script in the output bin.java directory to run a java binary.
 #
@@ -139,7 +42,7 @@ template("java_binary_script") {
   _script_name = invoker.script_name
 
   action(target_name) {
-    script = "//gn/android/gyp/create_java_binary_script.py"
+    script = "//gn/addon/android_app/create_java_binary_script.py"
     depfile = "$target_gen_dir/$_script_name.d"
     java_script = "$root_build_dir/bin/$_script_name"
     inputs = [
@@ -180,7 +83,7 @@ template("dex") {
                              "sources",
                              "testonly",
                            ])
-    script = "//gn/android/gyp/dex.py"
+    script = "//gn/addon/android_app/dex.py"
     depfile = "$target_gen_dir/$target_name.d"
     outputs = [
       depfile,
@@ -246,7 +149,7 @@ template("write_build_config") {
                              "visibility",
                            ])
 
-    script = "//gn/android/gyp/write_build_config.py"
+    script = "//gn/addon/android_app/write_build_config.py"
     depfile = "$target_gen_dir/$target_name.d"
     inputs = []
 
@@ -394,7 +297,7 @@ template("process_java_prebuilt") {
   assert(invoker.build_config != "")
 
   if (defined(invoker.proguard_preprocess) && invoker.proguard_preprocess) {
-    _proguard_jar_path = "//third_party/proguard/lib/proguard.jar"
+    _proguard_jar_path = "${rebased_android_sdk_root}/tools/proguard/lib/proguard.jar"
     _proguard_config_path = invoker.proguard_config
     _build_config = invoker.build_config
     _rebased_build_config = rebase_path(_build_config, root_build_dir)
@@ -406,7 +309,7 @@ template("process_java_prebuilt") {
                                "deps",
                                "public_deps",
                              ])
-      script = "//gn/android/gyp/proguard.py"
+      script = "//gn/addon/android_app/proguard.py"
       inputs = [
         android_sdk_jar,
         _proguard_jar_path,
@@ -486,9 +389,8 @@ template("package_apk") {
                              "public_deps",
                              "testonly",
                            ])
-    script = "//gn/android/gyp/apkbuilder.py"
+    script = "//gn/addon/android_app/apkbuilder.py"
     depfile = "$target_gen_dir/$target_name.d"
-### erik ###    data_deps = [ "//tools/android/md5sum" ]  # Used when deploying APKs
 
     inputs = [
       invoker.resource_packaged_apk_path,
@@ -538,7 +440,7 @@ template("package_apk") {
 #   rezip_apk: Whether to add crazy-linker alignment.
 template("finalize_apk") {
   action(target_name) {
-    script = "//gn/android/gyp/finalize_apk.py"
+    script = "//gn/addon/android_app/finalize_apk.py"
     depfile = "$target_gen_dir/$target_name.d"
     forward_variables_from(invoker,
                            [
@@ -665,7 +567,7 @@ template("create_apk") {
     action(target_name) {
       deps = invoker.deps
 
-      script = "//gn/android/gyp/package_resources.py"
+      script = "//gn/addon/android_app/package_resources.py"
       depfile = "${target_gen_dir}/${target_name}.d"
       inputs = [
         invoker.android_manifest,
@@ -747,7 +649,7 @@ template("create_apk") {
                      "target_gen_dir") + "/AndroidManifest.xml"
   action(_generate_incremental_manifest_target_name) {
     deps = _incremental_deps
-    script = "//gn/android/incremental_install/generate_android_manifest.py"
+    script = "//gn/addon/android_app/incremental_install/generate_android_manifest.py"
     depfile = "${target_gen_dir}/${target_name}.d"
     inputs = [
       _android_manifest,
@@ -797,7 +699,7 @@ template("create_apk") {
 
   _incremental_package_target = "${target_name}_incremental__package"
   package_apk(_incremental_package_target) {
-    _dex_target = "//gn/android/incremental_install:bootstrap_java__dex"
+    _dex_target = "//gn/addon/android_app/incremental_install:bootstrap_java__dex"
     deps = _incremental_deps + [
              ":${_incremental_package_resources_target_name}",
              _dex_target,
@@ -1004,7 +906,6 @@ template("java_prebuilt_impl") {
 #   java_files: List of .java files to compile.
 #   java_deps: List of java dependencies. These should all have a .jar output
 #     at "${target_gen_dir}/${target_name}.jar.
-#   chromium_code: If true, enable extra warnings.
 #   srcjar_deps: List of srcjar dependencies. The .java files contained in the
 #     dependencies srcjar outputs will be compiled and added to the output jar.
 #   jar_path: Use this to explicitly set the output jar path. Defaults to
@@ -1028,21 +929,9 @@ template("compile_java") {
     _jar_excluded_patterns += invoker.jar_excluded_patterns
   }
 
-  _chromium_code = false
-  if (defined(invoker.chromium_code)) {
-    _chromium_code = invoker.chromium_code
-  }
-
   _supports_android = true
   if (defined(invoker.supports_android)) {
     _supports_android = invoker.supports_android
-  }
-
-  _enable_errorprone = use_errorprone_java_compiler
-  if (!_chromium_code) {
-    _enable_errorprone = false
-  } else if (defined(invoker.enable_errorprone)) {
-    _enable_errorprone = invoker.enable_errorprone
   }
 
   _manifest_entries = []
@@ -1084,7 +973,7 @@ template("compile_java") {
   final_target_name = target_name
 
   action(javac_target_name) {
-    script = "//gn/android/gyp/javac.py"
+    script = "//gn/addon/android_app/javac.py"
     depfile = "$target_gen_dir/$target_name.d"
     deps = _srcjar_deps
     if (defined(invoker.deps)) {
@@ -1116,7 +1005,7 @@ template("compile_java") {
       args += [ "--incremental" ]
     }
     if (_supports_android) {
-      deps += [ "//gn/android:android_ijar" ]
+      deps += [ "//gn/addon/android_app:android_ijar" ]
       _android_sdk_ijar = "$root_out_dir/lib.java/android.interface.jar"
       inputs += [ _android_sdk_ijar ]
       _rebased_android_sdk_ijar = rebase_path(_android_sdk_ijar, root_build_dir)
@@ -1124,16 +1013,6 @@ template("compile_java") {
     }
     foreach(e, _manifest_entries) {
       args += [ "--manifest-entry=" + e ]
-    }
-    if (_chromium_code) {
-      args += [ "--chromium-code=1" ]
-    }
-    if (_enable_errorprone) {
-      deps += [ "//third_party/errorprone:chromium_errorprone" ]
-      args += [
-        "--use-errorprone-path",
-        "bin/chromium_errorprone",
-      ]
     }
 
 ### erik ###
@@ -1243,11 +1122,6 @@ template("java_library_impl") {
     }
   }
 
-  _chromium_code = false
-  if (defined(invoker.chromium_code)) {
-    _chromium_code = invoker.chromium_code
-  }
-
   _srcjar_deps = []
   if (defined(invoker.srcjar_deps)) {
     _srcjar_deps = invoker.srcjar_deps
@@ -1268,7 +1142,7 @@ template("java_library_impl") {
   _java_files = []
   if (defined(invoker.DEPRECATED_java_in_dir)) {
     _src_dir = invoker.DEPRECATED_java_in_dir + "/src"
-    _src_dir_exists = exec_script("//gn/dir_exists.py",
+    _src_dir_exists = exec_script("//gn/script/dir_exists.py",
                                   [ rebase_path(_src_dir, root_build_dir) ],
                                   "string")
     assert(_src_dir_exists == "False",
@@ -1276,7 +1150,7 @@ template("java_library_impl") {
                "(i.e. including the trailing \"/src\")")
 
     _java_files_build_rel =
-        exec_script("//gn/android/gyp/find.py",
+        exec_script("//gn/script/find.py",
                     [
                       "--pattern",
                       "*.java",
@@ -1297,7 +1171,6 @@ template("java_library_impl") {
     forward_variables_from(invoker,
                            [
                              "dist_jar_path",
-                             "enable_errorprone",
                              "jar_excluded_patterns",
                              "manifest_entries",
                              "proguard_config",
@@ -1311,7 +1184,6 @@ template("java_library_impl") {
 ### erik ###
     srcjar_deps = _srcjar_deps
     srcjars = _srcjars
-    chromium_code = _chromium_code
     supports_android = _supports_android
     deps = build_config_deps
   }
@@ -1332,46 +1204,6 @@ template("java_library_impl") {
   }
 
   if (_supports_android) {
-    if (defined(invoker.chromium_code) && invoker.chromium_code) {
-      _android_manifest = "//gn/android/AndroidManifest.xml"
-      if (defined(invoker.android_manifest)) {
-        _android_manifest = invoker.android_manifest
-      }
-
-      _final_datadeps += [ ":${_template_name}__lint" ]
-      android_lint("${_template_name}__lint") {
-        android_manifest = _android_manifest
-        jar_path = _jar_path
-        java_files = _java_files
-        deps = [
-          ":$_compile_java_target",
-        ]
-        if (defined(invoker.deps)) {
-          deps += invoker.deps
-        }
-      }
-
-      if (_run_findbugs) {
-        _final_datadeps += [ ":${_template_name}__findbugs" ]
-        findbugs("${_template_name}__findbugs") {
-          build_config = _build_config
-          jar_path = _jar_path
-          deps = [
-            ":$_compile_java_target",
-          ]
-        }
-      }
-### erik ###
-    } else {
-      if (defined(invoker.android_manifest)) {
-        print(invoker.android_manifest)
-      }
-      if (defined(invoker.run_findbugs)) {
-        print(invoker.run_findbugs)
-      }
-### erik ###
-    }
-
     _final_deps += [ ":${_template_name}__dex" ]
     dex("${_template_name}__dex") {
       sources = [
@@ -1424,7 +1256,7 @@ template("process_resources") {
       r_text_path,
     ]
 
-    sources_build_rel = exec_script("//gn/android/gyp/find.py",
+    sources_build_rel = exec_script("//gn/script/find.py",
                                     rebase_path(resource_dirs, root_build_dir),
                                     "list lines")
     sources = rebase_path(sources_build_rel, ".", root_build_dir)

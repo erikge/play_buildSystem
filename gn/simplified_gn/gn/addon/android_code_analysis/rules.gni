@@ -1,0 +1,100 @@
+
+
+template("android_lint") {
+  set_sources_assignment_filter([])
+
+  jar_path = invoker.jar_path
+  android_manifest = invoker.android_manifest
+  java_files = invoker.java_files
+  base_path = "$target_gen_dir/$target_name"
+
+  action(target_name) {
+    forward_variables_from(invoker,
+                           [
+                             "deps",
+                             "data_deps",
+                             "public_deps",
+                             "testonly",
+                           ])
+    script = "//gn/addon/android_app/lint.py"
+    result_path = base_path + "/result.xml"
+    config_path = base_path + "/config.xml"
+    suppressions_file = "//gn/android/lint/suppressions.xml"
+    inputs = [
+               suppressions_file,
+               android_manifest,
+               jar_path,
+             ] + java_files
+
+    outputs = [
+      config_path,
+      result_path,
+    ]
+
+    rebased_java_files = rebase_path(java_files, root_build_dir)
+
+    args = [
+      "--lint-path=$rebased_android_sdk_root/tools/lint",
+      "--config-path",
+      rebase_path(suppressions_file, root_build_dir),
+      "--manifest-path",
+      rebase_path(android_manifest, root_build_dir),
+      "--product-dir=.",
+      "--jar-path",
+      rebase_path(jar_path, root_build_dir),
+      "--processed-config-path",
+      rebase_path(config_path, root_build_dir),
+      "--result-path",
+      rebase_path(result_path, root_build_dir),
+      "--java-files=$rebased_java_files",
+      "--enable",
+    ]
+  }
+}
+
+template("findbugs") {
+  jar_path = invoker.jar_path
+
+  build_config = invoker.build_config
+
+  action(target_name) {
+    forward_variables_from(invoker,
+                           [
+                             "deps",
+                             "testonly",
+                           ])
+    script = "//gn/android/findbugs_diff.py"
+    depfile = "$target_gen_dir/$target_name.d"
+    result_path = "$target_gen_dir/$target_name/result.xml"
+    exclusions_file = "//gn/android/findbugs_filter/findbugs_exclude.xml"
+
+    rebased_build_config = rebase_path(build_config, root_build_dir)
+
+    inputs = [
+      "//gn/android/pylib/utils/findbugs.py",
+      exclusions_file,
+      jar_path,
+    ]
+
+    outputs = [
+      depfile,
+      result_path,
+    ]
+
+    args = [
+      "--depfile",
+      rebase_path(depfile, root_build_dir),
+      "--exclude",
+      rebase_path(exclusions_file, root_build_dir),
+      "--auxclasspath-gyp",
+      "@FileArg($rebased_build_config:javac:classpath)",
+      "--output-file",
+      rebase_path(result_path, root_build_dir),
+      rebase_path(jar_path, root_build_dir),
+    ]
+
+    if (findbugs_verbose) {
+      args += [ "-vv" ]
+    }
+  }
+}

@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-import("//gn/core/config/android/rules.gni")
+import("//gn/addon/android_app/rules.gni")
 
 android_library("bootstrap_java") {
   # Use .dex rather than .dex.jar to be usable by package_apk().

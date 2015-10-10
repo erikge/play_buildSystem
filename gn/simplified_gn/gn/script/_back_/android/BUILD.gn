@@ -28,10 +28,7 @@ java_prebuilt("sun_tools_java") {
   jar_dep = ":find_sun_tools_jar"
 }
 
-generate_interface_jar("android_ijar") {
-  input_jar = android_sdk_jar
-  output_jar = "$root_out_dir/lib.java/android.interface.jar"
-}
+
 
 # Copy to the lib.unstripped directory so that gdb can easily find it.
 copy("cpplib_unstripped") {
