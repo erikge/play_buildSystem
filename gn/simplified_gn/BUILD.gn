@@ -23,7 +23,7 @@ group("root") {
 
   if (is_android && !is_java) {
     deps += [
-#      "//demo_android",
+      "//demo_android",
     ]
   }
 

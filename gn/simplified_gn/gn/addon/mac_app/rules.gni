@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-mac_app_script = "//gn/core/config/mac/mac_app.py"
+mac_app_script = "//gn/addon/mac_app/mac_app.py"
 
 template("code_sign_mac") {
   assert(defined(invoker.entitlements_path),

@@ -2,7 +2,7 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
-ios_app_script = "//gn/core/config/ios/ios_app.py"
+ios_app_script = "//gn/addon/ios_app/ios_app.py"
 
 template("code_sign_ios") {
   assert(defined(invoker.entitlements_path),
