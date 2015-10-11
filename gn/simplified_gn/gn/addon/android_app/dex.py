@@ -11,6 +11,8 @@ import sys
 import tempfile
 import zipfile
 
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'script', 'pylib'))
+
 from util import build_utils
 
 

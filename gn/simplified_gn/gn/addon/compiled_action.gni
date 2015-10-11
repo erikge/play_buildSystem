@@ -92,7 +92,7 @@ template("compiled_action") {
                              "visibility",
                            ])
 
-    script = "//gn/gn_run_binary.py"
+    script = "//gn/script/gn_run_binary.py"
 
     # Constuct the host toolchain version of the tool.
     host_tool = invoker.tool + "($host_toolchain)"

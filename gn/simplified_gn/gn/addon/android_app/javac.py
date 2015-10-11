@@ -11,6 +11,8 @@ import re
 import sys
 import textwrap
 
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'script', 'pylib'))
+
 from util import build_utils
 
 import jar

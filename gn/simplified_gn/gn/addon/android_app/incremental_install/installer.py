@@ -24,7 +24,7 @@ from pylib import constants
 from pylib.utils import run_tests_helper
 from pylib.utils import time_profile
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'gyp'))
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'script', 'pylib'))
 from util import build_utils
 
 

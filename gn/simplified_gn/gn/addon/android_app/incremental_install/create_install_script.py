@@ -11,10 +11,8 @@ import os
 import pprint
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir))
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, 'gyp'))
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'script', 'pylib'))
 
-from pylib import constants
 from util import build_utils
 
 
@@ -89,8 +87,7 @@ def main(args):
   def relativize(path):
     return os.path.relpath(path, os.path.dirname(options.script_output_path))
 
-  installer_path = os.path.join(constants.DIR_SOURCE_ROOT, 'build', 'android',
-                                'incremental_install', 'installer.py')
+  installer_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'installer.py')
   installer_path = relativize(installer_path)
 
   path_args = [

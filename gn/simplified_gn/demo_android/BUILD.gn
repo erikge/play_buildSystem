@@ -10,7 +10,7 @@ android_apk("demo_android") {
         "src/com/erikge/gnandroid/MainActivity.java",
         "src/com/erikge/gnandroid/NativeInterface.java",
     ]
-    java_files_too_long = true
+    #java_files_too_long = true
 
     native_libs = [
         "libstyle_javah.so",

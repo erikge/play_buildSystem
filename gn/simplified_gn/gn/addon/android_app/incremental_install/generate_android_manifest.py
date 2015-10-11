@@ -14,7 +14,7 @@ import os
 import sys
 from xml.etree import ElementTree
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.path.pardir, 'gyp'))
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, os.pardir, 'script', 'pylib'))
 from util import build_utils
 
 _ANDROID_NAMESPACE = 'http://schemas.android.com/apk/res/android'

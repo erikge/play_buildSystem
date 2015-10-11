@@ -20,8 +20,8 @@ if (is_android) {
 #    default_android_sdk_version = "23"
 #    default_android_sdk_build_tools_version = "23.0.0"
     default_android_sdk_root = getenv("ANDROID_SDK_HOME")
-    default_android_sdk_version = "22"
-    default_android_sdk_build_tools_version = "22.0.1"
+    default_android_sdk_version = "21"
+    default_android_sdk_build_tools_version = "21.1.2"
 ### erik ###
   }
 

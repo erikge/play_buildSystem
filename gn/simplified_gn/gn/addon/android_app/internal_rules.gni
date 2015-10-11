@@ -1246,7 +1246,7 @@ template("process_resources") {
                              "deps",
                              "visibility",
                            ])
-    script = "//gn/android/gyp/process_resources.py"
+    script = "//gn/addon/android_app/process_resources.py"
 
     depfile = "$target_gen_dir/$target_name.d"
     outputs = [

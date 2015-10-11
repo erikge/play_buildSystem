@@ -31,6 +31,8 @@ import os
 import sys
 import xml.dom.minidom
 
+sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'script', 'pylib'))
+
 from util import build_utils
 from util import md5_check
 

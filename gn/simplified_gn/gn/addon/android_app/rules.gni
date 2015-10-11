@@ -932,7 +932,8 @@ template("android_apk") {
     srcjar_path = "${target_gen_dir}/${target_name}.srcjar"
     r_text_path = "${target_gen_dir}/${target_name}_R.txt"
     android_manifest = _android_manifest
-    resource_dirs = []
+#    resource_dirs = []
+    resource_dirs = [ "//gn/addon/android_app/helper/empty" ]
     zip_path = resources_zip_path
     all_resources_zip_path = _all_resources_zip_path
     generate_constant_ids = true
@@ -1024,7 +1025,7 @@ template("android_apk") {
     # run. See build/android/pylib/instrumentation/test_jar.py. We should be
     # able to just do that calculation at build time instead.
     action(create_dist_target) {
-      script = "//gn/android/gyp/create_dist_jar.py"
+      script = "//gn/addon/android_app/create_dist_jar.py"
       depfile = "$target_gen_dir/$target_name.d"
       inputs = [
         _build_config,
@@ -1074,7 +1075,7 @@ template("android_apk") {
                                "data_deps",
                                "public_deps",
                              ])
-      script = "//gn/android/gyp/pack_relocations.py"
+      script = "//gn/addon/android_app/pack_relocations.py"
       packed_libraries_dir = "$_native_libs_dir/$android_app_abi"
       depfile = "$target_gen_dir/$target_name.d"
       outputs = [
@@ -1220,7 +1221,7 @@ template("android_apk") {
 
   _create_incremental_script_rule_name = "${_template_name}__incremental_script"
   action(_create_incremental_script_rule_name) {
-    script = "//gn/android/incremental_install/create_install_script.py"
+    script = "//gn/addon/android_app/incremental_install/create_install_script.py"
     depfile = "$target_gen_dir/$target_name.d"
     deps = [
       ":$build_config_target",
