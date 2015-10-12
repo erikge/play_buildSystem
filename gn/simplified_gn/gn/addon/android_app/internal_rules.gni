@@ -1308,11 +1308,6 @@ template("process_resources") {
       args += [ "--shared-resources" ]
     }
 
-    if (defined(invoker.include_all_resources) &&
-        invoker.include_all_resources) {
-      args += [ "--include-all-resources" ]
-    }
-
     if (defined(invoker.all_resources_zip_path)) {
       all_resources_zip = invoker.all_resources_zip_path
       outputs += [ all_resources_zip ]

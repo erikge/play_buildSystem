@@ -122,46 +122,6 @@
                             <F N="simplified_gn/gn/addon/android_app/incremental_install/generate_android_manifest.py"/>
                             <F N="simplified_gn/gn/addon/android_app/incremental_install/installer.py"/>
                         </Folder>
-                        <Folder Name="jinja2">
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/__init__.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/_compat.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/_stringdefs.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/bccache.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/compiler.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/constants.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/debug.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/defaults.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/environment.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/exceptions.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/ext.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/filters.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/get_jinja2.sh"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/Jinja2-2.7.1.tar.gz.md5"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/Jinja2-2.7.1.tar.gz.sha512"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/lexer.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/loaders.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/meta.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/nodes.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/optimizer.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/parser.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/README.chromium"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/runtime.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/sandbox.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/tests.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/utils.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/jinja2/visitor.py"/>
-                        </Folder>
-                        <Folder Name="markupsafe">
-                            <F N="simplified_gn/gn/addon/android_app/markupsafe/__init__.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/markupsafe/_compat.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/markupsafe/_constants.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/markupsafe/_native.py"/>
-                            <F N="simplified_gn/gn/addon/android_app/markupsafe/_speedups.c"/>
-                            <F N="simplified_gn/gn/addon/android_app/markupsafe/get_markupsafe.sh"/>
-                            <F N="simplified_gn/gn/addon/android_app/markupsafe/MarkupSafe-0.18.tar.gz.md5"/>
-                            <F N="simplified_gn/gn/addon/android_app/markupsafe/MarkupSafe-0.18.tar.gz.sha512"/>
-                            <F N="simplified_gn/gn/addon/android_app/markupsafe/README.chromium"/>
-                        </Folder>
                         <F N="simplified_gn/gn/addon/android_app/aidl.py"/>
                         <F N="simplified_gn/gn/addon/android_app/apkbuilder.py"/>
                         <F N="simplified_gn/gn/addon/android_app/BUILD.gn"/>
@@ -309,10 +269,8 @@
                     <Folder Name="pylib">
                         <Folder Name="util">
                             <F N="simplified_gn/gn/script/pylib/util/__init__.py"/>
-                            <F N="simplified_gn/gn/script/pylib/util/build_device.py"/>
                             <F N="simplified_gn/gn/script/pylib/util/build_utils.py"/>
                             <F N="simplified_gn/gn/script/pylib/util/md5_check.py"/>
-                            <F N="simplified_gn/gn/script/pylib/util/md5_check_test.py"/>
                         </Folder>
                     </Folder>
                     <F N="simplified_gn/gn/script/dir_exists.py"/>
