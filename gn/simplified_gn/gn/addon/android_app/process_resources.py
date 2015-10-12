@@ -18,15 +18,12 @@ import re
 import shutil
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'script', 'pylib'))
-
 import generate_v14_compatible_resources
 
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../script/pylib'))
 from util import build_utils
 
 # Import jinja2 from third_party/jinja2
-### erik ### sys.path.insert(1, os.path.join(os.path.dirname(__file__), '../../../third_party'))
-sys.path.insert(1, os.path.join(os.path.dirname(__file__), '../../../build/_addon_'))
 from jinja2 import Template # pylint: disable=F0401
 
 

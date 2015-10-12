@@ -25,8 +25,7 @@ import os
 import re
 import sys
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'script', 'pylib'))
-
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../script/pylib'))
 from util import build_utils
 
 _readelf = None

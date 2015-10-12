@@ -25,8 +25,7 @@ import shutil
 import sys
 import tempfile
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'script', 'pylib'))
-
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../script/pylib'))
 from util import build_utils
 
 def PackLibraryRelocations(android_pack_relocations, library_path, output_path):

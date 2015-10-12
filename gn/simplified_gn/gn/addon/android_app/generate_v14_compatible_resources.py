@@ -27,8 +27,7 @@ import shutil
 import sys
 import xml.dom.minidom as minidom
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'script', 'pylib'))
-
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../script/pylib'))
 from util import build_utils
 
 # Note that we are assuming 'android:' is an alias of

@@ -11,47 +11,10 @@ import re
 import sys
 import textwrap
 
-sys.path.append(os.path.join(os.path.dirname(__file__), os.pardir, os.pardir, 'script', 'pylib'))
-
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../script/pylib'))
 from util import build_utils
 
 import jar
-
-sys.path.append(build_utils.COLORAMA_ROOT)
-import colorama
-
-
-def ColorJavacOutput(output):
-  fileline_prefix = r'(?P<fileline>(?P<file>[-.\w/\\]+.java):(?P<line>[0-9]+):)'
-  warning_re = re.compile(
-      fileline_prefix + r'(?P<full_message> warning: (?P<message>.*))$')
-  error_re = re.compile(
-      fileline_prefix + r'(?P<full_message> (?P<message>.*))$')
-  marker_re = re.compile(r'\s*(?P<marker>\^)\s*$')
-
-  warning_color = ['full_message', colorama.Fore.YELLOW + colorama.Style.DIM]
-  error_color = ['full_message', colorama.Fore.MAGENTA + colorama.Style.BRIGHT]
-  marker_color = ['marker',  colorama.Fore.BLUE + colorama.Style.BRIGHT]
-
-  def Colorize(line, regex, color):
-    match = regex.match(line)
-    start = match.start(color[0])
-    end = match.end(color[0])
-    return (line[:start]
-            + color[1] + line[start:end]
-            + colorama.Fore.RESET + colorama.Style.RESET_ALL
-            + line[end:])
-
-  def ApplyColor(line):
-    if warning_re.match(line):
-      line = Colorize(line, warning_re, warning_color)
-    elif error_re.match(line):
-      line = Colorize(line, error_re, error_color)
-    elif marker_re.match(line):
-      line = Colorize(line, marker_re, marker_color)
-    return line
-
-  return '\n'.join(map(ApplyColor, output.split('\n')))
 
 
 ERRORPRONE_OPTIONS = [
@@ -180,8 +143,7 @@ def _OnStaleMd5(changes, options, javac_cmd, java_files, classpath_inputs,
 
       build_utils.CheckOutput(
           cmd,
-          print_stdout=options.chromium_code,
-          stderr_filter=ColorJavacOutput)
+          print_stdout=options.chromium_code)
 
     if options.main_class or options.manifest_entry:
       entries = []
@@ -302,7 +264,6 @@ def _ParseOptions(argv):
 
 
 def main(argv):
-  colorama.init()
 
   argv = build_utils.ExpandFileArgs(argv)
   options, java_files = _ParseOptions(argv)

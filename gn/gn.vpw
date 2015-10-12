@@ -2,6 +2,5 @@
 <Workspace Version="10.0" VendorName="SlickEdit">
 	<Projects>
 		<Project File="build.vpj"/>
-		<Project File="simplified_gn/demo_android/demo_android.vpj"/>
 	</Projects>
 </Workspace>
