@@ -196,6 +196,14 @@ def _ParseOptions(argv):
       action='store_true',
       help='Whether to use interface jars (.interface.jar) when compiling')
   parser.add_option(
+      '--java-source',
+      default='',
+      help='Specify the source version ')
+  parser.add_option(
+      '--java-target',
+      default='',
+      help='Specify the target version')
+  parser.add_option(
       '--incremental',
       action='store_true',
       help='Whether to re-use .class files rather than recompiling them '
@@ -266,12 +274,25 @@ def _ParseOptions(argv):
 def main(argv):
 
   argv = build_utils.ExpandFileArgs(argv)
-  options, java_files = _ParseOptions(argv)
+  options, list_file = _ParseOptions(argv)
+
+  java_files = []
+  if len(list_file) > 0:
+    with open(list_file[0], 'r') as f:
+      for line in f.readlines():
+        java_files.append(line.strip())
 
   if options.src_gendirs:
     java_files += build_utils.FindInDirectories(options.src_gendirs, '*.java')
 
   java_files = _FilterJavaFiles(java_files, options.javac_includes)
+
+  ### TODO
+  if len(list_file) > 0:
+    with open(list_file[0], 'w') as f:
+      java_files = [ line + '\n' for line in java_files]
+      f.writelines(java_files)
+  ###
 
   runtime_classpath = options.classpath
   compile_classpath = runtime_classpath
@@ -298,13 +319,9 @@ def main(argv):
   if options.bootclasspath:
     javac_cmd.extend([
         '-bootclasspath', ':'.join(options.bootclasspath),
-### erik ###
-#        '-source', '1.7',
-#        '-target', '1.7',
-        '-source', '1.6',
-        '-target', '1.6',
-### erik ###
-        ])
+        '-source', options.java_source,
+        '-target', options.java_target,
+    ])
 
   if options.chromium_code:
     # TODO(aurimas): re-enable '-Xlint:deprecation' checks once they are fixed.
