@@ -1044,7 +1044,7 @@ template("java_library_impl") {
   forward_variables_from(invoker, [ "testonly" ])
 
   assert(
-      defined(invoker.java_files) || defined(invoker.DEPRECATED_java_in_dir) ||
+      defined(invoker.java_files) || defined(invoker.java_in_dir) ||
       defined(invoker.srcjars) || defined(invoker.srcjar_deps))
   _base_path = "$target_gen_dir/$target_name"
 
@@ -1122,25 +1122,26 @@ template("java_library_impl") {
   }
 
   _java_files = []
-  if (defined(invoker.DEPRECATED_java_in_dir)) {
-    _src_dir = invoker.DEPRECATED_java_in_dir + "/src"
-    _src_dir_exists = exec_script("//gn/script/dir_exists.py",
+  if (defined(invoker.java_in_dir)) {
+    foreach(_java_dir, invoker.java_in_dir) {
+      _src_dir = _java_dir + "/src"
+      _src_dir_exists = exec_script("//gn/script/dir_exists.py",
                                   [ rebase_path(_src_dir, root_build_dir) ],
                                   "string")
-    assert(_src_dir_exists == "False",
+      assert(_src_dir_exists == "False",
            "In GN, java_in_dir should be the fully specified java directory " +
                "(i.e. including the trailing \"/src\")")
 
-    _java_files_build_rel =
+      _java_files_build_rel =
         exec_script("//gn/script/find.py",
                     [
                       "--pattern",
                       "*.java",
-                      rebase_path(invoker.DEPRECATED_java_in_dir,
-                                  root_build_dir),
+                      rebase_path(_java_dir, root_build_dir),
                     ],
                     "list lines")
-    _java_files = rebase_path(_java_files_build_rel, ".", root_build_dir)
+      _java_files += rebase_path(_java_files_build_rel, ".", root_build_dir)
+    }
   }
   if (defined(invoker.java_files)) {
     _java_files += invoker.java_files

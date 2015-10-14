@@ -63,9 +63,8 @@ template("java_binary") {
 #     will be added to java_files and be included in this library.
 #   srcjars: List of srcjars to be included in this library, together with the
 #     ones obtained from srcjar_deps.
-#   DEPRECATED_java_in_dir: Directory containing java files. All .java files in
-#     this directory will be included in the library. This is only supported to
-#     ease the gyp->gn conversion and will be removed in the future.
+#   java_in_dir: Directory containing java files. All .java files in
+#     this directory will be included in the library.
 #
 #   chromium_code: If true, extra analysis warning/errors will be enabled.
 #
@@ -153,9 +152,8 @@ template("java_prebuilt") {
 #     will be added to java_files and be included in this library.
 #   srcjars: List of srcjars to be included in this library, together with the
 #     ones obtained from srcjar_deps.
-#   DEPRECATED_java_in_dir: Directory containing java files. All .java files in
-#     this directory will be included in the library. This is only supported to
-#     ease the gyp->gn conversion and will be removed in the future.
+#   java_in_dir: Directory containing java files. All .java files in
+#     this directory will be included in the library.
 #
 #   chromium_code: If true, extra analysis warning/errors will be enabled.
 #
@@ -458,9 +456,8 @@ template("android_aidl") {
 #     tested apk.
 #   testonly: Marks this target as "test-only".
 #
-#   DEPRECATED_java_in_dir: Directory containing java files. All .java files in
-#     this directory will be included in the library. This is only supported to
-#     ease the gyp->gn conversion and will be removed in the future.
+#   java_in_dir: Directory containing java files. All .java files in
+#     this directory will be included in the library.
 #
 # Example
 #   android_apk("foo_apk") {
@@ -716,11 +713,12 @@ template("android_apk") {
 
     if (defined(invoker.java_files)) {
       java_files = invoker.java_files
-    } else if (defined(invoker.DEPRECATED_java_in_dir)) {
-      DEPRECATED_java_in_dir = invoker.DEPRECATED_java_in_dir
     } else {
       java_files = []
     }
+    if (defined(invoker.java_in_dir)) {
+      java_in_dir = invoker.java_in_dir
+    } 
 
     srcjar_deps = _srcjar_deps
     jar_path = _jar_path
