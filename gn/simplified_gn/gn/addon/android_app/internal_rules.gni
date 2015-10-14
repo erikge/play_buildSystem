@@ -971,13 +971,11 @@ template("compile_java") {
     if (defined(invoker.deps)) {
       deps += invoker.deps
     }
-    _java_files_list = "$target_out_dir/${target_name}__java_files"
 
     outputs = [
       depfile,
       _intermediate_jar_path,
       _intermediate_jar_path + ".md5.stamp",
-      _java_files_list,
     ]
     sources = _java_files + _java_srcjars
     inputs = [
@@ -1013,8 +1011,9 @@ template("compile_java") {
       args += [ "--manifest-entry=" + e ]
     }
 
+    _java_files_list = "$target_out_dir/${target_name}__java_files"
     write_file(_java_files_list, rebase_path(_java_files, root_build_dir))
-    args += [ rebase_path(_java_files_list, root_build_dir) ]
+    args += [ "@" + rebase_path(_java_files_list, root_build_dir) ]
   }
 
   process_java_prebuilt(finish_target_name) {

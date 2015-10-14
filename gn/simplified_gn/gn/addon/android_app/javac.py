@@ -17,12 +17,6 @@ from util import build_utils
 import jar
 
 
-ERRORPRONE_OPTIONS = [
-  # These crash on lots of targets.
-  '-Xep:ParameterPackage:OFF',
-  '-Xep:OverridesGuiceInjectableMethod:OFF',
-  '-Xep:OverridesJavaxInjectableMethod:OFF',
-]
 
 
 def _FilterJavaFiles(paths, filters):
@@ -137,13 +131,17 @@ def _OnStaleMd5(changes, options, javac_cmd, java_files, classpath_inputs,
         classpath_idx = javac_cmd.index('-classpath')
         javac_cmd[classpath_idx + 1] += ':' + classes_dir
 
+      java_list_file = os.path.join(temp_dir, 'java_list.txt')
+      with open(java_list_file, 'w') as f:
+        java_files = [ line + '\n' for line in java_files]
+        f.writelines(java_files)
       # Don't include the output directory in the initial set of args since it
       # being in a temp dir makes it unstable (breaks md5 stamping).
-      cmd = javac_cmd + ['-d', classes_dir] + java_files
+      cmd = javac_cmd + ['-d', classes_dir] + [ '@' + java_list_file ]
 
       build_utils.CheckOutput(
           cmd,
-          print_stdout=options.chromium_code)
+          print_stdout=0)
 
     if options.main_class or options.manifest_entry:
       entries = []
@@ -218,16 +216,6 @@ def _ParseOptions(argv):
       default='',
       help='List of .class file patterns to exclude from the jar.')
 
-  parser.add_option(
-      '--chromium-code',
-      type='int',
-      help='Whether code being compiled should be built with stricter '
-      'warnings for chromium code.')
-
-  parser.add_option(
-      '--use-errorprone-path',
-      help='Use the Errorprone compiler at this path.')
-
   parser.add_option('--jar-path', help='Jar output path.')
   parser.add_option(
       '--main-class',
@@ -238,11 +226,7 @@ def _ParseOptions(argv):
       help='Key:value pairs to add to the .jar manifest.')
 
   parser.add_option('--stamp', help='Path to touch on success.')
-### erik ###
-  parser.add_option(
-      '--too-long',
-      help='To shorten or simplify the javac command line, you can specify a file for all *.java files.')
-### erik ###
+
 
   options, args = parser.parse_args(argv)
   build_utils.CheckOptions(options, parser, required=('jar_path',))
@@ -277,22 +261,18 @@ def main(argv):
   options, list_file = _ParseOptions(argv)
 
   java_files = []
-  if len(list_file) > 0:
-    with open(list_file[0], 'r') as f:
-      for line in f.readlines():
-        java_files.append(line.strip())
+  for item in list_file:
+    if item.startswith('@'):
+      with open(item[1:], 'r') as f:
+        for line in f.readlines():
+          java_files.append(line.strip())
+    else:
+      java_files.append(item)
 
   if options.src_gendirs:
     java_files += build_utils.FindInDirectories(options.src_gendirs, '*.java')
 
   java_files = _FilterJavaFiles(java_files, options.javac_includes)
-
-  ### TODO
-  if len(list_file) > 0:
-    with open(list_file[0], 'w') as f:
-      java_files = [ line + '\n' for line in java_files]
-      f.writelines(java_files)
-  ###
 
   runtime_classpath = options.classpath
   compile_classpath = runtime_classpath
@@ -302,12 +282,10 @@ def main(argv):
         [ijar_re.sub('.interface.jar', p) for p in runtime_classpath])
 
   javac_cmd = ['javac']
-  if options.use_errorprone_path:
-    javac_cmd = [options.use_errorprone_path] + ERRORPRONE_OPTIONS
 
   javac_cmd.extend((
       '-g',
-      # Chromium only allows UTF8 source files.  Being explicit avoids
+      # Only allows UTF8 source files.  Being explicit avoids
       # javac pulling a default encoding from the user's environment.
       '-encoding', 'UTF-8',
       '-classpath', ':'.join(compile_classpath),
@@ -323,14 +301,10 @@ def main(argv):
         '-target', options.java_target,
     ])
 
-  if options.chromium_code:
-    # TODO(aurimas): re-enable '-Xlint:deprecation' checks once they are fixed.
-    javac_cmd.extend(['-Xlint:unchecked'])
-  else:
-    # XDignore.symbol.file makes javac compile against rt.jar instead of
-    # ct.sym. This means that using a java internal package/class will not
-    # trigger a compile warning or error.
-    javac_cmd.extend(['-XDignore.symbol.file'])
+  # XDignore.symbol.file makes javac compile against rt.jar instead of
+  # ct.sym. This means that using a java internal package/class will not
+  # trigger a compile warning or error.
+  javac_cmd.extend(['-XDignore.symbol.file'])
 
   classpath_inputs = options.bootclasspath
   # TODO(agrieve): Remove this .TOC heuristic once GYP is no more.
