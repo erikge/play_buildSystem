@@ -97,6 +97,8 @@ def _OnStaleMd5(changes, options, javac_cmd, java_files, classpath_inputs,
 
     classes_dir = os.path.join(temp_dir, 'classes')
     os.makedirs(classes_dir)
+    excluded_classes_dir = os.path.join(temp_dir, 'excluded_classes')
+    os.makedirs(excluded_classes_dir)
 
     changed_paths = None
     if options.incremental and changes.AddedOrModifiedOnly():
@@ -157,13 +159,17 @@ def _OnStaleMd5(changes, options, javac_cmd, java_files, classpath_inputs,
     inclusion_predicate = lambda f: not build_utils.MatchesGlob(f, glob)
     exclusion_predicate = lambda f: not inclusion_predicate(f)
 
+    class_files = build_utils.FindInDirectory(classes_dir, '*.class')
+    for c in class_files:
+      if exclusion_predicate(c):
+        new_c = os.path.join(excluded_classes_dir, os.path.relpath(c, classes_dir))
+        os.rename(c, new_c)
+
     jar.JarDirectory(classes_dir,
                      options.jar_path,
-                     manifest_file=manifest_file,
-                     predicate=inclusion_predicate)
-    jar.JarDirectory(classes_dir,
-                     excluded_jar_path,
-                     predicate=exclusion_predicate)
+                     manifest_file=manifest_file)
+    jar.JarDirectory(excluded_classes_dir,
+                     excluded_jar_path)
 
 
 def _ParseOptions(argv):

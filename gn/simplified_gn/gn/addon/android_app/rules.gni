@@ -155,8 +155,6 @@ template("java_prebuilt") {
 #   java_in_dir: Directory containing java files. All .java files in
 #     this directory will be included in the library.
 #
-#   chromium_code: If true, extra analysis warning/errors will be enabled.
-#
 #   jar_excluded_patterns: List of patterns of .class files to exclude from the
 #     final jar.
 #
@@ -618,8 +616,10 @@ template("android_apk") {
       defined(invoker.create_abi_split) && invoker.create_abi_split
   _create_density_splits =
       defined(invoker.create_density_splits) && invoker.create_density_splits
+  if (incremental_install) {
   _create_language_splits =
       defined(invoker.language_splits) && invoker.language_splits != []
+  }
 
   # Help GN understand that _create_abi_split is not unused (bug in GN).
   assert(_create_abi_split || true)
@@ -878,9 +878,11 @@ template("android_apk") {
     keystore_path = _keystore_path
     keystore_password = _keystore_password
 
+    if (incremental_install) {
     # Incremental apk does not use native libs nor final dex.
     incremental_deps =
         deps + _android_manifest_deps + [ ":$process_resources_target" ]
+    }
 
     # This target generates the input file _all_resources_zip_path.
     deps += _android_manifest_deps + [
@@ -931,6 +933,7 @@ template("android_apk") {
     }
   }
 
+  if (incremental_install) {
   _create_incremental_script_rule_name = "${_template_name}__incremental_script"
   action(_create_incremental_script_rule_name) {
     script = "//gn/addon/android_app/incremental_install/create_install_script.py"
@@ -970,11 +973,13 @@ template("android_apk") {
       args += [ "--split=${_rebased_apk_path_no_ext}-language-*.apk" ]
     }
   }
+  }
 
   group(target_name) {
     forward_variables_from(invoker, [ "data_deps" ])
     public_deps = _final_deps
   }
+  if (incremental_install) {
   group("${target_name}_incremental") {
     data_deps = []
     forward_variables_from(invoker, [ "data_deps" ])
@@ -990,6 +995,7 @@ template("android_apk") {
     if (_native_libs != []) {
       public_deps += [ ":$_prepare_native_target_name" ]
     }
+  }
   }
 }
 

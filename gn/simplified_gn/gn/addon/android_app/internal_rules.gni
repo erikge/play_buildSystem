@@ -497,11 +497,13 @@ template("create_apk") {
   _android_manifest = invoker.android_manifest
   _base_path = invoker.base_path
   _final_apk_path = invoker.apk_path
+  if (incremental_install) {
   _incremental_final_apk_path_helper =
       process_file_template(
           [ _final_apk_path ],
           "{{source_dir}}/{{source_name_part}}_incremental.apk")
   _incremental_final_apk_path = _incremental_final_apk_path_helper[0]
+  }
 
   if (defined(invoker.resources_zip)) {
     _resources_zip = invoker.resources_zip
@@ -516,9 +518,11 @@ template("create_apk") {
   if (defined(invoker.deps)) {
     _deps = invoker.deps
   }
+  if (incremental_install) {
   _incremental_deps = []
   if (defined(invoker.incremental_deps)) {
     _incremental_deps = invoker.incremental_deps
+  }
   }
 
   if (defined(invoker.asset_location)) {
@@ -534,10 +538,12 @@ template("create_apk") {
   _base_apk_path = _base_path + ".apk_intermediates"
 
   _resource_packaged_apk_path = _base_apk_path + ".ap_"
-  _incremental_resource_packaged_apk_path = _base_apk_path + "_incremental.ap_"
   _packaged_apk_path = _base_apk_path + ".unfinished.apk"
+  if (incremental_install) {
+  _incremental_resource_packaged_apk_path = _base_apk_path + "_incremental.ap_"
   _incremental_packaged_apk_path =
       _base_apk_path + "_incremental.unfinished.apk"
+  }
   _shared_resources =
       defined(invoker.shared_resources) && invoker.shared_resources
   assert(_shared_resources || true)  # Mark as used.
@@ -641,6 +647,7 @@ template("create_apk") {
     resource_packaged_apk_path = _resource_packaged_apk_path
   }
 
+  if (incremental_install) {
   _generate_incremental_manifest_target_name =
       "${target_name}_incremental_generate_manifest"
   _incremental_android_manifest =
@@ -682,6 +689,7 @@ template("create_apk") {
     android_manifest = _incremental_android_manifest
     resource_packaged_apk_path = _incremental_resource_packaged_apk_path
   }
+  }
 
   package_target = "${target_name}__package"
   package_apk(package_target) {
@@ -696,6 +704,7 @@ template("create_apk") {
     resource_packaged_apk_path = _resource_packaged_apk_path
   }
 
+  if (incremental_install) {
   _incremental_package_target = "${target_name}_incremental__package"
   package_apk(_incremental_package_target) {
     _dex_target = "//gn/addon/android_app/incremental_install:bootstrap_java__dex"
@@ -713,6 +722,7 @@ template("create_apk") {
     output_apk_path = _incremental_packaged_apk_path
     resource_packaged_apk_path = _incremental_resource_packaged_apk_path
   }
+  }
 
   _finalize_apk_rule_name = "${target_name}__finalize"
   finalize_apk(_finalize_apk_rule_name) {
@@ -729,6 +739,7 @@ template("create_apk") {
     ]
   }
 
+  if (incremental_install) {
   _incremental_finalize_apk_rule_name = "${target_name}_incremental__finalize"
   finalize_apk(_incremental_finalize_apk_rule_name) {
     input_apk_path = _incremental_packaged_apk_path
@@ -740,6 +751,7 @@ template("create_apk") {
     public_deps = [
       ":$_incremental_package_target",
     ]
+  }
   }
 
   _split_deps = []
@@ -782,8 +794,11 @@ template("create_apk") {
   group(target_name) {
     public_deps = [ ":${_finalize_apk_rule_name}" ] + _split_deps
   }
+
+  if (incremental_install) {
   group("${target_name}_incremental") {
     public_deps = [ ":${_incremental_finalize_apk_rule_name}" ] + _split_deps
+  }
   }
 }
 
@@ -1123,6 +1138,7 @@ template("java_library_impl") {
 
   _java_files = []
   if (defined(invoker.java_in_dir)) {
+    _java_files_build_rel = []
     foreach(_java_dir, invoker.java_in_dir) {
       _src_dir = _java_dir + "/src"
       _src_dir_exists = exec_script("//gn/script/dir_exists.py",
@@ -1132,7 +1148,7 @@ template("java_library_impl") {
            "In GN, java_in_dir should be the fully specified java directory " +
                "(i.e. including the trailing \"/src\")")
 
-      _java_files_build_rel =
+      _java_files_build_rel +=
         exec_script("//gn/script/find.py",
                     [
                       "--pattern",
@@ -1140,8 +1156,8 @@ template("java_library_impl") {
                       rebase_path(_java_dir, root_build_dir),
                     ],
                     "list lines")
-      _java_files += rebase_path(_java_files_build_rel, ".", root_build_dir)
     }
+    _java_files += rebase_path(_java_files_build_rel, ".", root_build_dir)
   }
   if (defined(invoker.java_files)) {
     _java_files += invoker.java_files
