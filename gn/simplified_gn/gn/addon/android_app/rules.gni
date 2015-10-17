@@ -5,7 +5,7 @@
 import("//gn/core/config/android/env.gni")
 import("//gn/core/toolchain/lib_naming.gni")
 
-import("//gn/addon/android_app/internal_rules.gni")
+import("//gn/addon/android_app/rules_internal.gni")
 
 assert(is_android)
 

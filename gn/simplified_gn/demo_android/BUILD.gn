@@ -7,8 +7,6 @@ android_apk("demo_android") {
 
     java_in_dir = [ "src" ]
 
-    #java_files_too_long = true
-
     native_libs = [
         "libstyle_javah.so",
         "libstyle_register.so",

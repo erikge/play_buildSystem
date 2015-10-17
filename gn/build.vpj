@@ -130,7 +130,6 @@
                         <F N="simplified_gn/gn/addon/android_app/dex.py"/>
                         <F N="simplified_gn/gn/addon/android_app/finalize_apk.py"/>
                         <F N="simplified_gn/gn/addon/android_app/generate_v14_compatible_resources.py"/>
-                        <F N="simplified_gn/gn/addon/android_app/internal_rules.gni"/>
                         <F N="simplified_gn/gn/addon/android_app/jar.py"/>
                         <F N="simplified_gn/gn/addon/android_app/javac.py"/>
                         <F N="simplified_gn/gn/addon/android_app/pack_relocations.py"/>
@@ -138,6 +137,8 @@
                         <F N="simplified_gn/gn/addon/android_app/process_resources.py"/>
                         <F N="simplified_gn/gn/addon/android_app/proguard.py"/>
                         <F N="simplified_gn/gn/addon/android_app/rules.gni"/>
+                        <F N="simplified_gn/gn/addon/android_app/rules_basic.gni"/>
+                        <F N="simplified_gn/gn/addon/android_app/rules_internal.gni"/>
                         <F N="simplified_gn/gn/addon/android_app/write_build_config.py"/>
                         <F N="simplified_gn/gn/addon/android_app/write_ordered_libraries.py"/>
                     </Folder>
