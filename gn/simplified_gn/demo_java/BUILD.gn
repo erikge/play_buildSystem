@@ -1,7 +1,7 @@
 import("//gn/addon/android_app/rules.gni")
 
 
-android_library("demo_lib") {
+java_library("demo_lib") {
   _find_java_ = exec_script("//gn/script/find.py",
     [
       "--pattern",

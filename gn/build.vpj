@@ -83,6 +83,18 @@
             <F N="note/9_TODO.txt"/>
         </Folder>
         <Folder Name="simplified_gn">
+            <Folder Name="demo_android">
+                <F N="simplified_gn/demo_android/BUILD.gn"/>
+            </Folder>
+            <Folder Name="demo_cmd">
+                <F N="simplified_gn/demo_cmd/BUILD.gn"/>
+            </Folder>
+            <Folder Name="demo_ios">
+                <F N="simplified_gn/demo_ios/BUILD.gn"/>
+            </Folder>
+            <Folder Name="demo_java">
+                <F N="simplified_gn/demo_java/BUILD.gn"/>
+            </Folder>
             <Folder Name="gn">
                 <Folder Name="addon">
                     <Folder Name="android_app">
@@ -280,6 +292,7 @@
                     <F N="simplified_gn/gn/script/gn_run_cmd.py"/>
                 </Folder>
             </Folder>
+            <F N="simplified_gn/BUILD.gn"/>
         </Folder>
     </Files>
 </Project>
