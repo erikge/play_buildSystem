@@ -137,7 +137,6 @@
                         <F N="simplified_gn/gn/addon/android_app/process_resources.py"/>
                         <F N="simplified_gn/gn/addon/android_app/proguard.py"/>
                         <F N="simplified_gn/gn/addon/android_app/rules.gni"/>
-                        <F N="simplified_gn/gn/addon/android_app/rules_basic.gni"/>
                         <F N="simplified_gn/gn/addon/android_app/rules_internal.gni"/>
                         <F N="simplified_gn/gn/addon/android_app/write_build_config.py"/>
                         <F N="simplified_gn/gn/addon/android_app/write_ordered_libraries.py"/>
