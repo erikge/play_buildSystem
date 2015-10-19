@@ -66,6 +66,12 @@ def _ParseArgs(args):
   parser.add_option('--main-dex-list-paths',
                     help='A list of paths containing a list of the classes to '
                          'include in the main dex.')
+  parser.add_option('--num-threads',
+                    default='8',
+                    help='Multi-threads to run dex.')
+  parser.add_option('--xmx',
+                    default='2048M',
+                    help='Max memroy to run dex.')
 
   options, paths = parser.parse_args(args)
 
@@ -164,7 +170,7 @@ def main(args):
   # See http://crbug.com/272064 for context on --force-jumbo.
   # See https://github.com/android/platform_dalvik/commit/dd140a22d for
   # --num-threads.
-  dex_cmd = [dx_binary, '--num-threads=8', '--dex', '--force-jumbo',
+  dex_cmd = [dx_binary, '-JXmx' + options.xmx, '--num-threads=' + options.num_threads, '--dex', '--force-jumbo',
              '--output', options.dex_path]
   if options.no_locals != '0':
     dex_cmd.append('--no-locals')

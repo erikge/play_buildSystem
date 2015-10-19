@@ -134,6 +134,7 @@
                             <F N="simplified_gn/gn/addon/android_app/incremental_install/generate_android_manifest.py"/>
                             <F N="simplified_gn/gn/addon/android_app/incremental_install/installer.py"/>
                         </Folder>
+                        <F N="simplified_gn/gn/addon/android_app/add_asset_ap.py"/>
                         <F N="simplified_gn/gn/addon/android_app/aidl.py"/>
                         <F N="simplified_gn/gn/addon/android_app/apkbuilder.py"/>
                         <F N="simplified_gn/gn/addon/android_app/BUILD.gn"/>
@@ -145,7 +146,7 @@
                         <F N="simplified_gn/gn/addon/android_app/jar.py"/>
                         <F N="simplified_gn/gn/addon/android_app/javac.py"/>
                         <F N="simplified_gn/gn/addon/android_app/pack_relocations.py"/>
-                        <F N="simplified_gn/gn/addon/android_app/package_resources.py"/>
+                        <F N="simplified_gn/gn/addon/android_app/package_asset_ap.py"/>
                         <F N="simplified_gn/gn/addon/android_app/process_resources.py"/>
                         <F N="simplified_gn/gn/addon/android_app/proguard.py"/>
                         <F N="simplified_gn/gn/addon/android_app/rules.gni"/>

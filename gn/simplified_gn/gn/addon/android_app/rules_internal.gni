@@ -318,8 +318,6 @@ template("process_resources") {
   }
 }
 
-
-
 # Creates an asset and reaource packaged apk(.ap_)
 #
 # Variables
@@ -339,7 +337,7 @@ template("package_asset_ap_") {
   action(target_name) {
     deps = invoker.deps
 
-    script = "//gn/addon/android_app/package_resources.py"
+    script = "//gn/addon/android_app/package_asset_ap.py"
     depfile = "${target_gen_dir}/${target_name}.d"
     inputs = [
       invoker.android_manifest,
@@ -411,6 +409,46 @@ template("package_asset_ap_") {
         invoker.extensions_to_not_compress,
       ]
     }
+  }
+}
+
+# Add aditional resource to packaged apk(.ap_)
+#
+# Variables
+#   deps: Specifies the dependencies of this target.
+#   resource_packaged_apk_path:
+#   sources:
+#
+template("add_asset_ap_") {
+  action(target_name) {
+    deps = invoker.deps
+
+    script = "//gn/addon/android_app/add_asset_ap.py"
+    depfile = "${target_gen_dir}/${target_name}.d"
+    inputs = [
+      invoder.resource_packaged_apk_path,
+      invoker.sources,
+    ]
+    outputs = [
+      depfile,
+    ]
+
+    args = [
+      "--depfile",
+      rebase_path(depfile, root_build_dir),
+      "--android-sdk",
+      rebased_android_sdk,
+      "--aapt-path",
+      android_aapt_path,
+      "--ap-path",
+      rebase_path(invoker.resource_packaged_apk_path, root_build_dir),
+    ]
+
+    if (defined(invoker.args)) {
+      args += invoker.args
+    }
+
+    args += rebase_path(invoker.sources, root_build_dir)
   }
 }
 
