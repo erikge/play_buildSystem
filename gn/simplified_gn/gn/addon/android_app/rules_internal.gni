@@ -1037,6 +1037,8 @@ template("java_prebuilt_impl") {
   forward_variables_from(invoker, [ "testonly" ])
   _supports_android =
       defined(invoker.supports_android) && invoker.supports_android
+  _forward_dex = _supports_android 
+           && defined(invoker.forward_dex) && invoker.forward_dex
 
   assert(defined(invoker.jar_path))
   _base_path = "${target_gen_dir}/$target_name"
@@ -1047,6 +1049,9 @@ template("java_prebuilt_impl") {
   _jar_path = "$root_out_dir/lib.java$target_dir_name/$target_name.jar"
   _build_config = _base_path + ".build_config"
 
+  if (_forward_dex) {
+    _dex_path = _base_path + ".dex.jar"
+  }
   _deps = []
   if (defined(invoker.deps)) {
     _deps = invoker.deps
@@ -1060,6 +1065,9 @@ template("java_prebuilt_impl") {
 
   build_config_target_name = "${_template_name}__build_config"
   process_jar_target_name = "${_template_name}__process_jar"
+  if (_forward_dex) {
+    dex_target_name = "${_template_name}__dex"
+  }
 
   write_build_config(build_config_target_name) {
     type = "java_library"
@@ -1070,10 +1078,16 @@ template("java_prebuilt_impl") {
     deps = _deps
     build_config = _build_config
     jar_path = _jar_path
+    if (_forward_dex) {
+      dex_path = _dex_path
+    }
   }
 
   create_ijar(process_jar_target_name) {
     visibility = [ ":$_template_name" ]
+    if (_forward_dex) {
+      visibility += [ ":$dex_target_name" ]
+    }
 
     if (defined(invoker.proguard_preprocess) && invoker.proguard_preprocess) {
       proguard_preprocess = true
@@ -1085,6 +1099,16 @@ template("java_prebuilt_impl") {
     output_jar_path = _jar_path
 
     deps = [ ":$build_config_target_name" ] + _deps + _jar_deps
+  }
+
+  if (_forward_dex) {
+    dex(dex_target_name) {
+      sources = [
+        _jar_path,
+      ]
+      output = _dex_path
+      deps = [ ":$process_jar_target_name" ] + _deps + _jar_deps
+    }
   }
 
   if (defined(invoker.main_class)) {
@@ -1105,6 +1129,9 @@ template("java_prebuilt_impl") {
     deps = [
       ":$process_jar_target_name",
     ]
+    if (_forward_dex) {
+      deps += [ ":$dex_target_name" ]
+    }
     data_deps = []
     if (defined(invoker.data_deps)) {
       data_deps += invoker.data_deps
@@ -1286,12 +1313,25 @@ template("java_library_impl") {
 
   _supports_android =
       defined(invoker.supports_android) && invoker.supports_android
+  _forward_dex = _supports_android 
+           && defined(invoker.forward_dex) && invoker.forward_dex
+
   _requires_android =
       defined(invoker.requires_android) && invoker.requires_android
   assert(_requires_android || true)  # Mark as used.
   _run_findbugs = defined(invoker.run_findbugs) && invoker.run_findbugs
   assert(_run_findbugs || true)  # Mark as used.
 
+  if (_forward_dex) {
+    _dex_path = _base_path + ".dex.jar"
+    if (defined(invoker.dex_path)) {
+      _dex_path = invoker.dex_path
+    }
+  } else {
+    if (defined(invoker.dex_path)) {
+      assert(invoker.dex_path != "" || true)  # Mark as used.
+    }
+  }
 
   # Define build_config_deps which will be a list of targets required to
   # build the _build_config.
@@ -1320,6 +1360,9 @@ template("java_library_impl") {
 
       build_config = _build_config
       jar_path = _jar_path
+      if (_forward_dex) {
+        dex_path = _dex_path
+      }
     }
   }
 
@@ -1393,6 +1436,19 @@ template("java_library_impl") {
       jar_path = _jar_path
       script_name = _template_name
       deps = build_config_deps
+    }
+  }
+
+  if (_forward_dex) {
+    _final_deps += [ ":${_template_name}__dex" ]
+    dex("${_template_name}__dex") {
+      sources = [
+        _jar_path,
+      ]
+      output = _dex_path
+      deps = [
+        ":$_compile_java_target",
+      ]
     }
   }
 
