@@ -487,8 +487,7 @@ template("android_apk") {
   resources_zip_path = "$base_path.resources.zip"
   _all_resources_zip_path = "$base_path.resources.all.zip"
   _jar_path = "$base_path.jar"
-  _lib_dex_path = "$base_path.dex.jar"
-  _rebased_lib_dex_path = rebase_path(_lib_dex_path, root_build_dir)
+  _rebased_lib_dex_path = rebase_path(_jar_path, root_build_dir)
   _template_name = target_name
 
   final_dex_path = "$gen_dir/classes.dex"
@@ -722,7 +721,6 @@ template("android_apk") {
 
     srcjar_deps = _srcjar_deps
     jar_path = _jar_path
-    dex_path = _lib_dex_path
 
     if (defined(invoker.deps)) {
       deps += invoker.deps
@@ -772,7 +770,7 @@ template("android_apk") {
       _build_config,
     ]
     output = final_dex_path
-    _dex_arg_key = "${_rebased_build_config}:final_dex:dependency_dex_files"
+    _dex_arg_key = "${_rebased_build_config}:java:full_classpath"
     args = [
       "--inputs=@FileArg($_dex_arg_key)",
       _rebased_lib_dex_path,

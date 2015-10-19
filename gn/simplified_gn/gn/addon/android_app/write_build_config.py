@@ -173,9 +173,6 @@ def main(argv):
   build_utils.CheckOptions(options, parser, required_options)
 
   if options.type == 'java_library':
-    if options.supports_android and not options.dex_path:
-      raise Exception('java_library that supports Android requires a dex path.')
-
     if options.requires_android and not options.supports_android:
       raise Exception(
           '--supports-android is required when using --requires-android')
