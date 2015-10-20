@@ -138,9 +138,9 @@
                         <F N="simplified_gn/gn/addon/android_app/aidl.py"/>
                         <F N="simplified_gn/gn/addon/android_app/apkbuilder.py"/>
                         <F N="simplified_gn/gn/addon/android_app/BUILD.gn"/>
-                        <F N="simplified_gn/gn/addon/android_app/create_dist_jar.py"/>
                         <F N="simplified_gn/gn/addon/android_app/create_java_binary_script.py"/>
                         <F N="simplified_gn/gn/addon/android_app/dex.py"/>
+                        <F N="simplified_gn/gn/addon/android_app/fat_jar.py"/>
                         <F N="simplified_gn/gn/addon/android_app/finalize_apk.py"/>
                         <F N="simplified_gn/gn/addon/android_app/generate_v14_compatible_resources.py"/>
                         <F N="simplified_gn/gn/addon/android_app/jar.py"/>

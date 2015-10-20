@@ -207,7 +207,103 @@ template("write_build_config") {
   }
 }
 
-# Runs process_resources.py
+# Write build_config for android apk build.
+# Copy all native libs dependency to output_native_libs_dir/$android_app_abi.
+#
+# Variables
+#   deps: Specifies the dependencies of this target.
+#   native_libs:
+#
+#   build_config: Output path for the generated build_config
+#   output_native_libs_dir: New directory containing packed native libraries.
+#
+#   jar_path
+#   dex_path
+#   resources_zip
+#   android_manifest
+#
+template("organize_apk_build") {
+  assert(defined(invoker.build_config))
+  forward_variables_from(invoker,
+             [
+               "deps",
+               "native_libs",
+               "build_config",
+
+               "data_deps",
+               "public_deps",
+             ])
+
+  build_config_target_name = "${target_name}__build_config"
+  native_libs_target_name = "${target_name}__native_libs"
+  final_target_name = target_name
+  final_group_dep = [ ":$build_config_target_name" ]
+
+  write_build_config(build_config_target_name) {
+    forward_variables_from(invoker, [ 
+      "apk_under_test",
+      "jar_path",
+      "dex_path",
+      "resources_zip",
+      "android_manifest",
+    ])
+    type = "android_apk"
+    visibility = [
+      ":$native_libs_target_name",
+      ":$final_target_name",
+    ]
+  }
+
+  assert(invoker.output_native_libs_dir != "" || true)  # Mark as used.
+  if (defined(native_libs) && native_libs != []) {
+    final_group_dep += [ ":$native_libs_target_name" ]
+    action(native_libs_target_name) {
+      visibility = [ ":$final_target_name" ]
+      script = "//gn/addon/android_app/pack_relocations.py"
+      packed_libraries_dir = "${invoker.output_native_libs_dir}/$android_app_abi"
+      depfile = "$target_gen_dir/$target_name.d"
+      outputs = [
+        depfile,
+      ]
+
+      inputs = native_libs
+
+      inputs += [ build_config ]
+      deps += [ ":$build_config_target_name" ]
+
+      skip_packing_list = [
+        "gdbserver",
+      ]
+
+      _rebased_build_config = rebase_path(build_config, root_build_dir)
+      args = [
+        "--depfile",
+        rebase_path(depfile, root_build_dir),
+        "--enable-packing=0",
+        "--exclude-packing-list=$skip_packing_list",
+        "--stripped-libraries-dir",
+        rebase_path(root_build_dir, root_build_dir),
+        "--packed-libraries-dir",
+        rebase_path(packed_libraries_dir, root_build_dir),
+        "--libraries=@FileArg(${_rebased_build_config}:native:libraries)",
+        "--clear-dir",
+      ]
+
+      if (is_debug) {
+        rebased_gdbserver = rebase_path([ android_gdbserver ], root_build_dir)
+        inputs += [ android_gdbserver ]
+        args += [ "--libraries=$rebased_gdbserver" ]
+      }
+    }
+  }
+
+  group(final_target_name) {
+    forward_variables_from(invoker, [ "visibility" ])
+    public_deps = final_group_dep
+  }
+}
+
+# Process Android resources to generate R.java
 #
 # Variables
 #   deps: Specifies the dependencies of this target.
@@ -1038,6 +1134,60 @@ template("create_ijar") {
       ":$_output_jar_target",
     ]
   }
+}
+
+# Merges all dependency jars and a list of jars into a single jar
+#
+# Variables
+#   deps:
+#   build_config:
+#   jar_list:
+#
+#   output_jar_path:
+#
+template("fat_jar") {
+    action(target_name) {
+      assert(defined(invoker.build_config) || defined(invoker.jar_list))
+      assert(defined(invoker.output_jar_path))
+
+      forward_variables_from(invoker,
+                           [
+                             "deps",
+                             "testonly",
+                           ])
+      script = "//gn/addon/android_app/fat_jar.py"
+      depfile = "$target_gen_dir/$target_name.d"
+
+      outputs = [
+        depfile,
+        invoker.output_jar_path,
+      ]
+
+      args = [
+        "--depfile",
+        rebase_path(depfile, root_build_dir),
+        "--output",
+        rebase_path(invoker.output_jar_path, root_build_dir),
+        
+      ]
+
+      inputs = []
+      if (defined(invoker.build_config)) {
+        inputs += [
+          invoker.build_config,
+        ]
+        _rebased_build_config = rebase_path(invoker.build_config, root_build_dir)
+        args += [
+          "--inputs=@FileArg($_rebased_build_config:dist_jar:dependency_jars)",
+        ]
+      }
+      
+      if (defined(invoker.jar_list)) {
+        inputs += invoker.jar_list
+        _rebased_jar_list = rebase_path(invoker.jar_list, root_build_dir)
+        args += [ "--inputs=$_rebased_jar_list" ]
+      }
+    }
 }
 
 template("java_prebuilt_impl") {

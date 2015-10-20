@@ -441,6 +441,8 @@ template("android_aidl") {
 #     Note: this "transitive closure" actually only includes such targets if
 #     they are depended on through android_library or android_resources targets
 #     (and so not through builtin targets like 'action', 'group', etc).
+#   java_in_dir: Directory containing java files. All .java files in
+#     this directory will be included in the library.
 #   java_files: List of .java files to include in the apk.
 #   srcjar_deps: List of srcjar dependencies. The .java files in the srcjars
 #      will be added to java_files and be included in this apk.
@@ -454,8 +456,6 @@ template("android_aidl") {
 #     tested apk.
 #   testonly: Marks this target as "test-only".
 #
-#   java_in_dir: Directory containing java files. All .java files in
-#     this directory will be included in the library.
 #
 # Example
 #   android_apk("foo_apk") {
@@ -481,6 +481,7 @@ template("android_apk") {
 
   assert(defined(invoker.final_apk_path) || defined(invoker.apk_name))
   assert(defined(invoker.android_manifest))
+
   gen_dir = "$target_gen_dir/$target_name"
   base_path = "$gen_dir/$target_name"
   _build_config = "$target_gen_dir/$target_name.build_config"
@@ -499,11 +500,7 @@ template("android_apk") {
   } else if (defined(invoker.apk_name)) {
     _final_apk_path = "$root_build_dir/apks/" + invoker.apk_name + ".apk"
   }
-  _dist_jar_path_list =
-      process_file_template(
-          [ _final_apk_path ],
-          "$root_build_dir/test.lib.java/{{source_name_part}}.jar")
-  _dist_jar_path = _dist_jar_path_list[0]
+
   _final_apk_path_no_ext_list =
       process_file_template([ _final_apk_path ],
                             "{{source_dir}}/{{source_name_part}}")
@@ -574,22 +571,21 @@ template("android_apk") {
   # Help GN understand that _create_abi_split is not unused (bug in GN).
   assert(_create_abi_split || true)
 
-  build_config_target = "${_template_name}__build_config"
-  write_build_config(build_config_target) {
-    forward_variables_from(invoker, [ "apk_under_test" ])
-    type = "android_apk"
+  build_config_target = "${_template_name}__apk_build"
+  organize_apk_build(build_config_target) {
+    native_libs = _native_libs
+    build_config = _build_config
+    output_native_libs_dir = _native_libs_dir
+
     jar_path = _jar_path
     dex_path = final_dex_path
     resources_zip = resources_zip_path
-    build_config = _build_config
     android_manifest = _android_manifest
 
     deps = _android_manifest_deps
     if (defined(invoker.deps)) {
       deps += invoker.deps
     }
-
-    native_libs = _native_libs
   }
 
   _final_deps = []
@@ -637,41 +633,6 @@ template("android_apk") {
     }
   }
 
-  if (_dist_jar_path != "") {
-    print(_dist_jar_path)
-    create_dist_target = "${_template_name}__create_dist_jar"
-    _final_deps += [ ":$create_dist_target" ]
-
-    # TODO(cjhopman): This is only ever needed to calculate the list of tests to
-    # run. See build/android/pylib/instrumentation/test_jar.py. We should be
-    # able to just do that calculation at build time instead.
-    action(create_dist_target) {
-      script = "//gn/addon/android_app/create_dist_jar.py"
-      depfile = "$target_gen_dir/$target_name.d"
-      inputs = [
-        _build_config,
-      ]
-      outputs = [
-        depfile,
-        _dist_jar_path,
-      ]
-      args = [
-        "--depfile",
-        rebase_path(depfile, root_build_dir),
-        "--output",
-        rebase_path(_dist_jar_path, root_build_dir),
-        "--inputs=@FileArg($_rebased_build_config:dist_jar:dependency_jars)",
-      ]
-      inputs += [ _jar_path ]
-      _rebased_jar_path = rebase_path([ _jar_path ], root_build_dir)
-      args += [ "--inputs=$_rebased_jar_path" ]
-      deps = [
-        ":$build_config_target",  # Generates the build config file.
-        ":$java_target",  # Generates the jar file.
-      ]
-    }
-  }
-
   dex("$final_dex_target_name") {
     deps = [
       ":$build_config_target",
@@ -686,58 +647,6 @@ template("android_apk") {
       "--inputs=@FileArg($_dex_arg_key)",
       _rebased_lib_dex_path,
     ]
-  }
-
-  if (_native_libs != []) {
-    _prepare_native_target_name = "${_template_name}__prepare_native"
-    action(_prepare_native_target_name) {
-      forward_variables_from(invoker,
-                             [
-                               "data_deps",
-                               "public_deps",
-                             ])
-      script = "//gn/addon/android_app/pack_relocations.py"
-      packed_libraries_dir = "$_native_libs_dir/$android_app_abi"
-      depfile = "$target_gen_dir/$target_name.d"
-      outputs = [
-        depfile,
-      ]
-
-      inputs = _native_libs
-      deps = []
-
-      inputs += [ _build_config ]
-      deps += [ ":$build_config_target" ]
-
-      skip_packing_list = [
-        "gdbserver",
-        "libchromium_android_linker$shlib_extension",
-      ]
-
-      args = [
-        "--depfile",
-        rebase_path(depfile, root_build_dir),
-        "--enable-packing=0",
-        "--exclude-packing-list=$skip_packing_list",
-        "--stripped-libraries-dir",
-        rebase_path(root_build_dir, root_build_dir),
-        "--packed-libraries-dir",
-        rebase_path(packed_libraries_dir, root_build_dir),
-        "--libraries=@FileArg(${_rebased_build_config}:native:libraries)",
-        "--clear-dir",
-      ]
-
-
-      if (defined(invoker.deps)) {
-        deps += invoker.deps
-      }
-
-      if (is_debug) {
-        rebased_gdbserver = rebase_path([ android_gdbserver ], root_build_dir)
-        inputs += [ android_gdbserver ]
-        args += [ "--libraries=$rebased_gdbserver" ]
-      }
-    }
   }
 
   _final_deps += [ ":${_template_name}__create" ]
@@ -785,7 +694,6 @@ template("android_apk") {
 
     if (_native_libs != [] && !_create_abi_split) {
       native_libs_dir = _native_libs_dir
-      deps += [ ":$_prepare_native_target_name" ]
     }
   }
 
@@ -819,7 +727,6 @@ template("android_apk") {
 
       native_libs_dir = _native_libs_dir
       deps = [
-        ":${_prepare_native_target_name}",
         ":${_manifest_rule}",
       ]
       incremental_deps = deps
@@ -885,9 +792,6 @@ template("android_apk") {
       ":${_create_incremental_script_rule_name}",
       ":${java_target}",
     ]
-    if (_native_libs != []) {
-      public_deps += [ ":$_prepare_native_target_name" ]
-    }
   }
   }
 }
