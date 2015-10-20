@@ -452,6 +452,7 @@ template("android_aidl") {
 #   native_libs: List paths of native libraries to include in this apk. If these
 #     libraries depend on other shared_library targets, those dependencies will
 #     also be included in the apk.
+#   forward_dex: Dex as early as possible, that is dex for each generated jar.
 #   apk_under_test: For an instrumentation test apk, this is the target of the
 #     tested apk.
 #   testonly: Marks this target as "test-only".
@@ -488,7 +489,13 @@ template("android_apk") {
   resources_zip_path = "$base_path.resources.zip"
   _all_resources_zip_path = "$base_path.resources.all.zip"
   _jar_path = "$base_path.jar"
+  _forward_dex = defined(invoker.forward_dex) && invoker.forward_dex
+
   _rebased_lib_dex_path = rebase_path(_jar_path, root_build_dir)
+  if (_forward_dex) {
+    _lib_dex_path = "$base_path.dex.jar"
+    _rebased_lib_dex_path = rebase_path(_lib_dex_path, root_build_dir)
+  }
   _template_name = target_name
 
   final_dex_path = "$gen_dir/classes.dex"
@@ -627,6 +634,9 @@ template("android_apk") {
 
     srcjar_deps = _srcjar_deps
     jar_path = _jar_path
+    if (_forward_dex) {
+      dex_path = _lib_dex_path
+    }
 
     if (defined(invoker.deps)) {
       deps += invoker.deps
@@ -643,6 +653,9 @@ template("android_apk") {
     ]
     output = final_dex_path
     _dex_arg_key = "${_rebased_build_config}:java:full_classpath"
+    if (_forward_dex) {
+      _dex_arg_key = "${_rebased_build_config}:final_dex:dependency_dex_files"
+    }
     args = [
       "--inputs=@FileArg($_dex_arg_key)",
       _rebased_lib_dex_path,
