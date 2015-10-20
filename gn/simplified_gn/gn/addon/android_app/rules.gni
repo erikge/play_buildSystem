@@ -538,36 +538,9 @@ template("android_apk") {
 
   _load_library_from_apk = false
 
-  # The dependency that makes the chromium linker, if any is needed.
-  _chromium_linker_dep = []
-
   if (defined(invoker.native_libs)) {
-    _use_chromium_linker = false
-    if (defined(invoker.use_chromium_linker)) {
-      _use_chromium_linker =
-          invoker.use_chromium_linker && chromium_linker_supported
-      _chromium_linker_dep = [ "//base/android/linker:chromium_android_linker" ]
-    }
-
-    if (defined(invoker.load_library_from_apk) &&
-        invoker.load_library_from_apk) {
-      _load_library_from_apk = true
-      assert(_use_chromium_linker,
-             "Loading library from the apk requires use" +
-                 " of the Chromium linker.")
-    }
-
-    _enable_relocation_packing = false
-    if (defined(invoker.enable_relocation_packing) &&
-        invoker.enable_relocation_packing) {
-      _enable_relocation_packing = relocation_packing_supported
-      assert(_use_chromium_linker,
-             "Relocation packing requires use of the" + " Chromium linker.")
-    }
-
     if (is_component_build) {
       _native_libs += [ "$root_shlib_dir/libc++_shared.so" ]
-      _chromium_linker_dep += [ "//gn/android:cpplib_stripped" ]
     }
 
     # Allow native_libs to be in the form "foo.so" or "foo.cr.so"
@@ -580,28 +553,6 @@ template("android_apk") {
     # Add in target_cpu so that other architectures are not accidentally
     # included when switching target_cpu without doing a clean build.
     _native_libs_dir = gen_dir + "/lib-$target_cpu"
-
-    if (_use_chromium_linker) {
-      _native_libs +=
-          [ "$root_shlib_dir/libchromium_android_linker$shlib_extension" ]
-    }
-
-    _enable_relocation_packing = false
-    if (_use_chromium_linker && defined(invoker.enable_relocation_packing) &&
-        invoker.enable_relocation_packing) {
-      _enable_relocation_packing = true
-    }
-### erik ###
-#    _native_lib_version_rule = ""
-#    if (defined(invoker.native_lib_version_rule)) {
-#      _native_lib_version_rule = invoker.native_lib_version_rule
-#    }
-#    _native_lib_version_arg = "\"\""
-#    if (defined(invoker.native_lib_version_arg)) {
-#      _native_lib_version_arg = invoker.native_lib_version_arg
-#    }
-### erik ###
-
   }
 
   _android_manifest_deps = []
@@ -633,7 +584,7 @@ template("android_apk") {
     build_config = _build_config
     android_manifest = _android_manifest
 
-    deps = _chromium_linker_dep + _android_manifest_deps
+    deps = _android_manifest_deps
     if (defined(invoker.deps)) {
       deps += invoker.deps
     }
@@ -648,7 +599,6 @@ template("android_apk") {
     srcjar_path = "${target_gen_dir}/${target_name}.srcjar"
     r_text_path = "${target_gen_dir}/${target_name}_R.txt"
     android_manifest = _android_manifest
-#    resource_dirs = []
     resource_dirs = [ "//gn/addon/android_app/helper/empty" ]
     zip_path = resources_zip_path
     all_resources_zip_path = _all_resources_zip_path
@@ -661,46 +611,6 @@ template("android_apk") {
     }
   }
   _srcjar_deps += [ ":$process_resources_target" ]
-
-### erik ###  if (_native_libs != []) {
-  if (false && _native_libs != []) {
-    _enable_chromium_linker_tests = false
-    if (defined(invoker.enable_chromium_linker_tests)) {
-      _enable_chromium_linker_tests = invoker.enable_chromium_linker_tests
-    }
-
-    java_cpp_template("${_template_name}__native_libraries_java") {
-      package_name = "org/chromium/base/library_loader"
-      sources = [
-        "//base/android/java/templates/NativeLibraries.template",
-      ]
-      inputs = [
-        _build_config,
-      ]
-      deps = [
-        ":$build_config_target",
-      ]
-      if (_native_lib_version_rule != "") {
-        deps += [ _native_lib_version_rule ]
-      }
-
-      defines = [
-        "NATIVE_LIBRARIES_LIST=" +
-            "@FileArg($_rebased_build_config:native:java_libraries_list)",
-        "NATIVE_LIBRARIES_VERSION_NUMBER=$_native_lib_version_arg",
-      ]
-      if (_use_chromium_linker) {
-        defines += [ "ENABLE_CHROMIUM_LINKER" ]
-      }
-      if (_load_library_from_apk) {
-        defines += [ "ENABLE_CHROMIUM_LINKER_LIBRARY_IN_ZIP_FILE" ]
-      }
-      if (_enable_chromium_linker_tests) {
-        defines += [ "ENABLE_CHROMIUM_LINKER_TESTS" ]
-      }
-    }
-    _srcjar_deps += [ ":${_template_name}__native_libraries_java" ]
-  }
 
   java_target = "${_template_name}__java"
   java_library_impl(java_target) {
@@ -728,6 +638,7 @@ template("android_apk") {
   }
 
   if (_dist_jar_path != "") {
+    print(_dist_jar_path)
     create_dist_target = "${_template_name}__create_dist_jar"
     _final_deps += [ ":$create_dist_target" ]
 
@@ -793,7 +704,7 @@ template("android_apk") {
       ]
 
       inputs = _native_libs
-      deps = _chromium_linker_dep
+      deps = []
 
       inputs += [ _build_config ]
       deps += [ ":$build_config_target" ]
@@ -803,19 +714,11 @@ template("android_apk") {
         "libchromium_android_linker$shlib_extension",
       ]
 
-      enable_packing_arg = 0
-      if (_enable_relocation_packing) {
-        enable_packing_arg = 1
-        deps += [ relocation_packer_target ]
-      }
-
       args = [
         "--depfile",
         rebase_path(depfile, root_build_dir),
-        "--enable-packing=$enable_packing_arg",
+        "--enable-packing=0",
         "--exclude-packing-list=$skip_packing_list",
-### erik ###        "--android-pack-relocations",
-### erik ###        rebase_path(relocation_packer_exe, root_build_dir),
         "--stripped-libraries-dir",
         rebase_path(root_build_dir, root_build_dir),
         "--packed-libraries-dir",
@@ -824,14 +727,6 @@ template("android_apk") {
         "--clear-dir",
       ]
 
-### erik ###
-      if (_enable_relocation_packing) {
-        args += [
-          "--android-pack-relocations",
-          rebase_path(relocation_packer_exe, root_build_dir),
-        ]
-      }
-### erik ###
 
       if (defined(invoker.deps)) {
         deps += invoker.deps

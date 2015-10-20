@@ -33,6 +33,9 @@ if (is_debug) {
 #
 # Variables
 #   dpes:
+#
+#   build_config: Output path for the generated build_config
+#
 #   type: android_apk, android_resources, java_library, deps_dex
 #   srcjar
 #   jar_path
@@ -46,8 +49,6 @@ if (is_debug) {
 #   custom_package
 #   bypass_platform_checks
 #   apk_under_test
-#
-#   build_config: Output path for the generated build_config
 #
 template("write_build_config") {
   set_sources_assignment_filter([])
@@ -217,7 +218,12 @@ template("write_build_config") {
 #   zip_path: Output path for the packed resource.
 #   all_resources_zip_path:
 #   srcjar_path: Output path for the generated R.java
-#   r_text_path
+#   r_text_path:
+#
+#   v14-skip
+#   shared-resources
+#   dependencies-res-zips
+#   extra-res-packages
 #
 template("process_resources") {
   set_sources_assignment_filter([])
@@ -457,10 +463,12 @@ template("add_asset_ap_") {
 # Variables
 #   deps:
 #   sources:
-#   no_locals:
-#   args:
 #
 #   output:
+#
+#   incremental:
+#   no_locals:
+#   args:
 #
 template("dex") {
   set_sources_assignment_filter([])
