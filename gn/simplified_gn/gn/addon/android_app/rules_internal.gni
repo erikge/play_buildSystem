@@ -1193,8 +1193,10 @@ template("java_prebuilt_impl") {
   forward_variables_from(invoker, [ "testonly" ])
   _supports_android =
       defined(invoker.supports_android) && invoker.supports_android
-  _forward_dex = _supports_android 
-           && defined(invoker.forward_dex) && invoker.forward_dex
+  _forward_dex = _supports_android
+  if (defined(invoker.forward_dex)) {
+    _forward_dex = invoker.forward_dex
+  }
 
   assert(defined(invoker.jar_path))
   _base_path = "${target_gen_dir}/$target_name"
@@ -1207,6 +1209,8 @@ template("java_prebuilt_impl") {
 
   if (_forward_dex) {
     _dex_path = _base_path + ".dex.jar"
+  } else {
+    _dex_path = _jar_path
   }
   _deps = []
   if (defined(invoker.deps)) {
@@ -1221,9 +1225,8 @@ template("java_prebuilt_impl") {
 
   build_config_target_name = "${_template_name}__build_config"
   process_jar_target_name = "${_template_name}__process_jar"
-  if (_forward_dex) {
-    dex_target_name = "${_template_name}__dex"
-  }
+  dex_target_name = "${_template_name}__dex"
+  
 
   write_build_config(build_config_target_name) {
     type = "java_library"
@@ -1234,7 +1237,7 @@ template("java_prebuilt_impl") {
     deps = _deps
     build_config = _build_config
     jar_path = _jar_path
-    if (_forward_dex) {
+    if (_supports_android) {
       dex_path = _dex_path
     }
   }
@@ -1469,8 +1472,10 @@ template("java_library_impl") {
 
   _supports_android =
       defined(invoker.supports_android) && invoker.supports_android
-  _forward_dex = _supports_android 
-           && defined(invoker.forward_dex) && invoker.forward_dex
+  _forward_dex = _supports_android
+  if (defined(invoker.forward_dex)) {
+    _forward_dex = invoker.forward_dex
+  }
 
   _requires_android =
       defined(invoker.requires_android) && invoker.requires_android
@@ -1478,17 +1483,19 @@ template("java_library_impl") {
   _run_findbugs = defined(invoker.run_findbugs) && invoker.run_findbugs
   assert(_run_findbugs || true)  # Mark as used.
 
-  if (_forward_dex) {
-    _dex_path = _base_path + ".dex.jar"
-    if (defined(invoker.dex_path)) {
-      _dex_path = invoker.dex_path
-    }
-  } else {
-    if (defined(invoker.dex_path)) {
-      assert(invoker.dex_path != "" || true)  # Mark as used.
+  if (_supports_android) {
+    if (_forward_dex) {
+      _dex_path = _base_path + ".dex.jar"
+      if (defined(invoker.dex_path)) {
+        _dex_path = invoker.dex_path
+      }
+    } else {
+      _dex_path = _jar_path
+      assert(_dex_path != "" || true)  # Mark as used.
+      assert(defined(invoker.dex_path) || true)  # Mark as used.
     }
   }
-
+  
   # Define build_config_deps which will be a list of targets required to
   # build the _build_config.
   if (defined(invoker.override_build_config)) {
@@ -1516,7 +1523,7 @@ template("java_library_impl") {
 
       build_config = _build_config
       jar_path = _jar_path
-      if (_forward_dex) {
+      if (_supports_android) {
         dex_path = _dex_path
       }
     }
