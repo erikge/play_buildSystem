@@ -13,6 +13,7 @@ import zipfile
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../script/pylib'))
 from util import build_utils
+from util import md5_check
 
 
 def _CreateCombinedMainDexList(main_dex_list_paths):
@@ -72,6 +73,7 @@ def _ParseArgs(args):
   parser.add_option('--xmx',
                     default='2048M',
                     help='Max memroy to run dex.')
+  parser.add_option('--md5-path', help='The path for the md5 file of output dex.')
 
   options, paths = parser.parse_args(args)
 
@@ -136,10 +138,17 @@ def _RunDx(changes, options, dex_cmd, paths):
           paths = [classes_temp_dir]
 
     dex_cmd += paths
-    build_utils.CheckOutput(dex_cmd, print_stderr=False)
+    build_utils.CheckOutput(dex_cmd, print_stderr=True)
 
   if options.dex_path.endswith('.zip'):
     _RemoveUnwantedFilesFromZip(options.dex_path)
+
+  if options.md5_path:
+    parent = os.path.dirname(options.md5_path)
+    if not os.path.exists(parent):
+      os.makedirs(parent)
+    with open(options.md5_path, 'w') as f:
+      f.write(md5_check._Md5ForPath(options.dex_path))
 
 
 def _OnStaleMd5(changes, options, dex_cmd, paths):
@@ -186,6 +195,8 @@ def main(args):
     options.dex_path,
     options.dex_path + '.inputs',
   ]
+  if options.md5_path:
+    output_paths.append(options.md5_path)
 
   # An escape hatch to be able to check if incremental dexing is causing
   # problems.

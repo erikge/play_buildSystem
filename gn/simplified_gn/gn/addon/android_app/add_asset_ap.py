@@ -24,13 +24,13 @@ def _ParseArgs(args):
   parser.add_option('--ap-path',
                     help='Path to (partial) apk.')
 
-  options, add_file = parser.parse_args(args)
+  options, add_files = parser.parse_args(args)
 
   required_options = ('android_sdk', 'aapt_path', 'ap_path')
 
   build_utils.CheckOptions(options, parser, required=required_options)
 
-  return options, paths
+  return options, add_files
 
 
 
@@ -48,7 +48,7 @@ def main(args):
   ]
   package_command.extend(add_files)
 
-  input_paths = [ options.ap_path ]
+  input_paths = []
   input_paths.extend(add_files)
 
   output_paths = [ options.ap_path ]

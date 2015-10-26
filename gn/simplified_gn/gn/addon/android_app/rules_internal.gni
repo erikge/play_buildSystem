@@ -527,12 +527,10 @@ template("add_asset_ap_") {
 
     script = "//gn/addon/android_app/add_asset_ap.py"
     depfile = "${target_gen_dir}/${target_name}.d"
-    inputs = [
-      invoder.resource_packaged_apk_path,
-      invoker.sources,
-    ]
+    inputs = invoker.sources
     outputs = [
       depfile,
+      invoker.resource_packaged_apk_path,
     ]
 
     args = [
@@ -562,7 +560,6 @@ template("add_asset_ap_") {
 #
 #   output:
 #
-#   incremental:
 #   no_locals:
 #   args:
 #
@@ -734,6 +731,7 @@ template("finalize_apk") {
 
 # Packages resources, assets, dex, and native libraries into an apk. Signs and
 # zipaligns the apk.
+# package_asset_ap_ + package_apk + finalize_apk
 #
 # Variables
 #   deps: Specifies the dependencies of this target.
