@@ -3,3 +3,7 @@ out
 
 # python
 *.pyc
+
+# slickedit
+*.vpwhist
+*.vtg

@@ -105,11 +105,14 @@
                             <F N="simplified_gn/gn/addon/android_app/helper/debug.jks"/>
                         </Folder>
                         <Folder Name="ijar">
+                            <F N="simplified_gn/gn/addon/android_app/ijar/BUILD"/>
                             <F N="simplified_gn/gn/addon/android_app/ijar/BUILD.gn"/>
                             <F N="simplified_gn/gn/addon/android_app/ijar/classfile.cc"/>
                             <F N="simplified_gn/gn/addon/android_app/ijar/common.h"/>
                             <F N="simplified_gn/gn/addon/android_app/ijar/ijar.cc"/>
                             <F N="simplified_gn/gn/addon/android_app/ijar/ijar.gni"/>
+                            <F N="simplified_gn/gn/addon/android_app/ijar/LICENSE"/>
+                            <F N="simplified_gn/gn/addon/android_app/ijar/OWNERS"/>
                             <F N="simplified_gn/gn/addon/android_app/ijar/README.chromium"/>
                             <F N="simplified_gn/gn/addon/android_app/ijar/README.txt"/>
                             <F N="simplified_gn/gn/addon/android_app/ijar/zip.cc"/>
@@ -171,6 +174,19 @@
                         <F N="simplified_gn/gn/addon/win_app/manifest.gni"/>
                     </Folder>
                     <F N="simplified_gn/gn/addon/compiled_action.gni"/>
+                </Folder>
+                <Folder Name="bin">
+                    <Folder Name="linux64">
+                        <F N="simplified_gn/gn/bin/linux64/gn"/>
+                        <F N="simplified_gn/gn/bin/linux64/ninja-linux32"/>
+                        <F N="simplified_gn/gn/bin/linux64/ninja-linux64"/>
+                    </Folder>
+                    <Folder Name="mac">
+                        <F N="simplified_gn/gn/bin/mac/gn"/>
+                        <F N="simplified_gn/gn/bin/mac/ninja"/>
+                    </Folder>
+                    <F N="simplified_gn/gn/bin/gn.exe"/>
+                    <F N="simplified_gn/gn/bin/ninja.exe"/>
                 </Folder>
                 <Folder Name="core">
                     <Folder Name="config">
@@ -257,12 +273,13 @@
                         </Folder>
                         <Folder Name="win">
                             <F N="simplified_gn/gn/core/toolchain/win/BUILD.gn"/>
+                            <F N="simplified_gn/gn/core/toolchain/win/gyp_win_tool.py"/>
                             <F N="simplified_gn/gn/core/toolchain/win/midl.gni"/>
                             <F N="simplified_gn/gn/core/toolchain/win/setup_toolchain.py"/>
-                            <F N="simplified_gn/gn/core/toolchain/win/win_tool.py"/>
                         </Folder>
                         <F N="simplified_gn/gn/core/toolchain/ccache.gni"/>
                         <F N="simplified_gn/gn/core/toolchain/gcc_toolchain.gni"/>
+                        <F N="simplified_gn/gn/core/toolchain/gcc_toolchain_setup_on_win.py"/>
                         <F N="simplified_gn/gn/core/toolchain/lib_naming.gni"/>
                     </Folder>
                     <F N="simplified_gn/gn/core/BUILDCONFIG.gn"/>

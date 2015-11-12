@@ -12,10 +12,9 @@ declare_args() {
 }
 
 import("//gn/core/config/win/env.gni")
-import("//gn/core/toolchain/goma.gni")
 
 # Should only be running on Windows.
-assert(is_win)
+assert(host_os == "win")
 
 # Setup the Visual Studio state.
 #
@@ -25,25 +24,29 @@ assert(is_win)
 
 gyp_win_tool_path = rebase_path("win_tool.py", root_build_dir)
 
-toolchain_data = exec_script("setup_toolchain.py",
+
+toolchain_data_x86 = exec_script("setup_toolchain.py",
                              [
                                visual_studio_path,
                                gyp_win_tool_path,
                                windows_sdk_path,
+                               "x86",
                                visual_studio_runtime_dirs,
-                               current_cpu,
                              ],
                              "scope")
 
-if (vc_bin_dir == "") {
-  vc_bin_dir = toolchain_data.vc_bin_dir
-}
+toolchain_data_x64 = exec_script("setup_toolchain.py",
+                             [
+                               visual_studio_path,
+                               gyp_win_tool_path,
+                               windows_sdk_path,
+                               "x64",
+                               visual_studio_runtime_dirs,
+                             ],
+                             "scope")
 
-if (use_goma) {
-  goma_prefix = "$goma_dir/gomacc.exe "
-} else {
-  goma_prefix = ""
-}
+print(toolchain_data_x86.vc_bin_dir)
+print(toolchain_data_64.vc_bin_dir)
 
 
 # Copy the VS runtime DLL for the default toolchain the root build directory so
@@ -224,7 +227,7 @@ if (current_cpu == "x86") {
   msvc_toolchain("x86") {
     environment = "environment.x86"
     current_cpu = "x86"
-    cl = "${goma_prefix}\"${vc_bin_dir}/cl.exe\""
+    cl = "\"${vc_bin_dir}/cl.exe\""
     is_clang = false
   }
   msvc_toolchain("clang_x86") {
@@ -232,7 +235,7 @@ if (current_cpu == "x86") {
     current_cpu = "x86"
     prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
                          root_build_dir)
-    cl = "${goma_prefix}$prefix/clang-cl.exe"
+    cl = "$prefix/clang-cl.exe"
     current_os = "win"
     is_clang = true
   }
@@ -242,7 +245,7 @@ if (current_cpu == "x64") {
   msvc_toolchain("x64") {
     environment = "environment.x64"
     current_cpu = "x64"
-    cl = "${goma_prefix}\"${vc_bin_dir}/cl.exe\""
+    cl = "\"${vc_bin_dir}/cl.exe\""
     is_clang = false
   }
   msvc_toolchain("clang_x64") {
@@ -250,7 +253,7 @@ if (current_cpu == "x64") {
     current_cpu = "x64"
     prefix = rebase_path("//third_party/llvm-build/Release+Asserts/bin",
                          root_build_dir)
-    cl = "${goma_prefix}$prefix/clang-cl.exe"
+    cl = "$prefix/clang-cl.exe"
     current_os = "win"
     is_clang = true
   }
@@ -259,7 +262,7 @@ if (current_cpu == "x64") {
 # WinRT toolchains
 msvc_toolchain("winrt_x86") {
   environment = "environment.winrt_x86"
-  cl = "${goma_prefix}\"${vc_bin_dir}/cl.exe\""
+  cl = "\"${vc_bin_dir}/cl.exe\""
   is_clang = false
 
   current_cpu = "x86"
@@ -268,7 +271,7 @@ msvc_toolchain("winrt_x86") {
 
 msvc_toolchain("winrt_x64") {
   environment = "environment.winrt_x64"
-  cl = "${goma_prefix}\"${vc_bin_dir}/cl.exe\""
+  cl = "\"${vc_bin_dir}/cl.exe\""
   is_clang = false
 
   current_cpu = "x64"

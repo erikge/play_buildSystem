@@ -21,7 +21,6 @@ def _ExtractImportantEnvironment(output_of_set):
   """Extracts environment variables required for the toolchain to run from
   a textual dump output by the cmd.exe 'set' command."""
   envvars_to_save = (
-      'goma_.*', # TODO(scottmg): This is ugly, but needed for goma.
       'include',
       'lib',
       'libpath',
@@ -97,15 +96,16 @@ def _CopyTool(source_path):
 
 
 def main():
-  if len(sys.argv) != 6:
+  if len(sys.argv) < 5:
     print('Usage setup_toolchain.py '
           '<visual studio path> <win tool path> <win sdk path> '
-          '<runtime dirs> <target_cpu>')
+          '<target_cpu> <runtime dirs> ')
     sys.exit(2)
   tool_source = sys.argv[2]
   win_sdk_path = sys.argv[3]
-  runtime_dirs = sys.argv[4]
-  target_cpu = sys.argv[5]
+  target_cpu = sys.argv[4]
+  if len(sys.argv) > 5:
+      runtime_dirs = sys.argv[5]
 
   _CopyTool(tool_source)
 
@@ -124,7 +124,9 @@ def main():
         args, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     variables, _ = popen.communicate()
     env = _ExtractImportantEnvironment(variables)
-    env['PATH'] = runtime_dirs + ';' + env['PATH']
+    if runtime_dirs:
+        env['PATH'] = runtime_dirs + ';' + env['PATH']
+
 
     if cpu == target_cpu:
       for path in env['PATH'].split(os.pathsep):

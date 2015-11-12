@@ -5,6 +5,14 @@
 import("//gn/core/toolchain/ccache.gni")
 import("//gn/core/toolchain/lib_naming.gni")
 
+if (host_os == "win") {
+  win_tool_path = rebase_path("win/gyp_win_tool.py", root_build_dir)
+  exec_script("gcc_toolchain_setup_on_win.py",
+                             [
+                               win_tool_path,
+                             ],
+                             "scope")
+}
 
 # This template defines a toolchain for something that works like gcc
 # (including clang).
@@ -299,15 +307,29 @@ template("gcc_toolchain") {
       }
     }
 
-    tool("stamp") {
-      command = "touch {{output}}"
-      description = "STAMP {{output}}"
+    if (host_os != "win") {
+      tool("stamp") {
+        command = "touch {{output}}"
+        description = "STAMP {{output}}"
+      }
+
+      tool("copy") {
+        command = "ln -f {{source}} {{output}} 2>/dev/null || (rm -rf {{output}} && cp -af {{source}} {{output}})"
+        description = "COPY {{source}} {{output}}"
+      }
+    } else {
+      tool("stamp") {
+        command = "$python_path gyp-win-tool stamp {{output}}"
+        description = "STAMP {{output}}"
+      }
+
+      tool("copy") {
+        command =
+            "$python_path gyp-win-tool recursive-mirror {{source}} {{output}}"
+        description = "COPY {{source}} {{output}}"
+      }
     }
 
-    tool("copy") {
-      command = "ln -f {{source}} {{output}} 2>/dev/null || (rm -rf {{output}} && cp -af {{source}} {{output}})"
-      description = "COPY {{source}} {{output}}"
-    }
 
     # When invoking this toolchain not as the default one, these args will be
     # passed to the build. They are ignored when this is the default toolchain.

@@ -359,13 +359,15 @@ template("android_resources") {
 #
 # Variables
 #   sources: Paths to .aidl files to compile.
-#   import_include: Path to directory containing .java files imported by the
+#   aidl_in_dir: Directory containing aidl files. All .aidl files in
+#     this directory will be included as sources.
+#   import_includes: Path to directory containing .java files imported by the
 #     .aidl files.
 #   interface_file: Preprocessed aidl file to import.
 #
 # Example
 #   android_aidl("foo_aidl") {
-#     import_include = "java/src"
+#     import_includes = [ "java/src" ]
 #     sources = [
 #       "java/src/com/foo/bar/FooBarService.aidl",
 #       "java/src/com/foo/bar/FooBarServiceCallback.aidl",
@@ -379,9 +381,28 @@ template("android_aidl") {
   aidl_path = "${android_sdk_build_tools}/aidl"
   framework_aidl = "$android_sdk/framework.aidl"
 
+  _aidl_files = []
+  if (defined(invoker.aidl_in_dir)) {
+    _aidl_rel = []
+    foreach(_aidl_dir, invoker.aidl_in_dir) {
+      _aidl_rel +=
+        exec_script("//gn/script/find.py",
+                    [
+                      "--pattern",
+                      "*.aidl",
+                      rebase_path(_aidl_dir, root_build_dir),
+                    ],
+                    "list lines")
+    }
+    _aidl_files += rebase_path(_aidl_rel, ".", root_build_dir)
+  }
+  if (defined(invoker.sources)) {
+    _aidl_files += invoker.sources
+  }
+
   action(target_name) {
     script = "//gn/addon/android_app/aidl.py"
-    sources = invoker.sources
+    sources = _aidl_files
 
     imports = [ framework_aidl ]
     if (defined(invoker.interface_file)) {
@@ -389,7 +410,7 @@ template("android_aidl") {
       imports += [ invoker.interface_file ]
     }
 
-    inputs = [ aidl_path ] + imports
+    inputs = imports
 
     depfile = "${target_gen_dir}/${target_name}.d"
     outputs = [
@@ -406,17 +427,17 @@ template("android_aidl") {
       "--srcjar",
       rebase_path(srcjar_path, root_build_dir),
     ]
-    if (defined(invoker.import_include) && invoker.import_include != "") {
+    if (defined(invoker.import_includes) && invoker.import_includes != []) {
       # TODO(cjhopman): aidl supports creating a depfile. We should be able to
       # switch to constructing a depfile for the overall action from that
       # instead of having all the .java files in the include paths as inputs.
       rebased_import_includes =
-          rebase_path([ invoker.import_include ], root_build_dir)
+          rebase_path(invoker.import_includes, root_build_dir)
       args += [ "--includes=$rebased_import_includes" ]
 
       _java_files_build_rel =
           exec_script("//gn/script/find.py",
-                      rebase_path([ invoker.import_include ], root_build_dir),
+                      rebase_path(invoker.import_includes, root_build_dir),
                       "list lines")
       _java_files = rebase_path(_java_files_build_rel, ".", root_build_dir)
       inputs += _java_files
@@ -643,7 +664,7 @@ template("android_apk") {
     inputs = [
       _build_config,
     ]
-    output = final_dex_path
+    output_dex_path = final_dex_path
     _dex_arg_key = "${_rebased_build_config}:final_dex:dependency_dex_files"
     args = [
       "--inputs=@FileArg($_dex_arg_key)",

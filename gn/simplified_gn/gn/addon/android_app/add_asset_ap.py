@@ -34,19 +34,27 @@ def _ParseArgs(args):
 
 
 
-def _OnStaleMd5(package_command, options):
-  build_utils.CheckOutput(package_command, print_stdout=False, print_stderr=False)
+def _OnStaleMd5(package_command_add, package_command_remove, options):
+  build_utils.CheckOutput(package_command_remove, print_stdout=False, print_stderr=False, fail_func=None)
+  build_utils.CheckOutput(package_command_add, print_stdout=False, print_stderr=False)
 
 
 def main(args):
   options, add_files = _ParseArgs(args)
   
-  package_command = [
+  package_command_add = [
       options.aapt_path,
       'a',
       options.ap_path
   ]
-  package_command.extend(add_files)
+  package_command_add.extend(add_files)
+
+  package_command_remove = [
+      options.aapt_path,
+      'r',
+      options.ap_path
+  ]
+  package_command_remove.extend(add_files)
 
   input_paths = []
   input_paths.extend(add_files)
@@ -55,10 +63,10 @@ def main(args):
 
 
   build_utils.CallAndWriteDepfileIfStale(
-      lambda: _OnStaleMd5(package_command, options),
+      lambda: _OnStaleMd5(package_command_add, package_command_remove, options),
       options,
       input_paths=input_paths,
-      input_strings=package_command,
+      input_strings=package_command_add,
       output_paths=output_paths)
 
 

@@ -48,7 +48,12 @@ config("compiler") {
       "/FIIntrin.h",
     ]
 
-    if (visual_studio_version == "2013") {
+    # _MSC_VER
+    if (visual_studio_version == "2010") {
+      cflags += [ "-fmsc-version=1600" ]
+    } else if (visual_studio_version == "2012") {
+      cflags += [ "-fmsc-version=1700" ]
+    } else if (visual_studio_version == "2013") {
       cflags += [ "-fmsc-version=1800" ]
     } else if (visual_studio_version == "2015") {
       cflags += [ "-fmsc-version=1900" ]

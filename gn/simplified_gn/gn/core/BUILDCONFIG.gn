@@ -366,6 +366,8 @@ if (is_win) {
     }
   } else if (host_os == "mac") {
     host_toolchain = "//gn/core/toolchain/mac:clang_$host_cpu"
+  } else if (host_os == "win") {
+    #host_toolchain = "//gn/core/toolchain/win:$host_cpu"
   } else {
     assert(false, "Unknown host for android cross compile")
   }

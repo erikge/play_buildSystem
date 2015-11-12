@@ -530,7 +530,6 @@ template("add_asset_ap_") {
     inputs = invoker.sources
     outputs = [
       depfile,
-      invoker.resource_packaged_apk_path,
     ]
 
     args = [
@@ -558,7 +557,7 @@ template("add_asset_ap_") {
 #   deps:
 #   sources:
 #
-#   output:
+#   output_dex_path:
 #
 #   no_locals:
 #   args:
@@ -566,7 +565,7 @@ template("add_asset_ap_") {
 template("dex") {
   set_sources_assignment_filter([])
 
-  assert(defined(invoker.output))
+  assert(defined(invoker.output_dex_path))
   action(target_name) {
     forward_variables_from(invoker,
                            [
@@ -579,10 +578,13 @@ template("dex") {
     depfile = "$target_gen_dir/$target_name.d"
     outputs = [
       depfile,
-      invoker.output,
+      invoker.output_dex_path,
     ]
+    if (defined(invoker.outputs)) {
+      outputs += invoker.outputs
+    }
 
-    rebased_output = rebase_path(invoker.output, root_build_dir)
+    rebased_output_dex = rebase_path(invoker.output_dex_path, root_build_dir)
 
     args = [
       "--depfile",
@@ -590,7 +592,7 @@ template("dex") {
       "--android-sdk-tools",
       rebased_android_sdk_build_tools,
       "--dex-path",
-      rebased_output,
+      rebased_output_dex,
     ]
 
     if (incremental_dx) {
@@ -1056,6 +1058,7 @@ template("create_ijar") {
                       get_path_info(_output_jar_path, "name") + ".interface.jar"
 
   assert(invoker.build_config != "")
+  assert(_output_ijar_path != "") # Mark as used.
 
   if (defined(invoker.proguard_preprocess) && invoker.proguard_preprocess) {
     _proguard_jar_path = "${rebased_android_sdk_root}/tools/proguard/lib/proguard.jar"
@@ -1117,20 +1120,26 @@ template("create_ijar") {
     }
   }
 
-  generate_interface_jar("${target_name}__ijar") {
-    input_jar = _output_jar_path
-    output_jar = _output_ijar_path
-    deps = [
-      ":$_output_jar_target",
-    ]
+  if (host_os != "win") {
+    generate_interface_jar("${target_name}__ijar") {
+      input_jar = _output_jar_path
+      output_jar = _output_ijar_path
+      deps = [
+        ":$_output_jar_target",
+      ]
+    }
   }
 
   group(target_name) {
     forward_variables_from(invoker, [ "visibility" ])
     public_deps = [
-      ":${target_name}__ijar",
       ":$_output_jar_target",
     ]
+    if (host_os != "win") {
+      public_deps += [
+        ":${target_name}__ijar",
+      ]
+    }
   }
 }
 
@@ -1193,7 +1202,8 @@ template("java_prebuilt_impl") {
   forward_variables_from(invoker, [ "testonly" ])
   _supports_android =
       defined(invoker.supports_android) && invoker.supports_android
-  _forward_dex = _supports_android
+#  _forward_dex = _supports_android
+  _forward_dex = false
   if (defined(invoker.forward_dex)) {
     _forward_dex = invoker.forward_dex
   }
@@ -1226,6 +1236,7 @@ template("java_prebuilt_impl") {
   build_config_target_name = "${_template_name}__build_config"
   process_jar_target_name = "${_template_name}__process_jar"
   dex_target_name = "${_template_name}__dex"
+  assert(dex_target_name != "" || true)  # Mark as used.
   
 
   write_build_config(build_config_target_name) {
@@ -1265,7 +1276,7 @@ template("java_prebuilt_impl") {
       sources = [
         _jar_path,
       ]
-      output = _dex_path
+      output_dex_path = _dex_path
       deps = [ ":$process_jar_target_name" ] + _deps + _jar_deps
     }
   }
@@ -1392,13 +1403,17 @@ template("compile_java") {
     _rebased_depfile = rebase_path(depfile, root_build_dir)
     args = [
       "--depfile=$_rebased_depfile",
-      "--use-ijars",
       "--classpath=@FileArg($_rebased_build_config:javac:classpath)",
       "--jar-path=$_rebased_jar_path",
       "--java-srcjars=$_rebased_java_srcjars",
       "--java-srcjars=@FileArg($_rebased_build_config:javac:srcjars)",
       "--jar-excluded-classes=$_jar_excluded_patterns",
     ]
+    if (host_os != "win") {
+      args += [
+        "--use-ijars",
+      ]
+    }
     args += [
       "--java-source=$javac_source",
       "--java-target=$javac_target",
@@ -1407,11 +1422,16 @@ template("compile_java") {
       args += [ "--incremental" ]
     }
     if (_supports_android) {
-      deps += [ "//gn/addon/android_app:android_ijar" ]
-      _android_sdk_ijar = "$root_out_dir/lib.java/android.interface.jar"
-      inputs += [ _android_sdk_ijar ]
-      _rebased_android_sdk_ijar = rebase_path(_android_sdk_ijar, root_build_dir)
-      args += [ "--bootclasspath=$_rebased_android_sdk_ijar" ]
+      if (host_os != "win") {
+        deps += [ "//gn/addon/android_app:android_ijar" ]
+        _android_sdk_ijar = "$root_out_dir/lib.java/android.interface.jar"
+        inputs += [ _android_sdk_ijar ]
+        _rebased_android_sdk_ijar = rebase_path(_android_sdk_ijar, root_build_dir)
+        args += [ "--bootclasspath=$_rebased_android_sdk_ijar" ]
+      } else {
+        inputs += [ android_sdk_jar ]
+        args += [ "--bootclasspath=$rebased_android_sdk_jar" ]
+      }
     }
     foreach(e, _manifest_entries) {
       args += [ "--manifest-entry=" + e ]
@@ -1472,7 +1492,8 @@ template("java_library_impl") {
 
   _supports_android =
       defined(invoker.supports_android) && invoker.supports_android
-  _forward_dex = _supports_android
+#  _forward_dex = _supports_android
+  _forward_dex = false
   if (defined(invoker.forward_dex)) {
     _forward_dex = invoker.forward_dex
   }
@@ -1608,7 +1629,7 @@ template("java_library_impl") {
       sources = [
         _jar_path,
       ]
-      output = _dex_path
+      output_dex_path = _dex_path
       deps = [
         ":$_compile_java_target",
       ]

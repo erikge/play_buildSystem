@@ -152,7 +152,7 @@ def CheckOutput(args, cwd=None,
   if stderr_filter is not None:
     stderr = stderr_filter(stderr)
 
-  if fail_func(child.returncode, stderr):
+  if fail_func and fail_func(child.returncode, stderr):
     raise CalledProcessError(cwd, args, stdout + stderr)
 
   if print_stdout:
@@ -186,8 +186,8 @@ def IsDeviceReady():
 
 
 def CheckZipPath(name):
-  if os.path.normpath(name) != name:
-    raise Exception('Non-canonical zip path: %s' % name)
+#  if os.path.normpath(name) != name:
+#    raise Exception('Non-canonical zip path: %s' % name)
   if os.path.isabs(name):
     raise Exception('Absolute zip path: %s' % name)
 

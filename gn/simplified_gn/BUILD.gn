@@ -12,7 +12,7 @@ declare_args() {
 group("root") {
 
   deps = [
-    "//demo_cmd:hello",
+#    "//demo_cmd:hello",
   ]
 
   if (is_java && is_android) {

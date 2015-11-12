@@ -82,7 +82,8 @@ def _ExtractClassFiles(jar_path, dest_dir, java_files):
     if not path.endswith('.class'):
       return False
     path_without_suffix = re.sub(r'(?:\$[^/]+)?\.class$', '', path)
-    return not any(path_without_suffix in p for p in java_files)
+    preduced_java_name = path_without_suffix + '.java'
+    return not any(preduced_java_name in p for p in java_files)
 
   build_utils.ExtractAll(jar_path, path=dest_dir, predicate=extract_predicate)
 
@@ -280,7 +281,7 @@ def main(argv):
 
   java_files = _FilterJavaFiles(java_files, options.javac_includes)
 
-  runtime_classpath = options.classpath
+  runtime_classpath = [os.path.normpath(p) for p in options.classpath]
   compile_classpath = runtime_classpath
   if options.use_ijars:
     ijar_re = re.compile(r'\.jar$')
