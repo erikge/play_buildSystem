@@ -3,8 +3,8 @@
 start=$(date +%s)
 # ======================
 
-gn gen out/java --args='target_os = "android" is_java=true'
-ninja -C out/java/
+gn/bin/gn gen out/java --args='target_os = "android" is_java=true'
+gn/bin/ninja -C out/java/
 
 # ======================
 end=$(date +%s)
